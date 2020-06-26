@@ -64,7 +64,7 @@ public class SerieResponse {
         @SerializedName("external_ids")
         public ExternalIds externalIds;
         public List<Season> seasons;
-        public VideosResponse.Video video;
+        public VideoResponse.Video video;
         @SerializedName("next_episode_to_air")
         public Episode nextEpisodeToAir;
         @SerializedName("last_episode_to_air")

@@ -4,7 +4,7 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
-class MovieCredits {
+class MovieCredits: Serializable {
 
     @Expose
     var cast: List<Cast>? = null
