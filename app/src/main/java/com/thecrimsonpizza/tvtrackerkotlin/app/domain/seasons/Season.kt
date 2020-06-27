@@ -7,7 +7,7 @@ import java.util.*
 class Season(
     var id: Int = 0,
     var name: String?,
-    var episodes: List<Episode>?,
+    var episodes: List<Episode>,
     var overview: String?,
     var visto: Boolean = false,
     var watchedDate: Date?,
