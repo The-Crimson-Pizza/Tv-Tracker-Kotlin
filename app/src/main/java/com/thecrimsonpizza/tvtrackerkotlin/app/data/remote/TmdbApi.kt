@@ -1,5 +1,10 @@
 package com.thecrimsonpizza.tvtrackerkotlin.app.data.remote
 
+import com.thecrimsonpizza.tvtrackerkotlin.app.domain.BasicResponse
+import com.thecrimsonpizza.tvtrackerkotlin.app.domain.actor.PersonResponse
+import com.thecrimsonpizza.tvtrackerkotlin.app.domain.seasons.Season
+import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
+import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.VideoResponse
 import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.GET
 import retrofit2.http.Headers
@@ -30,7 +35,7 @@ interface TmdbApi {
     ): Observable<SerieResponse.Serie>
 
     @GET("tv/{tv_id}/videos")
-    fun getTrailer(@Path("tv_id") idSerie: Int): Observable<VideosResponse>
+    fun getTrailer(@Path("tv_id") idSerie: Int): Observable<VideoResponse>
 
     @GET("tv/{id_serie}/season/{season_number}")
     fun getSeason(

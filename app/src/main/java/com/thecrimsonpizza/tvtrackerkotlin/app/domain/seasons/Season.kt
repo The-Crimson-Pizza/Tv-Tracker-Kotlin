@@ -7,7 +7,7 @@ import java.util.*
 class Season(
     var id: Int = 0,
     var name: String?,
-    var episodes: List<Episode>,
+    var episodes: MutableList<Episode>,
     var overview: String?,
     var visto: Boolean = false,
     var watchedDate: Date?,
@@ -17,7 +17,7 @@ class Season(
     @SerializedName("episode_count") var episodeCount: Int?
 ) : Serializable {
 
-    fun sort(seasons: List<Season>){
+    fun sort(seasons: MutableList<Season>){
         seasons.sortedBy { it.seasonNumber }
         // todo - comprobar que funciona la ordenación
     }

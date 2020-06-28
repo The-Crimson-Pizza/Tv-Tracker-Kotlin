@@ -34,7 +34,7 @@ class SerieResponse(@field:Expose @field:SerializedName("results") val results: 
         @SerializedName("last_air_date") var lastAirDate: String? = null,
         @SerializedName("poster_path") var posterPath: String? = null,
         @SerializedName("backdrop_path") var backdropPath: String? = null,
-        @SerializedName("episode_run_time") var episodeRunTime: List<Int>? = null,
+        @SerializedName("episode_run_time") var episodeRunTime: List<Int>?,
         @SerializedName("in_production") var inProduction: Boolean = false,
         @SerializedName("number_of_episodes") var numberOfEpisodes: Int = 0,
         @SerializedName("number_of_seasons") var numberOfSeasons: Int = 0,
