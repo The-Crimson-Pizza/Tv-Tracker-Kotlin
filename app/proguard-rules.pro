@@ -28,3 +28,6 @@
 # of your app.
 -keepclassmembers class com.thecrimsonpizza.tvtrackerkotlin.app.domain.* {
   *;  }
+
+-keepattributes Signature
+-keepattributes *Annotation*

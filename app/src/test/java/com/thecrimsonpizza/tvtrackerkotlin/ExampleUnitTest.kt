@@ -1,4 +1,4 @@
-package com.thecrimsonpizza.tvtrackerkotlin.tvtrackerkotlin
+package com.thecrimsonpizza.tvtrackerkotlin
 
 import org.junit.Test
 
