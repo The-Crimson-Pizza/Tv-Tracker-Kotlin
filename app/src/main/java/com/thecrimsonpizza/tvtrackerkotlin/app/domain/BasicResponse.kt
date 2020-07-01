@@ -5,20 +5,12 @@ import android.os.Parcelable
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class BasicResponse {
-
-    @SerializedName("results")
-    @Expose
-    var basicSeries: List<SerieBasic>? = null
-
-    fun BasicResponse(basicSeries: List<SerieBasic>?) {
-        this.basicSeries = basicSeries
-    }
+class BasicResponse(@SerializedName("results") @Expose var basicSeries: List<SerieBasic>) {
 
     class SerieBasic(
         val id: Int,
-        val name: String?,
-        @SerializedName("poster_path") val posterPath: String?,
+        val name: String,
+        @SerializedName("poster_path") val posterPath: String,
         @SerializedName("vote_average") var voteAverage: Float = 0f
     ) : Parcelable {
 
@@ -51,8 +43,8 @@ class BasicResponse {
 
         constructor(source: Parcel) : this(
             source.readInt(),
-            source.readString(),
-            source.readString(),
+            source.readString().toString(),
+            source.readString().toString(),
             source.readFloat()
         )
     }

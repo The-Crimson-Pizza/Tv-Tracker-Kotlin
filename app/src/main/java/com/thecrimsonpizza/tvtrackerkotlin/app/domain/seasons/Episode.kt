@@ -2,7 +2,7 @@ package com.thecrimsonpizza.tvtrackerkotlin.app.domain.seasons
 
 import android.view.View
 import com.google.gson.annotations.SerializedName
-import com.thecrimsonpizza.tvtrackerkotlin.app.data.local.FirebaseDb
+import com.thecrimsonpizza.tvtrackerkotlin.app.data.local.FirebaseDatabaseRealtime
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
 import java.io.Serializable
 import java.util.*
@@ -87,7 +87,7 @@ class Episode(
                 favs[favPosition].finished = false
                 favs[favPosition].finishDate = null
             }
-            FirebaseDb.getInstance(FirebaseAuth.getInstance().getCurrentUser()).setSeriesFav(favs)
+            FirebaseDatabaseRealtime.getInstance(FirebaseAuth.getInstance().getCurrentUser()).setSeriesFav(favs)
         }
     }
 
@@ -113,7 +113,7 @@ class Episode(
             favs[favPosition].seasons.get(seasonPos).watchedDate = null
             favs[favPosition].finished = false
             favs[favPosition].finishDate = null
-            FirebaseDb.getInstance(FirebaseAuth.getInstance().getCurrentUser()).setSeriesFav(favs)
+            FirebaseDatabaseRealtime.getInstance(FirebaseAuth.getInstance().getCurrentUser()).setSeriesFav(favs)
         }
     }
 

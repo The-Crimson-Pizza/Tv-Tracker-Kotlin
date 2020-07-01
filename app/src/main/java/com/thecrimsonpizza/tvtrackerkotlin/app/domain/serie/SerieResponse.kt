@@ -10,7 +10,9 @@ import com.thecrimsonpizza.tvtrackerkotlin.app.domain.seasons.Season
 import java.io.Serializable
 import java.util.*
 
-class SerieResponse(@field:Expose @field:SerializedName("results") val results: List<Serie>) {
+class SerieResponse(
+    @field:Expose @field:SerializedName("results") val results: List<Serie>
+) {
 
     class Serie(
         var id: Int = 0,
@@ -46,9 +48,6 @@ class SerieResponse(@field:Expose @field:SerializedName("results") val results: 
         @SerializedName("last_episode_to_air") var lastEpisodeToAir: Episode? = null
     ) : Serializable {
 
-        fun toBasic(): BasicResponse.SerieBasic {
-            return BasicResponse.SerieBasic(id, name, posterPath, voteAverage)
-        }
 
         fun checkFav(seriesFavs: List<Serie>) {
             for (s in seriesFavs) {

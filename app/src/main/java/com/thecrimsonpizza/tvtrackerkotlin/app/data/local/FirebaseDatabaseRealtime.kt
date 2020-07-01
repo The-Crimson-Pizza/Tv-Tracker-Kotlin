@@ -8,18 +8,13 @@ import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
 /**
  * Class that manages the connections to the Firebase Database, getting and uploading data
  */
-class FirebaseDb(currentUser: FirebaseUser) {
+class FirebaseDatabaseRealtime(currentUser: FirebaseUser?) {
 
     val seriesFav: DatabaseReference = FirebaseDatabase.getInstance()
-        .getReference("users/" + currentUser.uid + "/series_following")
+        .getReference("users/" + currentUser?.uid + "/series_following")
     val tempIds: DatabaseReference = FirebaseDatabase.getInstance().getReference("temp/")
 
     fun setSeriesFav(followingList: List<SerieResponse.Serie>) {
         seriesFav.setValue(followingList)
     }
-
-//    fun getSeriesFav(): DatabaseReference? {
-//        return seriesFav
-//    }
-
 }
