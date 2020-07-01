@@ -1,7 +1,5 @@
 package com.thecrimsonpizza.tvtrackerkotlin.app.ui.home
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +16,6 @@ import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.getImage
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.setBaseAdapter
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.ID_SERIE
-import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.MY_PREFS
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.lista_series_basic.view.*
 

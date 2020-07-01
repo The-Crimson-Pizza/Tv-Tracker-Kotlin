@@ -15,7 +15,7 @@
         app:cardCornerRadius="5dp">
 
         <ImageView
-            android:id="@+id/posterBasic"
+            android:id="@+id/posterBasicVertical"
             android:layout_width="match_parent"
             android:layout_height="190dp"
             android:contentDescription="@string/serie_poster_description"
@@ -28,7 +28,7 @@
             android:gravity="center">
 
             <TextView
-                android:id="@+id/titleBasic"
+                android:id="@+id/titleBasicVertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -50,7 +50,7 @@
             android:padding="2dp">
 
             <TextView
-                android:id="@+id/ratingBasic"
+                android:id="@+id/ratingBasicVertical"
                 android:layout_width="30dp"
                 android:layout_height="20dp"
                 android:gravity="center"

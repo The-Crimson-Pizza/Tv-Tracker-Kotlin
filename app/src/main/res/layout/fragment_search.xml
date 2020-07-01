@@ -6,18 +6,18 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:theme="@style/AppTheme2"
-    tools:context=".ui.search.SearchFragment">
+    tools:context=".app.ui.search.SearchFragment">
 
     <include layout="@layout/main_title" />
 
     <SearchView
-        android:theme="@style/Theme.AppCompat.DayNight"
         android:id="@+id/searchView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
         android:iconifiedByDefault="false"
-        android:queryHint="Search" />
+        android:queryHint="Search"
+        android:theme="@style/Theme.AppCompat.DayNight" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabs"

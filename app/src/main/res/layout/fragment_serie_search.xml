@@ -4,7 +4,7 @@
     android:id="@+id/switcherSearchSerie"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.search.SerieSearchFragment">
+    tools:context="app.ui.search.SerieSearchFragment">
 
     <include
         android:id="@+id/search_image"
@@ -13,7 +13,7 @@
         android:layout_height="match_parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvSeries"
+        android:id="@+id/rvSeriesSearch"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical" />

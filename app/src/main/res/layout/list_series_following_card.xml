@@ -30,7 +30,7 @@
                 app:cardCornerRadius="10dp">
 
                 <ImageView
-                    android:id="@+id/posterBasic"
+                    android:id="@+id/posterBasicVertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/serie_poster_description"
