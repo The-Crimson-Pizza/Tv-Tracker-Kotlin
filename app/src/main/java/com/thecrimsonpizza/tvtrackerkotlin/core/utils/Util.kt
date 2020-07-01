@@ -1,8 +1,12 @@
 package com.thecrimsonpizza.tvtrackerkotlin.core.utils
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.widget.ImageView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.Target
 import java.util.*
 
 class Util {
@@ -22,4 +26,11 @@ fun isNetworkAvailable(context: Context): Boolean {
             (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
                     capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
                     capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET));
+}
+
+
+fun getImageNoPlaceholder(url: String?, image: ImageView, contexto: Context) {
+    Glide.with(contexto)
+        .load(url)
+        .into(image)
 }

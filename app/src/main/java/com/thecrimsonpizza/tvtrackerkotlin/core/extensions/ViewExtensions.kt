@@ -5,16 +5,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-fun RecyclerView.setUp(
-    layoutManager: RecyclerView.LayoutManager,
-    adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>
-) {
-    this.layoutManager = layoutManager
-    this.adapter = adapter
-    this.setHasFixedSize(true)
-    this.setItemViewCacheSize(20)
-    this.isSaveEnabled = true
-}
+
 
 fun TextView.setTextAndHideViewIfIsNeeded(text: String) {
     if (!TextUtils.isEmpty(text)) {

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".ui.otros.ActorFragment"
+    tools:context=".app.ui.actor.ActorFragment"
     tools:showIn="@layout/fragment_actor">
 
     <LinearLayout
@@ -45,18 +45,18 @@
                 android:id="@+id/icon_mortimer"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:visibility="gone"
                 android:layout_margin="10dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/mortimer" />
+                android:src="@drawable/mortimer"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/fecha_actor_mortimer"
                 android:layout_width="wrap_content"
-                android:visibility="gone"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:visibility="gone" />
         </LinearLayout>
 
         <LinearLayout
@@ -97,19 +97,20 @@
             app:trimLines="70"
             app:trimMode="trimModeLength" />
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/tvCreditsView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="@string/series"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:orientation="vertical">
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="@string/series"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-        <ViewSwitcher
-            android:id="@+id/switcherSeries"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvSeries"
@@ -118,27 +119,22 @@
                 android:layout_marginTop="15dp"
                 android:orientation="horizontal" />
 
-            <TextView
-                android:id="@+id/text_empty_dos"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="@string/no_data" />
+        </LinearLayout>
 
-        </ViewSwitcher>
-
-        <TextView
+        <LinearLayout
+            android:id="@+id/movieCreditsView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="@string/movies"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:orientation="vertical">
 
-        <ViewSwitcher
-            android:id="@+id/switcherFilms"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="@string/movies"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_movies"
@@ -147,14 +143,8 @@
                 android:layout_marginTop="15dp"
                 android:orientation="horizontal" />
 
-            <TextView
-                android:id="@+id/text_empty_uno"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="@string/no_data" />
+        </LinearLayout>
 
-        </ViewSwitcher>
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

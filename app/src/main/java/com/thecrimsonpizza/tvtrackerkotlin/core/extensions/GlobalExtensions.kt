@@ -1,11 +1,15 @@
 package com.thecrimsonpizza.tvtrackerkotlin.core.extensions
 
 import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.LiveDataReactiveStreams
 import com.thecrimsonpizza.tvtrackerkotlin.R
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.FORMAT_DEFAULT
-import java.text.ParseException
+import io.reactivex.rxjava3.core.BackpressureStrategy
+import io.reactivex.rxjava3.core.Observable
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
 
@@ -14,9 +18,24 @@ fun String?.checkNull(context: Context): String? {
     else context.getString(R.string.no_data)
 }
 
-fun String.changeDateFormat(format: String?): String? {
-    return SimpleDateFormat(FORMAT_DEFAULT, Locale.getDefault())
+fun String.changeDateFormat(format:String): String? {
+    return SimpleDateFormat(format, Locale.getDefault())
         .format(LocalDate.parse(this, DateTimeFormatter.ISO_DATE))
+}
+
+fun String.parseToDate(format: String?): Date? {
+    return Date.from(
+        LocalDate.parse(this, DateTimeFormatter.ISO_DATE)
+            .atStartOfDay(ZoneId.systemDefault())
+            .toInstant()
+    )
+}
+
+fun String?.parseToLocalDate(): LocalDate {
+    var formatter =
+        DateTimeFormatter.ofPattern(FORMAT_DEFAULT)
+    formatter = formatter.withLocale(Locale.getDefault())
+    return LocalDate.parse(this, formatter)
 }
 
 fun Date?.convertToString(pattern: String): String {
@@ -36,5 +55,9 @@ fun String.translateStatus(): String {
         "Pilot" -> "Piloto"
         else -> "Sin datos"
     }
+}
+
+fun <T> Observable<T>.toLiveData(): LiveData<T> {
+    return LiveDataReactiveStreams.fromPublisher(this.toFlowable(BackpressureStrategy.LATEST))
 }
 
