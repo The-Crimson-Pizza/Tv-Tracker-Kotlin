@@ -45,13 +45,13 @@ class PeopleCreditsAdapter(
 
         fun bind(cast: MovieCredits.Cast, context: Context) = with(itemView) {
             itemView.titleBasic.text = cast.title
-            itemView.posterBasic.getImage(context, BASE_URL_IMAGES_POSTER + cast.posterPath)
+            itemView.posterBasicVertical.getImage(context, BASE_URL_IMAGES_POSTER + cast.posterPath)
             itemView.ratingBasic.text = cast.voteAverage.toString()
         }
 
         fun bind(cast: TvCredits.Cast, context: Context) = with(itemView) {
             itemView.titleBasic.text = cast.name
-            itemView.posterBasic.getImage(context, BASE_URL_IMAGES_POSTER + cast.posterPath)
+            itemView.posterBasicVertical.getImage(context, BASE_URL_IMAGES_POSTER + cast.posterPath)
             itemView.ratingBasic.text = cast.voteAverage.toString()
         }
     }

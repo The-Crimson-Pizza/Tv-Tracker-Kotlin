@@ -56,7 +56,7 @@ class ActorAdapter(val context: Context, val view: View, val person: PersonRespo
         includeView.bio_text.text = person.biography.checkNull(context)
 
         person.movieCredits?.cast?.let {
-            includeView.rv_movies.withMovieCreditsAdapter(
+            includeView.rv_movies.setMovieCreditsAdapter(
                 it, R.layout.lista_series_basic,
                 LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             ) { cast ->
@@ -70,7 +70,7 @@ class ActorAdapter(val context: Context, val view: View, val person: PersonRespo
         }
 
         person.tvCredits?.cast?.let {
-            includeView.rvSeries.withTvCreditsAdapter(
+            includeView.rvSeries.setTvCreditsAdapter(
                 it, R.layout.lista_series_basic,
                 LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             ) { cast ->
@@ -85,8 +85,8 @@ class ActorAdapter(val context: Context, val view: View, val person: PersonRespo
 
         }
 
-        if (person.movieCredits?.cast.isNullOrEmpty()) includeView.movieCreditsView.visibility =
-            View.GONE
+        if (person.movieCredits?.cast.isNullOrEmpty())
+            includeView.movieCreditsView.visibility = View.GONE
         else includeView.movieCreditsView.visibility = View.VISIBLE
 
         if (person.tvCredits?.cast.isNullOrEmpty()) includeView.tvCreditsView.visibility = View.GONE
@@ -112,7 +112,7 @@ class ActorAdapter(val context: Context, val view: View, val person: PersonRespo
     }
 
     private fun calculateAge(dead: Boolean): String {
-        var bornDateNew = ""
+        val bornDateNew: String
         var deathDateNew = ""
 
         if (person.isDead) {
