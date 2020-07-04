@@ -37,7 +37,7 @@ class SerieSearchFragment : Fragment() {
             showList, R.layout.lista_series_basic_vertical,
             GridLayoutManager(activity, 3)
         ) {
-            itemView.posterBasicVertical.getImagePortrait(
+            itemView.posterBasicTutorial.getImagePortrait(
                 requireContext(), it.posterPath.toString()
             )
             itemView.titleBasicVertical.text = it.name

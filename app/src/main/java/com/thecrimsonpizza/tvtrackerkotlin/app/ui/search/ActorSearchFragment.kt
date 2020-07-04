@@ -36,7 +36,7 @@ class ActorSearchFragment : Fragment() {
             personList, R.layout.lista_series_basic_vertical,
             GridLayoutManager(activity, 3)
         ) {
-            itemView.posterBasicVertical.getImagePortrait(
+            itemView.posterBasicTutorial.getImagePortrait(
                 requireContext(), it.profilePath.toString()
             )
             itemView.titleBasicVertical.text = it.name

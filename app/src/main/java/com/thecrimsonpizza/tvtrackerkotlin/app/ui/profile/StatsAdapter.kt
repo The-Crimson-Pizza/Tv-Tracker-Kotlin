@@ -16,7 +16,7 @@ class StatsAdapter(val context: Context) {
         var contEpisodes = 0
         for (show in followingList) {
             for (season in show.seasons) {
-                contEpisodes += season.episodes.count { it.visto }
+                contEpisodes += season.episodes.count { it.watched }
             }
         }
         return contEpisodes.toString()
@@ -44,7 +44,7 @@ class StatsAdapter(val context: Context) {
     fun mostWatchedTvShow(followingList: List<SerieResponse.Serie>): String? {
         val seriesMap = HashMap<String, Int>()
         for (tvShow in followingList)
-            seriesMap[tvShow.name] = tvShow.seasons.flatMap { it.episodes }.count { it.visto }
+            seriesMap[tvShow.name] = tvShow.seasons.flatMap { it.episodes }.count { it.watched }
         seriesMap.maxBy { it.value }?.key?.let {
             return it
         } ?: return EMPTY_STRING
@@ -53,7 +53,7 @@ class StatsAdapter(val context: Context) {
     fun countTimeEpisodesWatched(followingList: List<SerieResponse.Serie>): String? {
         var contTime = 0
         for (tvShow in followingList) {
-            contTime += (tvShow.seasons.flatMap { it.episodes }.filter { it.visto }
+            contTime += (tvShow.seasons.flatMap { it.episodes }.filter { it.watched }
                 .groupBy { it.id }
                 .mapValues { entry ->
                     entry.value

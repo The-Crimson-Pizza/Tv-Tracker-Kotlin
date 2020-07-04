@@ -24,7 +24,7 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_intro"
+        android:id="@+id/recyclerTutorial"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="5dp"

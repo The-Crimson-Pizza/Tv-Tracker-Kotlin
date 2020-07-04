@@ -60,7 +60,7 @@ class ActorAdapter(val context: Context, val view: View, val person: PersonRespo
                 it, R.layout.lista_series_basic,
                 LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             ) { cast ->
-                itemView.titleBasic.text = cast.title
+                itemView.titleBasicTutorial.text = cast.title
                 itemView.posterBasic.getImage(
                     context, BASE_URL_IMAGES_POSTER + cast.posterPath
                 )
@@ -74,7 +74,7 @@ class ActorAdapter(val context: Context, val view: View, val person: PersonRespo
                 it, R.layout.lista_series_basic,
                 LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             ) { cast ->
-                itemView.titleBasic.text = cast.name
+                itemView.titleBasicTutorial.text = cast.name
                 itemView.posterBasic.getImage(
                     context, BASE_URL_IMAGES_POSTER + cast.posterPath
                 )

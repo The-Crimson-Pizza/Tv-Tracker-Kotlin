@@ -6,7 +6,7 @@
     android:orientation="horizontal">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/card_view"
+        android:id="@+id/cardViewTutorial"
         android:layout_width="wrap_content"
         android:layout_height="235dp"
         android:layout_margin="4dp"
@@ -17,7 +17,7 @@
         <!--        android:foreground="?android:attr/selectableItemBackground"-->
 
         <ImageView
-            android:id="@+id/posterBasicVertical"
+            android:id="@+id/posterBasicTutorial"
             android:layout_width="120dp"
             android:layout_height="190dp"
             android:src="@drawable/default_poster"
@@ -31,7 +31,7 @@
             android:gravity="center">
 
             <TextView
-                android:id="@+id/titleBasic"
+                android:id="@+id/titleBasicTutorial"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"

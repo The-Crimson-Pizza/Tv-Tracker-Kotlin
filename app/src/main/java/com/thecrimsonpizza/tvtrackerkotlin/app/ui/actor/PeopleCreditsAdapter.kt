@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.thecrimsonpizza.tvtrackerkotlin.R
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.actor.MovieCredits
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.actor.TvCredits
-import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.getImage
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_POSTER
 import kotlinx.android.synthetic.main.lista_series_basic.view.*
 
@@ -44,13 +43,13 @@ class PeopleCreditsAdapter(
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(cast: MovieCredits.Cast, context: Context) = with(itemView) {
-            itemView.titleBasic.text = cast.title
+            itemView.titleBasicTutorial.text = cast.title
             itemView.posterBasicVertical.getImage(context, BASE_URL_IMAGES_POSTER + cast.posterPath)
             itemView.ratingBasic.text = cast.voteAverage.toString()
         }
 
         fun bind(cast: TvCredits.Cast, context: Context) = with(itemView) {
-            itemView.titleBasic.text = cast.name
+            itemView.titleBasicTutorial.text = cast.name
             itemView.posterBasicVertical.getImage(context, BASE_URL_IMAGES_POSTER + cast.posterPath)
             itemView.ratingBasic.text = cast.voteAverage.toString()
         }

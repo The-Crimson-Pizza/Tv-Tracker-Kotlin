@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,9 +25,7 @@ class HomeFragment : Fragment() {
         fun newInstance() = HomeFragment()
     }
 
-    private val homeViewModel: HomeViewModel by lazy {
-        ViewModelProvider(this@HomeFragment).get(HomeViewModel::class.java)
-    }
+    private val homeViewModel: HomeViewModel by activityViewModels()
 
     private val trendList = mutableListOf<BasicResponse.SerieBasic>()
     private val newList = mutableListOf<BasicResponse.SerieBasic>()
@@ -75,7 +73,7 @@ class HomeFragment : Fragment() {
             LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         ) { show ->
             itemView.posterBasic.getImage(requireContext(), show.posterPath)
-            itemView.titleBasic.text = show.name
+            itemView.titleBasicTutorial.text = show.name
             itemView.ratingBasic.text = show.voteAverage.toString()
             itemView.setOnClickListener { goToSerieFragment(it, it.id) }
         }
@@ -88,7 +86,7 @@ class HomeFragment : Fragment() {
             LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         ) { show ->
             itemView.posterBasic.getImage(requireContext(), show.posterPath.toString())
-            itemView.titleBasic.text = show.name
+            itemView.titleBasicTutorial.text = show.name
             itemView.ratingBasic.text = show.voteAverage.toString()
             itemView.setOnClickListener { goToSerieFragment(it, it.id) }
         }
