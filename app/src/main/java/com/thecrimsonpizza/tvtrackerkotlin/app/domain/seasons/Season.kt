@@ -9,7 +9,7 @@ class Season(
     var name: String?,
     var episodes: MutableList<Episode>,
     var overview: String?,
-    var visto: Boolean = false,
+//    var watched: Boolean = false,
     var watchedDate: Date?,
     @SerializedName("air_date") var airDate: String?,
     @SerializedName("poster_path") var posterPath: String?,
@@ -17,7 +17,14 @@ class Season(
     @SerializedName("episode_count") var episodeCount: Int?
 ) : Serializable {
 
-    fun sort(seasons: MutableList<Season>){
+    var watched: Boolean = false
+        set(value) {
+            field = value
+            watchedDate = if (watched) Date() else null
+        }
+
+
+    fun sort(seasons: MutableList<Season>) {
         seasons.sortedBy { it.seasonNumber }
         // todo - comprobar que funciona la ordenación
     }

@@ -4,9 +4,9 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import com.thecrimsonpizza.tvtrackerkotlin.app.domain.BasicResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.seasons.Episode
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.seasons.Season
+import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants
 import java.io.Serializable
 import java.util.*
 
@@ -27,10 +27,10 @@ class SerieResponse(
         var seasons: List<Season>,
         var video: VideoResponse.Video? = null,
         var added: Boolean = false,
-        var finished: Boolean = false,
+//        var finished: Boolean = false,
         var addedDate: Date? = null,
         var finishDate: Date? = null,
-        var lastEpisodeWatched: Episode? = null,
+        var lastEpisodeWatched: Episode?,
         @SerializedName("original_name") var originalName: String? = null,
         @SerializedName("first_air_date") var firstAirDate: String? = null,
         @SerializedName("last_air_date") var lastAirDate: String? = null,
@@ -49,6 +49,21 @@ class SerieResponse(
     ) : Serializable {
 
 
+        var finished: Boolean = false
+            set(value) {
+                field = value
+                finishDate = if (finished) Date() else null
+            }
+
+        fun mostWatchedTvShow(followingList: List<SerieResponse.Serie>): String? {
+            val seriesMap = HashMap<String, Int>()
+            for (tvShow in followingList)
+                seriesMap[tvShow.name] = tvShow.seasons.flatMap { it.episodes }.count { it.watched }
+            seriesMap.maxBy { it.value }?.key?.let {
+                return it
+            } ?: return GlobalConstants.EMPTY_STRING
+        }
+
         fun checkFav(seriesFavs: List<Serie>) {
             for (s in seriesFavs) {
                 if (id == s.id) {
@@ -62,27 +77,27 @@ class SerieResponse(
         private fun setSeasonWatched(serie: Serie) {
             var cont = 0
             for (i in serie.seasons!!.indices) {
-                seasons!![i].visto = serie.seasons!![i].visto
+                seasons!![i].watched = serie.seasons!![i].watched
                 seasons!![i].watchedDate = serie.seasons!![i].watchedDate
                 setEpisodeWatched(serie, i)
-                if (seasons!![i].visto) cont++
+                if (seasons!![i].watched) cont++
             }
             isSerieFinished(cont)
         }
 
         private fun setEpisodeWatched(serie: Serie, i: Int) {
             for (j in 0 until serie.seasons!![i].episodes.size) {
-                seasons[i].episodes.get(j).visto =
-                    serie.seasons!![i].episodes.get(j).visto
+                seasons[i].episodes.get(j).watched =
+                    serie.seasons!![i].episodes.get(j).watched
                 seasons!![i].episodes.get(j).watchedDate =
                     serie.seasons!![i].episodes.get(j).watchedDate
             }
             if (checkAllEpisodes(serie.seasons!![i].episodes)) {
-                seasons!![i].visto = true
+                seasons!![i].watched = true
                 seasons!![i].watchedDate =
                     getMaxDate(getDatesEpisodes(serie.seasons!![i].episodes))
             } else {
-                seasons!![i].visto = false
+                seasons!![i].watched = false
                 seasons!![i].watchedDate = null
             }
         }
@@ -100,7 +115,7 @@ class SerieResponse(
         private fun checkAllEpisodes(episodes: List<Episode>): Boolean {
             var cont = 0
             for (i in episodes.indices) {
-                if (episodes[i].visto) {
+                if (episodes[i].watched) {
                     cont++
                 }
             }

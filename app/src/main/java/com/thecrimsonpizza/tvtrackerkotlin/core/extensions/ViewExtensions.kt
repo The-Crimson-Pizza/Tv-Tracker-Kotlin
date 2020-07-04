@@ -2,9 +2,9 @@ package com.thecrimsonpizza.tvtrackerkotlin.core.extensions
 
 import android.text.TextUtils
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
-
+import com.thecrimsonpizza.tvtrackerkotlin.R
 
 
 fun TextView.setTextAndHideViewIfIsNeeded(text: String) {
@@ -20,4 +20,3 @@ fun TextView.setTextAndHideViewIfIsNeeded(text: String) {
 fun View.isVisible(): Boolean {
     return this.visibility == View.VISIBLE
 }
-

@@ -69,6 +69,8 @@ object GlobalConstants {
     const val TEXT_PLAIN = "text/plain";
     const val SEASON_EPISODE_FORMAT = "%02dx%02d - %s";
     const val YOUTUBE = "YouTube";
+    const val ES = "es-ES";
+
 
     const val EMPTY_STRING = ""
 
