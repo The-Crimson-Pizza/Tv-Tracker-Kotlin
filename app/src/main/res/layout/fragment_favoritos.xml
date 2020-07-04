@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/favoritos"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.otros.FavoritosFragment">
+    tools:context=".app.ui.following.FollowingFragment">
 
     <include layout="@layout/main_title" />
 
@@ -26,29 +27,59 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="end">
+            android:gravity="end"
+            android:orientation="horizontal">
 
-            <ImageButton
-                android:id="@+id/added_button"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_gravity="center"
-                android:layout_marginEnd="15dp"
-                android:background="@color/bgTotal"
-                android:foreground="?attr/selectableItemBackgroundBorderless"
-                android:scaleType="fitCenter"
-                android:src="@drawable/sort_recently" />
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:orientation="horizontal">
 
-            <ImageButton
-                android:id="@+id/name_button"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_gravity="end"
-                android:layout_marginEnd="15dp"
-                android:background="@color/bgTotal"
-                android:scaleType="fitCenter"
-                android:foreground="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/sort_name" />
+                <RadioButton
+                    android:id="@+id/radioSortAdded"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:checked="true"
+                    android:button="@drawable/radio_button_selector_added" />
+
+                <RadioButton
+                    android:id="@+id/radioSortWatched"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:button="@drawable/radio_button_selector_watched" />
+
+                <RadioButton
+                    android:id="@+id/radioSortAbc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:button="@drawable/radio_button_selector_abc" />
+            </RadioGroup>
+
+            <!--            <ImageButton-->
+            <!--                android:id="@+id/added_button"-->
+            <!--                android:layout_width="32dp"-->
+            <!--                android:layout_height="32dp"-->
+            <!--                android:layout_gravity="center"-->
+            <!--                android:layout_marginEnd="15dp"-->
+            <!--                android:background="@color/bgTotal"-->
+            <!--                android:foreground="?attr/selectableItemBackgroundBorderless"-->
+            <!--                android:scaleType="fitCenter"-->
+            <!--                android:src="@drawable/ic_sort_added_checked_32" />-->
+
+            <!--            <ImageButton-->
+            <!--                android:id="@+id/name_button"-->
+            <!--                android:layout_width="32dp"-->
+            <!--                android:layout_height="32dp"-->
+            <!--                android:layout_gravity="end"-->
+            <!--                android:layout_marginEnd="15dp"-->
+            <!--                android:background="@color/bgTotal"-->
+            <!--                android:foreground="?attr/selectableItemBackgroundBorderless"-->
+            <!--                android:scaleType="fitCenter"-->
+            <!--                android:src="@drawable/ic_sort_name_checked_32" />-->
             <!--<ImageButton
                 android:layout_width="32dp"
                 android:layout_height="32dp"
@@ -59,26 +90,34 @@
                 android:background="@color/almostWhite"
                 android:layout_marginEnd="15dp"/>-->
 
-            <ImageButton
-                android:id="@+id/watched_button"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_gravity="end"
-                android:layout_marginEnd="15dp"
-                android:background="@color/bgTotal"
-                android:scaleType="fitCenter"
-                android:foreground="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/sort_watched" />
+            <!--            <ImageButton-->
+            <!--                android:id="@+id/watched_button"-->
+            <!--                android:layout_width="32dp"-->
+            <!--                android:layout_height="32dp"-->
+            <!--                android:layout_gravity="end"-->
+            <!--                android:layout_marginEnd="15dp"-->
+            <!--                android:background="@color/bgTotal"-->
+            <!--                android:foreground="?attr/selectableItemBackgroundBorderless"-->
+            <!--                android:scaleType="fitCenter"-->
+            <!--                android:src="@drawable/ic_sort_watched_checked_32" />-->
 
-            <ImageButton
-                android:id="@+id/orientation_arrows"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_gravity="end"
-                android:scaleType="fitCenter"
-                android:src="@drawable/change_orientation_icon"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:layout_marginEnd="15dp" />
+            <CheckBox
+                android:id="@+id/checkboxSortDirection"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center"
+                android:button="@drawable/checkbox_selector_sort" />
+            <!--            -->
+            <!--            <ImageButton-->
+            <!--                android:id="@+id/orientation_arrows"-->
+            <!--                android:layout_width="32dp"-->
+            <!--                android:layout_height="32dp"-->
+            <!--                android:layout_gravity="end|center"-->
+            <!--                android:layout_marginEnd="15dp"-->
+            <!--                android:background="?attr/selectableItemBackgroundBorderless"-->
+            <!--                android:scaleType="fitCenter"-->
+            <!--                android:src="@drawable/ic_sort_unchecked_32" />-->
+            <!--            -->
         </LinearLayout>
 
     </LinearLayout>
@@ -87,6 +126,7 @@
         android:id="@+id/grid_favoritas"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" />
+        android:orientation="vertical"
+        tools:visibility="visible" />
 
 </LinearLayout>

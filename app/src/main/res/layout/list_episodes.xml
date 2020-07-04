@@ -145,7 +145,7 @@
                 android:padding="15dp">
 
                 <TextView
-                    android:id="@+id/next_episode"
+                    android:id="@+id/nextEpisodeNameExpandable"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"

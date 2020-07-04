@@ -30,7 +30,7 @@
                 app:cardCornerRadius="10dp">
 
                 <ImageView
-                    android:id="@+id/posterBasicVertical"
+                    android:id="@+id/posterFollowing"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/serie_poster_description"
@@ -46,7 +46,7 @@
                 android:padding="5dp">
 
                 <TextView
-                    android:id="@+id/serie_name"
+                    android:id="@+id/nameFollowing"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="2.5dp"
@@ -63,7 +63,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/episode_fecha"
+                        android:id="@+id/episodeFollowingDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -81,7 +81,7 @@
                     android:orientation="horizontal">
 
                     <ProgressBar
-                        android:id="@+id/progreso"
+                        android:id="@+id/followingProgress"
                         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                         android:layout_width="wrap_content"
                         android:layout_height="30dp"
@@ -90,7 +90,7 @@
                         android:theme="@style/Widget.AppCompat.ProgressBar.Horizontal.Personal" />
 
                     <TextView
-                        android:id="@+id/vistos"
+                        android:id="@+id/watchedEpisodesFollowing"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -123,7 +123,7 @@
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/next_episode_2"
+                            android:id="@+id/nextEpisodeName"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:ellipsize="marquee"
@@ -166,7 +166,7 @@
                 android:padding="20dp">
 
                 <TextView
-                    android:id="@+id/next_episode"
+                    android:id="@+id/nextEpisodeNameExpandable"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -191,10 +191,10 @@
                     style="@style/Widget.AppCompat.Button.Colored.Personal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="end"
                     android:layout_marginTop="20dp"
                     android:backgroundTint="@color/colorPrimary"
                     android:gravity="center"
-                    android:layout_gravity="end"
                     android:text="@string/next_episode_watched"
                     android:textColor="@color/bgTotal" />
             </LinearLayout>
