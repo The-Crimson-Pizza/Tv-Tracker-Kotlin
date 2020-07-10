@@ -6,15 +6,15 @@ import java.util.*
 
 class Season(
     var id: Int = 0,
-    var name: String?,
-    var episodes: MutableList<Episode>,
-    var overview: String?,
+    var name: String = "",
+    var episodes: MutableList<Episode> = mutableListOf(),
+    var overview: String = "",
 //    var watched: Boolean = false,
-    var watchedDate: Date?,
-    @SerializedName("air_date") var airDate: String?,
-    @SerializedName("poster_path") var posterPath: String?,
-    @SerializedName("season_number") var seasonNumber: Int,
-    @SerializedName("episode_count") var episodeCount: Int?
+    var watchedDate: Date? = null,
+    @SerializedName("air_date") var airDate: String = "",
+    @SerializedName("poster_path") var posterPath: String? = "",
+    @SerializedName("season_number") var seasonNumber: Int = 0,
+    @SerializedName("episode_count") var episodeCount: Int = 0
 ) : Serializable {
 
     var watched: Boolean = false
@@ -28,5 +28,4 @@ class Season(
         seasons.sortedBy { it.seasonNumber }
         // todo - comprobar que funciona la ordenación
     }
-
 }

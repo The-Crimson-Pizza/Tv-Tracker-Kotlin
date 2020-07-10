@@ -8,11 +8,7 @@ class PersonResponse: Serializable {
 
     @SerializedName("results")
     @Expose
-    var results: List<Person>? = null
-
-    fun PersonResponse(results: List<Person>?) {
-        this.results = results
-    }
+    lateinit var  results: List<Person>
 
     class Person(
         var id: Int,
@@ -20,14 +16,14 @@ class PersonResponse: Serializable {
         var birthday: String?,
         var deathday: String?,
         var gender: Int,
-        var biography: String?,
+        var biography: String,
         var homepage: String?,
         @SerializedName("place_of_birth") var placeOfBirth: String?,
         @SerializedName("profile_path") var profilePath: String?,
-        @SerializedName("known_for_department") var known: String?,
-        @SerializedName("tv_credits") var tvCredits: TvCredits?,
-        @SerializedName("movie_credits") var movieCredits: MovieCredits?,
-        @SerializedName("external_ids") var externalIds: ExternalIds?
+        @SerializedName("known_for_department") var known: String,
+        @SerializedName("tv_credits") var tvCredits: Credits,
+        @SerializedName("movie_credits") var movieCredits: Credits,
+        @SerializedName("external_ids") var externalIds: ExternalIds
     ) : Serializable {
 
         val isDead: Boolean

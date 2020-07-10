@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,10 +20,6 @@ import kotlinx.android.synthetic.main.lista_series_basic.view.*
 
 class HomeFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = HomeFragment()
-    }
-
     private val homeViewModel: HomeViewModel by activityViewModels()
 
     private val trendList = mutableListOf<BasicResponse.SerieBasic>()
@@ -38,24 +33,29 @@ class HomeFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         setBaseAdapter(gridTrend, trendList)
         setBaseAdapter(gridNew, newList)
         setFollowingAdapter(gridFollowing, followingList)
 
-        homeViewModel.getFollowingShows()?.observe(viewLifecycleOwner, Observer {
+
+/*
+  homeViewModel.getFollowingShows()?.observe(viewLifecycleOwner, Observer {
             refreshData(followingList, it, gridFollowing)
-        })
+        }) */
 
-        homeViewModel.getNewShows().observe(viewLifecycleOwner, Observer {
-            refreshData(newList, it.basicSeries, gridNew)
-        })
+//        homeViewModel.getNewShows().observe(viewLifecycleOwner, Observer {
+//            refreshData(newList, it.basicSeries, gridNew)
+//        })
 
-        homeViewModel.getTrendingShows().observe(viewLifecycleOwner, Observer {
-            refreshData(trendList, it.basicSeries, gridTrend)
-        })
+        /*        homeViewModel.getTrendingShows().observe(viewLifecycleOwner, Observer {
+                 refreshData(trendList, it.basicSeries, gridTrend)
+             })
+             */
+
+
     }
 
     private fun <T : Any> refreshData(

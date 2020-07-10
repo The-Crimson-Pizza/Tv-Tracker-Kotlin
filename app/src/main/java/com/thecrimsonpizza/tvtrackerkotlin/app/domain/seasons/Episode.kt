@@ -15,17 +15,17 @@ import java.io.Serializable
 import java.util.*
 
 class Episode(
-    var id: Int,
-    var name: String,
-    var overview: String,
+    var id: Int = 0,
+    var name: String = "",
+    var overview: String = "",
 //    var watched: Boolean = false,
-    var watchedDate: Date?,
-    @SerializedName("show_id") var showId: Int,
-    @SerializedName("air_date") var airDate: String,
-    @SerializedName("episode_number") var episodeNumber: Int,
-    @SerializedName("season_number") var seasonNumber: Int,
-    @SerializedName("still_path") var stillPath: String?,
-    @SerializedName("vote_average") var voteAverage: Float?
+    var watchedDate: Date? = null,
+    @SerializedName("show_id") var showId: Int = 0,
+    @SerializedName("air_date") var airDate: String = "",
+    @SerializedName("episode_number") var episodeNumber: Int = 0,
+    @SerializedName("season_number") var seasonNumber: Int = 0,
+    @SerializedName("still_path") var stillPath: String? = null,
+    @SerializedName("vote_average") var voteAverage: Float = 0f
 ) : Serializable {
 
     var watched: Boolean = false
@@ -34,7 +34,7 @@ class Episode(
             watchedDate = if (watched) Date() else null
         }
 
-    fun getUnwatchedOverview(context:Context, serie: SerieResponse.Serie):String{
+    fun getUnwatchedOverview(context: Context, serie: SerieResponse.Serie): String {
         return when {
             serie.checkEpisodesFinished() -> String.format(
                 context.getString(R.string.finished_date),
@@ -45,7 +45,8 @@ class Episode(
             else -> this.overview
         }
     }
-    fun getUnwatchedTitle(context:Context, serie: SerieResponse.Serie):String{
+
+    fun getUnwatchedTitle(context: Context, serie: SerieResponse.Serie): String {
         return when {
             serie.checkEpisodesFinished() -> context.getString(R.string.just_watch)
             this.name.isEmpty() -> context.getString(R.string.no_data)
@@ -54,7 +55,8 @@ class Episode(
                 SEASON_EPISODE_FORMAT,
                 this.seasonNumber,
                 this.episodeNumber,
-                this.name)
+                this.name
+            )
         }
     }
 

@@ -10,8 +10,8 @@ class BasicResponse(@SerializedName("results") @Expose var basicSeries: List<Ser
     class SerieBasic(
         val id: Int,
         val name: String,
-        @SerializedName("poster_path") val posterPath: String,
-        @SerializedName("vote_average") var voteAverage: Float = 0f
+        @SerializedName("poster_path") val posterPath: String?,
+        @SerializedName("vote_average") var voteAverage: Float
     ) : Parcelable {
 
         fun isFav(followingList: List<SerieBasic>): Boolean {
@@ -25,9 +25,10 @@ class BasicResponse(@SerializedName("results") @Expose var basicSeries: List<Ser
 
         override fun writeToParcel(dest: Parcel?, flags: Int) {
             dest?.let {
+                dest.writeInt(id)
                 dest.writeString(name)
                 dest.writeString(posterPath)
-                dest.writeInt(id)
+                dest.writeFloat(voteAverage)
             }
         }
 
@@ -44,7 +45,7 @@ class BasicResponse(@SerializedName("results") @Expose var basicSeries: List<Ser
         constructor(source: Parcel) : this(
             source.readInt(),
             source.readString().toString(),
-            source.readString().toString(),
+            source.readString(),
             source.readFloat()
         )
     }

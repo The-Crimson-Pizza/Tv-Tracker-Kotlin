@@ -4,50 +4,51 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import com.thecrimsonpizza.tvtrackerkotlin.app.domain.actor.Credits
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.seasons.Episode
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.seasons.Season
+import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.sort
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants
 import java.io.Serializable
 import java.util.*
 
 class SerieResponse(
-    @field:Expose @field:SerializedName("results") val results: List<Serie>
+    @Expose @SerializedName("results") val results: List<Serie> = listOf()
 ) {
 
     class Serie(
         var id: Int = 0,
-        var name: String,
-        var status: String? = null,
-        var homepage: String? = null,
-        var overview: String? = null,
-        var genres: List<Genre>? = null,
-        var networks: List<Network>? = null,
-        var credits: Credits? = null,
-        var similar: Similar? = null,
-        var seasons: List<Season>,
-        var video: VideoResponse.Video? = null,
+        var name: String = "",
+        var status: String = "",
+        var homepage: String = "",
+        var overview: String = "",
+        var genres: List<Genre> = listOf(),
+        var networks: List<Network> = listOf(),
+        var credits: Credits = Credits(),
+        var similar: Similar = Similar(),
+        var seasons: MutableList<Season> = mutableListOf(),
+        var video: VideoResponse.Video = VideoResponse.Video(),
         var added: Boolean = false,
 //        var finished: Boolean = false,
         var addedDate: Date? = null,
         var finishDate: Date? = null,
-        var lastEpisodeWatched: Episode?,
-        @SerializedName("original_name") var originalName: String? = null,
-        @SerializedName("first_air_date") var firstAirDate: String? = null,
-        @SerializedName("last_air_date") var lastAirDate: String? = null,
+        var lastEpisodeWatched: Episode = Episode(),
+        @SerializedName("original_name") var originalName: String = "",
+        @SerializedName("first_air_date") var firstAirDate: String = "",
+        @SerializedName("last_air_date") var lastAirDate: String = "",
         @SerializedName("poster_path") var posterPath: String? = null,
         @SerializedName("backdrop_path") var backdropPath: String? = null,
-        @SerializedName("episode_run_time") var episodeRunTime: List<Int>?,
+        @SerializedName("episode_run_time") var episodeRunTime: List<Int> = listOf(),
         @SerializedName("in_production") var inProduction: Boolean = false,
         @SerializedName("number_of_episodes") var numberOfEpisodes: Int = 0,
         @SerializedName("number_of_seasons") var numberOfSeasons: Int = 0,
-        @SerializedName("origin_country") var originCountry: List<String>? = null,
-        @SerializedName("original_language") var originalLanguage: String? = null,
-        @SerializedName("vote_average") var voteAverage: Float,
-        @SerializedName("external_ids") var externalIds: ExternalIds? = null,
+        @SerializedName("origin_country") var originCountry: List<String> = listOf(),
+        @SerializedName("original_language") var originalLanguage: String = "",
+        @SerializedName("vote_average") var voteAverage: Float = 0f,
+        @SerializedName("external_ids") var externalIds: ExternalIds = ExternalIds(),
         @SerializedName("next_episode_to_air") var nextEpisodeToAir: Episode? = null,
         @SerializedName("last_episode_to_air") var lastEpisodeToAir: Episode? = null
     ) : Serializable {
-
 
         var finished: Boolean = false
             set(value) {
@@ -55,7 +56,13 @@ class SerieResponse(
                 finishDate = if (finished) Date() else null
             }
 
-        fun mostWatchedTvShow(followingList: List<SerieResponse.Serie>): String? {
+        fun withSeasons(seasonsList: MutableList<Season>, serie: Serie): Serie {
+            serie.seasons = seasonsList
+            serie.seasons.sort()
+            return serie
+        }
+
+        fun mostWatchedTvShow(followingList: List<Serie>): String? {
             val seriesMap = HashMap<String, Int>()
             for (tvShow in followingList)
                 seriesMap[tvShow.name] = tvShow.seasons.flatMap { it.episodes }.count { it.watched }
@@ -64,46 +71,47 @@ class SerieResponse(
             } ?: return GlobalConstants.EMPTY_STRING
         }
 
-        fun checkFav(seriesFavs: List<Serie>) {
-            for (s in seriesFavs) {
-                if (id == s.id) {
-                    added = true
-                    setSeasonWatched(s)
-                    break
-                }
-            }
+        fun checkFav(followingList: List<Serie>) {
+            followingList.first { it.id == this.id }.also { setSeasonWatched(it) }.added = true
+//            for (s in seriesFavs) {
+////                if (id == s.id) {
+////                    added = true
+////                    setSeasonWatched(s)
+////                    break
+////                }
+////            }
         }
 
         private fun setSeasonWatched(serie: Serie) {
             var cont = 0
-            for (i in serie.seasons!!.indices) {
-                seasons!![i].watched = serie.seasons!![i].watched
-                seasons!![i].watchedDate = serie.seasons!![i].watchedDate
+            for (i in serie.seasons.indices) {
+                seasons[i].watched = serie.seasons[i].watched
+                seasons[i].watchedDate = serie.seasons[i].watchedDate
                 setEpisodeWatched(serie, i)
-                if (seasons!![i].watched) cont++
+                if (seasons[i].watched) cont++
             }
             isSerieFinished(cont)
         }
 
         private fun setEpisodeWatched(serie: Serie, i: Int) {
-            for (j in 0 until serie.seasons!![i].episodes.size) {
-                seasons[i].episodes.get(j).watched =
-                    serie.seasons!![i].episodes.get(j).watched
-                seasons!![i].episodes.get(j).watchedDate =
-                    serie.seasons!![i].episodes.get(j).watchedDate
+            for (j in 0 until serie.seasons[i].episodes.size) {
+                seasons[i].episodes[j].watched =
+                    serie.seasons[i].episodes[j].watched
+                seasons[i].episodes[j].watchedDate =
+                    serie.seasons[i].episodes[j].watchedDate
             }
-            if (checkAllEpisodes(serie.seasons!![i].episodes)) {
-                seasons!![i].watched = true
-                seasons!![i].watchedDate =
-                    getMaxDate(getDatesEpisodes(serie.seasons!![i].episodes))
+            if (checkAllEpisodes(serie.seasons[i].episodes)) {
+                seasons[i].watched = true
+                seasons[i].watchedDate =
+                    getMaxDate(getDatesEpisodes(serie.seasons[i].episodes))
             } else {
-                seasons!![i].watched = false
-                seasons!![i].watchedDate = null
+                seasons[i].watched = false
+                seasons[i].watchedDate = null
             }
         }
 
         private fun isSerieFinished(cont: Int) {
-            if (seasons!!.size == cont) {
+            if (seasons.size == cont) {
                 finished = true
                 finishDate = getMaxDate(getDatesSeason(seasons))
             } else {
@@ -128,7 +136,7 @@ class SerieResponse(
             } else Collections.max(datesList)
         }
 
-        fun getDatesEpisodes(episodes: List<Episode>): List<Date> {
+        private fun getDatesEpisodes(episodes: List<Episode>): List<Date> {
             val dates: MutableList<Date> =
                 ArrayList()
             for (e in episodes) {
@@ -160,8 +168,8 @@ class SerieResponse(
         }
 
         class Genre(
-            var id: Int,
-            var name: String
+            var id: Int = 0,
+            var name: String = ""
         ) : Parcelable {
 
             override fun writeToParcel(dest: Parcel?, flags: Int) {
@@ -188,8 +196,9 @@ class SerieResponse(
         }
 
         class Network(
-            var id: Int, var name: String,
-            @SerializedName("logo_path") var logoPath: String
+            var id: Int = 0,
+            var name: String = "",
+            @SerializedName("logo_path") var logoPath: String? = ""
         ) : Parcelable {
 
 

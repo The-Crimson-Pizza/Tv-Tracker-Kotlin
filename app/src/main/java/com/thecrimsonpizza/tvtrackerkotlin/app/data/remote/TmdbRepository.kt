@@ -2,9 +2,9 @@ package com.thecrimsonpizza.tvtrackerkotlin.app.data.remote
 
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.BasicResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.actor.PersonResponse
+import com.thecrimsonpizza.tvtrackerkotlin.app.domain.seasons.Season
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.VideoResponse
-import com.thecrimsonpizza.tvtrackerkotlin.app.ui.BaseFragment
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.GET_PEOPLE_API_EXTRAS
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.GET_SERIE_API_EXTRAS
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.MADRID
@@ -12,7 +12,6 @@ import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.POP_DESC
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.TRAILER
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.YOUTUBE
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.Util
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.BiFunction
@@ -52,10 +51,24 @@ object TmdbRepository {
         )
     }
 
-    fun getSeasons(idSerie: Int, firstSeason: Int, numSeasons: Int): Single<MutableList<Any>> {
-        return Observable.range(firstSeason, numSeasons)
-            .observeOn(AndroidSchedulers.mainThread())
-            .flatMap<Any> { i: Int ->
+    fun getSerieWithSeasons(id: Int): Observable<SerieResponse.Serie> {
+        return getSerie(id)
+            .flatMap { serie ->
+                getSeasons(id, serie.numberOfSeasons).map {
+                    serie.withSeasons(
+                        it,
+                        serie
+                    )
+                }.toObservable()
+            }
+    }
+
+    fun getSeasons(
+        idSerie: Int,
+        numSeasons: Int
+    ): Single<MutableList<Season>> {
+        return Observable.range(1, numSeasons)
+            .flatMap { i: Int ->
                 request.getSeason(idSerie, i, language)
             }.toList()
     }

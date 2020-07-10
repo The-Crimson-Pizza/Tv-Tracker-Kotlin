@@ -9,9 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.thecrimsonpizza.tvtrackerkotlin.R
-import com.thecrimsonpizza.tvtrackerkotlin.app.domain.actor.MovieCredits
+import com.thecrimsonpizza.tvtrackerkotlin.app.domain.actor.Credits
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.actor.PersonResponse
-import com.thecrimsonpizza.tvtrackerkotlin.app.domain.actor.TvCredits
 import com.thecrimsonpizza.tvtrackerkotlin.app.ui.webview.WebViewActivity
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.*
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_PORTRAIT
@@ -27,7 +26,11 @@ import kotlinx.android.synthetic.main.lista_series_basic.view.*
 import java.time.LocalDate
 import java.time.Period
 
-class ActorAdapter(val context: Context, val view: View, val person: PersonResponse.Person) {
+class ActorAdapter(
+    val context: Context,
+    val view: View,
+    private val person: PersonResponse.Person
+) {
 
     /**
      * Fills the data obtained by the api in the ActorFragment
@@ -55,8 +58,8 @@ class ActorAdapter(val context: Context, val view: View, val person: PersonRespo
         includeView.lugar_actor.text = person.placeOfBirth.checkNull(context)
         includeView.bio_text.text = person.biography.checkNull(context)
 
-        person.movieCredits?.cast?.let {
-            includeView.rv_movies.setMovieCreditsAdapter(
+        person.movieCredits.cast.let {
+            includeView.rv_movies.setTvCreditsAdapter(
                 it, R.layout.lista_series_basic,
                 LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             ) { cast ->
@@ -94,7 +97,7 @@ class ActorAdapter(val context: Context, val view: View, val person: PersonRespo
 
     }
 
-    private fun goToTmdbMovie(movie: MovieCredits.Cast, context: Context, view: View) {
+    private fun goToTmdbMovie(movie: Credits.Cast, context: Context, view: View) {
         Snackbar.make(view, "Ver ficha técnica", BaseTransientBottomBar.LENGTH_LONG)
             .setAction(R.string.open_web) {
                 context.startActivity(
@@ -105,7 +108,7 @@ class ActorAdapter(val context: Context, val view: View, val person: PersonRespo
             }.show()
     }
 
-    private fun goToSerie(serie: TvCredits.Cast, view: View) {
+    private fun goToSerie(serie: Credits.Cast, view: View) {
         val bundle = Bundle()
         bundle.putInt(ID_SERIE, serie.id)
         Navigation.findNavController(view).navigate(R.id.action_actores_to_series, bundle)

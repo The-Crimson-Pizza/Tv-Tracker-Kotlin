@@ -6,12 +6,12 @@ import java.io.Serializable
 
 class Similar : Serializable {
     @Expose
-    var results: List<Result>? = null
+    var results: MutableList<Result> = mutableListOf()
 
     class Result(
-        var id: Int,
-        var name: String,
-        var popularity: Float,
-        @SerializedName("original_name") var originalName: String?
+        var id: Int = 0,
+        var name: String = "",
+        var popularity: Float = 0f,
+        @SerializedName("original_name") var originalName: String = ""
     ) : Serializable
 }

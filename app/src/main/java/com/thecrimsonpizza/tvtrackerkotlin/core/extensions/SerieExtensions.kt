@@ -8,7 +8,7 @@ import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
 import java.util.*
 
 
-fun List<Season>.sort(){
+fun List<Season>.sort() {
     this.sortedWith(nullsLast(compareBy { it.seasonNumber }))
 }
 
@@ -17,19 +17,18 @@ fun List<SerieResponse.Serie>.setLastWatched() {
         tvShow.lastEpisodeWatched = tvShow.seasons
             .flatMap { it.episodes }
             .filter { it.watchedDate != null }
-            .maxBy { it.watchedDate.toString() }
+            .maxBy { it.watchedDate.toString() }!!
 }
 
 fun List<SerieResponse.Serie>.saveToFirebase() {
     FirebaseDatabaseRealtime(FirebaseAuth.getInstance().currentUser).setSeriesFav(this)
 }
 
-
 fun SerieResponse.Serie.countEpisodesWatched(): Int {
     return this.seasons.flatMap { it.episodes }.count { it.watched }
 }
 
-fun SerieResponse.Serie.getLastUnwatched():Episode? {
+fun SerieResponse.Serie.getLastUnwatched(): Episode? {
     this.seasons.sort()
     for (s in this.seasons) {
         for (e in s.episodes) {
@@ -49,8 +48,8 @@ fun SerieResponse.Serie.checkSeasonsFinished(): Boolean =
 fun SerieResponse.Serie.checkEpisodesFinished(): Boolean =
     this.seasons.flatMap { it.episodes }.all { it.watched }
 
-fun SerieResponse.Serie.checkEpisodesBySeasonFinished(): Boolean =
-    this.seasons.flatMap { it.episodes }.all { it.watched }
+fun SerieResponse.Serie.checkEpisodesInSeasonFinished(pos: Int): Boolean =
+    this.seasons.filter { it.id == this.seasons[pos].id }.flatMap { it.episodes }.all { it.watched }
 
 fun SerieResponse.Serie.watchEpisode(
     list: List<SerieResponse.Serie>,
@@ -69,3 +68,25 @@ fun SerieResponse.Serie.watchEpisode(
 
     list.saveToFirebase()
 }
+
+fun Episode.markAsWatched(watched: Boolean = true) {
+    this.watched = watched
+    this.watchedDate = if (watched) Date() else null
+}
+
+fun Season.markAsWatched(watched: Boolean = true) {
+    this.watched = watched
+    this.watchedDate = if (watched) Date() else null
+
+    this.episodes.forEach {
+        it.watched = watched
+        it.watchedDate = if (watched) Date() else null
+    }
+}
+
+fun SerieResponse.Serie.markAsWatched(watched: Boolean = true) {
+    this.finished = watched
+    this.finishDate = if (watched) Date() else null
+}
+
+

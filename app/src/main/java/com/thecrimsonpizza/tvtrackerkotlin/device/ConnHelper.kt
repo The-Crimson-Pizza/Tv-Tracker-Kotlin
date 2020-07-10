@@ -6,11 +6,8 @@ import android.net.NetworkInfo
 import android.net.NetworkRequest
 import android.os.Build
 import androidx.lifecycle.LiveData
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class ConnectionHelper @Inject constructor(private val cm: ConnectivityManager) : LiveData<Boolean>() {
+class ConnHelper  constructor(private val cm: ConnectivityManager) : LiveData<Boolean>() {
 
     private val networkCallback = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network?) = postValue(true)

@@ -3,9 +3,10 @@ package com.thecrimsonpizza.tvtrackerkotlin.core.extensions
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
+import androidx.lifecycle.MutableLiveData
 import com.thecrimsonpizza.tvtrackerkotlin.R
-import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.FORMAT_DEFAULT
+import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.FORMAT_MINUTES
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Observable
 import java.text.SimpleDateFormat
@@ -19,17 +20,21 @@ fun String?.checkNull(context: Context): String? {
     else context.getString(R.string.no_data)
 }
 
-fun String.changeDateFormat(format:String): String? {
+fun String.changeDateFormat(format: String): String? {
     return SimpleDateFormat(format, Locale.getDefault())
         .format(LocalDate.parse(this, DateTimeFormatter.ISO_DATE))
 }
 
-fun String.parseToDate(format: String?): Date? {
+fun String.parseToDate(): Date? {
     return Date.from(
         LocalDate.parse(this, DateTimeFormatter.ISO_DATE)
             .atStartOfDay(ZoneId.systemDefault())
             .toInstant()
     )
+}
+
+fun Int.getMinutes(): String {
+    return String.format(Locale.getDefault(), FORMAT_MINUTES, this, 0)
 }
 
 fun String?.parseToLocalDate(): LocalDate {
@@ -61,3 +66,5 @@ fun String.translateStatus(): String {
 fun <T> Observable<T>.toLiveData(): LiveData<T> {
     return LiveDataReactiveStreams.fromPublisher(this.toFlowable(BackpressureStrategy.LATEST))
 }
+
+fun <T : Any?> MutableLiveData<T>.withDefault(initialValue: T) = apply { setValue(initialValue) }

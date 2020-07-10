@@ -6,15 +6,14 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.thecrimsonpizza.tvtrackerkotlin.R
-import de.hdodenhof.circleimageview.CircleImageView
 
-fun ImageView.getImage(context: Context, url: String) {
+fun ImageView.getImage(context: Context, url: String?) {
     Glide.with(context).load(url)
         .apply(
             RequestOptions()
                 .placeholder(R.drawable.loading_poster)
                 .error(R.drawable.default_poster)
-                .centerCrop()
+//                .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
         )
         .into(this)
