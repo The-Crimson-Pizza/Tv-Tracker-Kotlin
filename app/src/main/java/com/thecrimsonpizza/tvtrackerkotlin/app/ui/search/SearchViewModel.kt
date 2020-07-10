@@ -6,34 +6,45 @@ import androidx.lifecycle.ViewModel
 import com.thecrimsonpizza.tvtrackerkotlin.app.data.remote.TmdbRepository
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.actor.PersonResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
-import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.toLiveData
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
 
 class SearchViewModel : ViewModel() {
-    private val query = MutableLiveData<String>()
-    private lateinit var searchPersonList: LiveData<PersonResponse>
-    private lateinit var searchShowList: LiveData<SerieResponse>
+
+    private var searchPersonList= MutableLiveData<PersonResponse>()
+    private var searchShowList = MutableLiveData<SerieResponse>()
+    private var query = MutableLiveData<String>()
+
 
     fun setQuery(value: String) {
         query.value = value
     }
-
-    fun getQuery(): LiveData<String>? {
+    fun getQuery():LiveData<String>{
         return query
     }
 
-    fun initPersonSearch(query: String) {
-        searchPersonList = TmdbRepository.searchPerson(query).toLiveData()
-    }
 
+    fun setPersonList(query: String) {
+        TmdbRepository.searchPerson(query)
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnError(Throwable::printStackTrace)
+            .subscribe {
+                searchPersonList.value = it
+            }
+    }
     fun getPersonList(): LiveData<PersonResponse> {
         return searchPersonList
     }
 
-    fun initShowSearch(query: String) {
-        searchShowList = TmdbRepository.searchSerie(query).toLiveData()
-    }
 
+    fun setShowList(query: String) {
+        TmdbRepository.searchSerie(query)
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnError(Throwable::printStackTrace)
+            .subscribe {
+                searchShowList.value = it
+            }
+    }
     fun getShowList(): LiveData<SerieResponse> {
         return searchShowList
     }
