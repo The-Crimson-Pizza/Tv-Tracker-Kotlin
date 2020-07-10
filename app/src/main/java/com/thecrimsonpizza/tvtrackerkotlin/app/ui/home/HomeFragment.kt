@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -14,6 +15,7 @@ import com.thecrimsonpizza.tvtrackerkotlin.app.domain.BasicResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.getImage
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.setBaseAdapter
+import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_POSTER
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.ID_SERIE
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.lista_series_basic.view.*
@@ -46,14 +48,13 @@ class HomeFragment : Fragment() {
             refreshData(followingList, it, gridFollowing)
         }) */
 
-//        homeViewModel.getNewShows().observe(viewLifecycleOwner, Observer {
-//            refreshData(newList, it.basicSeries, gridNew)
-//        })
+        homeViewModel.getNewShows().observe(viewLifecycleOwner, Observer {
+            refreshData(newList, it.basicSeries, gridNew)
+        })
 
-        /*        homeViewModel.getTrendingShows().observe(viewLifecycleOwner, Observer {
-                 refreshData(trendList, it.basicSeries, gridTrend)
-             })
-             */
+        homeViewModel.getTrendingShows().observe(viewLifecycleOwner, Observer {
+            refreshData(trendList, it.basicSeries, gridTrend)
+        })
 
 
     }
@@ -72,7 +73,7 @@ class HomeFragment : Fragment() {
             R.layout.lista_series_basic,
             LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         ) { show ->
-            itemView.posterBasic.getImage(requireContext(), show.posterPath)
+            itemView.posterBasic.getImage(requireContext(), BASE_URL_IMAGES_POSTER + show.posterPath)
             itemView.titleBasicTutorial.text = show.name
             itemView.ratingBasic.text = show.voteAverage.toString()
             itemView.setOnClickListener { goToSerieFragment(it, it.id) }
@@ -85,7 +86,7 @@ class HomeFragment : Fragment() {
             R.layout.lista_series_basic,
             LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         ) { show ->
-            itemView.posterBasic.getImage(requireContext(), show.posterPath.toString())
+            itemView.posterBasic.getImage(requireContext(), BASE_URL_IMAGES_POSTER +show.posterPath.toString())
             itemView.titleBasicTutorial.text = show.name
             itemView.ratingBasic.text = show.voteAverage.toString()
             itemView.setOnClickListener { goToSerieFragment(it, it.id) }
@@ -97,6 +98,4 @@ class HomeFragment : Fragment() {
         bundle.putInt(ID_SERIE, id)
         Navigation.findNavController(view).navigate(R.id.action_home_to_series, bundle)
     }
-
-
 }

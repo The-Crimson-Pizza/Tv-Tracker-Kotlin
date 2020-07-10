@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         startPos = 0
         setNavigationView()
 
-        getFavorites()
+//        getFavorites()
 
     }
 
