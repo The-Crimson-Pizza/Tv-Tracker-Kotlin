@@ -31,17 +31,16 @@ object TmdbRepository {
         return request.getNewSeries(2020, language, POP_DESC)
     }
 
-    fun getSerie(idSerie: Int): Observable<SerieResponse.Serie> {
+    private fun getSerie(idSerie: Int): Observable<SerieResponse.Serie> {
         val obsSerie: Observable<SerieResponse.Serie> =
             request.getSerie(idSerie, language, GET_SERIE_API_EXTRAS)
-        val obsVideo: Observable<VideoResponse> =
-            request.getTrailer(idSerie)
-        return Observable.zip<SerieResponse.Serie, VideoResponse, SerieResponse.Serie>(obsSerie,
-            obsVideo,
-            BiFunction<SerieResponse.Serie, VideoResponse, SerieResponse.Serie> { serie: SerieResponse.Serie, videosResponse: VideoResponse ->
+        val obsVideo: Observable<VideoResponse> = request.getTrailer(idSerie)
+        return Observable.zip<SerieResponse.Serie, VideoResponse, SerieResponse.Serie>(
+            obsSerie, obsVideo, BiFunction<SerieResponse.Serie, VideoResponse, SerieResponse.Serie>
+            { serie: SerieResponse.Serie, videosResponse: VideoResponse ->
                 val trailers: List<VideoResponse.Video> = videosResponse.results
                 for (v in trailers) {
-                    if (v.type.equals(TRAILER) && v.site.equals(YOUTUBE)) {
+                    if (v.type == TRAILER && v.site == YOUTUBE) {
                         serie.video = v
                         break
                     }
@@ -55,18 +54,12 @@ object TmdbRepository {
         return getSerie(id)
             .flatMap { serie ->
                 getSeasons(id, serie.numberOfSeasons).map {
-                    serie.withSeasons(
-                        it,
-                        serie
-                    )
+                    serie.withSeasons(it, serie)
                 }.toObservable()
             }
     }
 
-    fun getSeasons(
-        idSerie: Int,
-        numSeasons: Int
-    ): Single<MutableList<Season>> {
+    private fun getSeasons(idSerie: Int, numSeasons: Int): Single<MutableList<Season>> {
         return Observable.range(1, numSeasons)
             .flatMap { i: Int ->
                 request.getSeason(idSerie, i, language)

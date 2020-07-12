@@ -7,7 +7,7 @@ class VideoResponse(
     @Expose val results: List<Video> = listOf()
 ) : Serializable {
 
-    class Video(
+    data class Video(
         val key: String = "",
         val site: String = "",
         val type: String = ""

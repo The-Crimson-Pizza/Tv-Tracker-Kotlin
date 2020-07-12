@@ -5,6 +5,7 @@ import android.view.View
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.gson.annotations.SerializedName
 import com.thecrimsonpizza.tvtrackerkotlin.R
+import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.Following
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.checkEpisodesFinished
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.convertToString
@@ -14,12 +15,12 @@ import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.SEASON_EPI
 import java.io.Serializable
 import java.util.*
 
-class Episode(
+data class Episode(
     var id: Int = 0,
     var name: String = "",
     var overview: String = "",
-//    var watched: Boolean = false,
-    var watchedDate: Date? = null,
+    var followingData: Following = Following(),
+
     @SerializedName("show_id") var showId: Int = 0,
     @SerializedName("air_date") var airDate: String = "",
     @SerializedName("episode_number") var episodeNumber: Int = 0,
@@ -28,18 +29,12 @@ class Episode(
     @SerializedName("vote_average") var voteAverage: Float = 0f
 ) : Serializable {
 
-    var watched: Boolean = false
-        set(value) {
-            field = value
-            watchedDate = if (watched) Date() else null
-        }
-
     fun getUnwatchedOverview(context: Context, serie: SerieResponse.Serie): String {
         return when {
             serie.checkEpisodesFinished() -> String.format(
                 context.getString(R.string.finished_date),
-                serie.finishDate.convertToString(GlobalConstants.FORMAT_LONG),
-                serie.finishDate.convertToString(GlobalConstants.FORMAT_HOURS)
+                serie.followingData.watchedDate.convertToString(GlobalConstants.FORMAT_LONG),
+                serie.followingData.watchedDate.convertToString(GlobalConstants.FORMAT_HOURS)
             )
             this.overview.isEmpty() -> context.getString(R.string.no_data)
             else -> this.overview
@@ -66,16 +61,16 @@ class Episode(
         favs: List<SerieResponse.Serie>,
         watchedCheck: MaterialCheckBox
     ) {
-        if (serie.added) {
+        if (serie.followingData.added) {
             watchedCheck.visibility = View.VISIBLE
-            watchedCheck.isChecked = episode.watched
+            watchedCheck.isChecked = episode.followingData.watched
             watchedCheck.setOnCheckedChangeListener { _: View, isChecked: Boolean ->
                 if (isChecked) {
-                    if (!episode.watched) {
+                    if (!episode.followingData.watched) {
                         serie.watchEpisode(favs, true)
                     }
                 } else {
-                    if (episode.watched) {
+                    if (episode.followingData.watched) {
                         serie.watchEpisode(favs, false)
                     }
                 }

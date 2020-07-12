@@ -4,12 +4,9 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
-class Credits : Serializable {
+data class Credits(@Expose var cast: List<Cast> = mutableListOf()) : Serializable {
 
-    @Expose
-    lateinit var cast: List<Cast>
-
-    class Cast(
+    data class Cast(
         var id: Int = 0,
         var name: String = "",
         var character: String = "",
@@ -21,7 +18,7 @@ class Credits : Serializable {
 
         @SerializedName("profile_path") var profilePath: String? = null,
 
-        var title: String="",
+        var title: String = "",
         @SerializedName("original_title") var originalTitle: String = "",
         @SerializedName("release_date") var releaseDate: String = ""
 

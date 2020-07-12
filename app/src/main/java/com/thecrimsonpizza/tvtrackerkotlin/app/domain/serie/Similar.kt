@@ -4,11 +4,9 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
-class Similar : Serializable {
-    @Expose
-    var results: MutableList<Result> = mutableListOf()
+data class Similar(@Expose var results: MutableList<Result> = mutableListOf()) : Serializable {
 
-    class Result(
+    data class Result(
         var id: Int = 0,
         var name: String = "",
         var popularity: Float = 0f,

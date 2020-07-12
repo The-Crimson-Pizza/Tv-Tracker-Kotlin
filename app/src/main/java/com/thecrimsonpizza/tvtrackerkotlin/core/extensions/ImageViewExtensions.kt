@@ -14,8 +14,9 @@ fun ImageView.getImage(context: Context, url: String?) {
                 .placeholder(R.drawable.loading_poster)
                 .error(R.drawable.default_poster)
 //                .centerCrop()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
         )
+        .dontAnimate()
         .into(this)
 }
 
@@ -26,13 +27,15 @@ fun ImageView.getImagePortrait(context: Context, url: String) {
                 .placeholder(R.drawable.loading_poster)
                 .error(R.drawable.default_portrait_big)
 //                .centerCrop()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
         )
+        .dontAnimate()
         .into(this)
 }
 
 fun ImageView.getImageNoPlaceholder(context: Context, url: String) {
     Glide.with(context)
         .load(url)
+        .dontAnimate()
         .into(this)
 }

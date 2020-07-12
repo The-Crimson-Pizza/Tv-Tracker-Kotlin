@@ -16,8 +16,8 @@ fun List<SerieResponse.Serie>.setLastWatched() {
     for (tvShow in this)
         tvShow.lastEpisodeWatched = tvShow.seasons
             .flatMap { it.episodes }
-            .filter { it.watchedDate != null }
-            .maxBy { it.watchedDate.toString() }!!
+            .filter { it.followingData.watchedDate != null }
+            .maxBy { it.followingData.watchedDate.toString() }!!
 }
 
 fun List<SerieResponse.Serie>.saveToFirebase() {
@@ -25,14 +25,14 @@ fun List<SerieResponse.Serie>.saveToFirebase() {
 }
 
 fun SerieResponse.Serie.countEpisodesWatched(): Int {
-    return this.seasons.flatMap { it.episodes }.count { it.watched }
+    return this.seasons.flatMap { it.episodes }.count { it.followingData.watched }
 }
 
 fun SerieResponse.Serie.getLastUnwatched(): Episode? {
     this.seasons.sort()
     for (s in this.seasons) {
         for (e in s.episodes) {
-            if (!e.watched) return e
+            if (!e.followingData.watched) return e
         }
     }
     return null
@@ -43,13 +43,14 @@ fun SerieResponse.Serie.getProgress(): Int {
 }
 
 fun SerieResponse.Serie.checkSeasonsFinished(): Boolean =
-    this.seasons.all { it.watched }
+    this.seasons.all { it.followingData.watched }
 
 fun SerieResponse.Serie.checkEpisodesFinished(): Boolean =
-    this.seasons.flatMap { it.episodes }.all { it.watched }
+    this.seasons.flatMap { it.episodes }.all { it.followingData.watched }
 
 fun SerieResponse.Serie.checkEpisodesInSeasonFinished(pos: Int): Boolean =
-    this.seasons.filter { it.id == this.seasons[pos].id }.flatMap { it.episodes }.all { it.watched }
+    this.seasons.filter { it.id == this.seasons[pos].id }.flatMap { it.episodes }
+        .all { it.followingData.watched }
 
 fun SerieResponse.Serie.watchEpisode(
     list: List<SerieResponse.Serie>,
@@ -57,36 +58,36 @@ fun SerieResponse.Serie.watchEpisode(
 ) {
     val episode: Episode? = this.getLastUnwatched()
     list.filter { it.id == this.id }.flatMap { it.seasons }
-        .first { it.id == episode?.id }.watched = isWatched
+        .first { it.id == episode?.id }.followingData.watched = isWatched
     list.filter { it.id == this.id }.flatMap { it.seasons }
-        .first { it.id == episode?.id }.watchedDate = Date()
+        .first { it.id == episode?.id }.followingData.watchedDate = Date()
 
     list.filter { it.id == this.id }.flatMap { it.seasons }
-        .forEach { it.watched = list[list.indexOf(this)].checkEpisodesFinished() }
+        .forEach { it.followingData.watched = list[list.indexOf(this)].checkEpisodesFinished() }
     list.filter { it.id == this.id }
-        .forEach { it.finished = list[list.indexOf(this)].checkSeasonsFinished() }
+        .forEach { it.followingData.watched = list[list.indexOf(this)].checkSeasonsFinished() }
 
     list.saveToFirebase()
 }
 
 fun Episode.markAsWatched(watched: Boolean = true) {
-    this.watched = watched
-    this.watchedDate = if (watched) Date() else null
+    this.followingData.watched = watched
+    this.followingData.watchedDate = if (watched) Date() else null
 }
 
 fun Season.markAsWatched(watched: Boolean = true) {
-    this.watched = watched
-    this.watchedDate = if (watched) Date() else null
+    this.followingData.watched = watched
+    this.followingData.watchedDate = if (watched) Date() else null
 
     this.episodes.forEach {
-        it.watched = watched
-        it.watchedDate = if (watched) Date() else null
+        it.followingData.watched = watched
+        it.followingData.watchedDate = if (watched) Date() else null
     }
 }
 
 fun SerieResponse.Serie.markAsWatched(watched: Boolean = true) {
-    this.finished = watched
-    this.finishDate = if (watched) Date() else null
+    this.followingData.watched = watched
+    this.followingData.watchedDate = if (watched) Date() else null
 }
 
 

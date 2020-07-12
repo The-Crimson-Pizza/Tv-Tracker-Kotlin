@@ -15,14 +15,19 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
 
+
 fun String?.checkNull(context: Context): String? {
     return if (!this.isNullOrEmpty()) this
     else context.getString(R.string.no_data)
 }
 
-fun String.changeDateFormat(format: String): String? {
-    return SimpleDateFormat(format, Locale.getDefault())
-        .format(LocalDate.parse(this, DateTimeFormatter.ISO_DATE))
+fun String.changeDateFormat(format: String): String {
+    val localDate = LocalDate.parse(this, DateTimeFormatter.ofPattern(FORMAT_DEFAULT))
+    val formatter =
+        DateTimeFormatter.ofPattern(format)
+    val formattedString: String = localDate.format(formatter)
+    return formattedString
+//    return SimpleDateFormat(format, Locale.getDefault())        .format(LocalDate.parse(this, format))
 }
 
 fun String.parseToDate(): Date? {

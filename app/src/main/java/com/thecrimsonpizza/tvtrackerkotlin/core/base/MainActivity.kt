@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getFavorites() {
-        followingViewModel.followingMutable.observe(this, Observer {
+        followingViewModel.getFollowing().observe(this, Observer {
             mFavs.clear()
             mFavs.addAll(it)
             for (serie in mFavs) {
