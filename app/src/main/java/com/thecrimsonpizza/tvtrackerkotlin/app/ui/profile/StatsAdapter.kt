@@ -16,7 +16,7 @@ class StatsAdapter(val context: Context) {
         var contEpisodes = 0
         for (show in followingList) {
             for (season in show.seasons) {
-                contEpisodes += season.episodes.count { it.watched }
+                contEpisodes += season.episodes.count { it.followingData.watched }
             }
         }
         return contEpisodes.toString()
@@ -44,7 +44,7 @@ class StatsAdapter(val context: Context) {
     fun mostWatchedTvShow(followingList: List<SerieResponse.Serie>): String? {
         val seriesMap = HashMap<String, Int>()
         for (tvShow in followingList)
-            seriesMap[tvShow.name] = tvShow.seasons.flatMap { it.episodes }.count { it.watched }
+            seriesMap[tvShow.name] = tvShow.seasons.flatMap { it.episodes }.count { it.followingData.watched }
         seriesMap.maxBy { it.value }?.key?.let {
             return it
         } ?: return EMPTY_STRING
@@ -53,7 +53,7 @@ class StatsAdapter(val context: Context) {
     fun countTimeEpisodesWatched(followingList: List<SerieResponse.Serie>): String? {
         var contTime = 0
         for (tvShow in followingList) {
-            contTime += (tvShow.seasons.flatMap { it.episodes }.filter { it.watched }
+            contTime += (tvShow.seasons.flatMap { it.episodes }.filter { it.followingData.watched }
                 .groupBy { it.id }
                 .mapValues { entry ->
                     entry.value
@@ -65,14 +65,14 @@ class StatsAdapter(val context: Context) {
     }
 
     private fun getShowRuntime(show: SerieResponse.Serie): Int {
-        return show.episodeRunTime?.first() ?: 45
+        return show.episodeRunTime.first() ?: 45
     }
 
     private fun getTopTenGenres(followingList: List<SerieResponse.Serie>): Map<String, Int>? {
         val genresMap = HashMap<String, Int>()
         for (show in followingList) {
-            show.genres?.groupingBy { it.name }?.eachCount()
-                ?.forEach { key, value ->
+            show.genres.groupingBy { it.name }.eachCount()
+                .forEach { (key, value) ->
                     genresMap.merge(key, value) { t, u -> t + u }
                 }
         }
@@ -83,8 +83,8 @@ class StatsAdapter(val context: Context) {
     private fun getTopTenNetworks(followingList: List<SerieResponse.Serie>): Map<String, Int>? {
         val networksMap = HashMap<String, Int>()
         for (show in followingList) {
-            show.networks?.groupingBy { it.name }?.eachCount()
-                ?.forEach { key, value ->
+            show.networks.groupingBy { it.name }.eachCount()
+                .forEach { (key, value) ->
                     networksMap.merge(key, value) { t, u -> t + u }
                 }
         }

@@ -5,7 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
-import com.thecrimsonpizza.tvtrackerkotlin.app.domain.actor.Credits
 import com.thecrimsonpizza.tvtrackerkotlin.core.base.BaseViewHolder
 import com.thecrimsonpizza.tvtrackerkotlin.core.base.SimpleRecyclerAdapter
 
@@ -18,22 +17,6 @@ fun <T : Any> RecyclerView.setBaseAdapter(
     layoutManager: RecyclerView.LayoutManager,
     onBindView: BaseViewHolder<T>.(data: T) -> Unit
 ): SimpleRecyclerAdapter<T> {
-    val recyclerAdapter = SimpleRecyclerAdapter(dataList, layoutID, onBindView)
-    adapter = recyclerAdapter
-    this.layoutManager = layoutManager
-    this.setHasFixedSize(true)
-    this.setItemViewCacheSize(20)
-    this.isSaveEnabled = true
-    return recyclerAdapter
-}
-
-fun RecyclerView.setTvCreditsAdapter(
-    dataList: List<Credits.Cast>, @LayoutRes layoutID: Int,
-    layoutManager: RecyclerView.LayoutManager,
-    onBindView: BaseViewHolder<Credits.Cast>.(data: Credits.Cast) -> Unit
-): SimpleRecyclerAdapter<Credits.Cast> {
-
-    dataList.sortedWith(nullsLast(compareBy ( {it.firstAirDate}, {it.releaseDate} )))
     val recyclerAdapter = SimpleRecyclerAdapter(dataList, layoutID, onBindView)
     adapter = recyclerAdapter
     this.layoutManager = layoutManager

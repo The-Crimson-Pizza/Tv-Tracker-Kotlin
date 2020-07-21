@@ -2,6 +2,8 @@ package com.thecrimsonpizza.tvtrackerkotlin.core.extensions
 
 import com.google.firebase.auth.FirebaseAuth
 import com.thecrimsonpizza.tvtrackerkotlin.app.data.local.FirebaseDatabaseRealtime
+import com.thecrimsonpizza.tvtrackerkotlin.app.domain.BasicResponse
+import com.thecrimsonpizza.tvtrackerkotlin.app.domain.actor.Credits
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.seasons.Episode
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.seasons.Season
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
@@ -36,6 +38,13 @@ fun SerieResponse.Serie.getLastUnwatched(): Episode? {
         }
     }
     return null
+}
+
+fun SerieResponse.Serie.toBasic(): BasicResponse.SerieBasic{
+    return BasicResponse.SerieBasic(this.id, this.name, this.posterPath)
+}
+fun Credits.Cast.toBasic(): BasicResponse.SerieBasic{
+    return BasicResponse.SerieBasic(this.id, this.name, this.posterPath)
 }
 
 fun SerieResponse.Serie.getProgress(): Int {

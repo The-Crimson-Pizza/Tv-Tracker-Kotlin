@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -17,76 +18,85 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.android.material.tabs.TabLayoutMediator.TabConfigurationStrategy
 import com.thecrimsonpizza.tvtrackerkotlin.R
+import com.thecrimsonpizza.tvtrackerkotlin.app.domain.BasicResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
+import com.thecrimsonpizza.tvtrackerkotlin.app.ui.following.FollowingViewModel
 import com.thecrimsonpizza.tvtrackerkotlin.app.ui.webview.WebViewActivity
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.saveToFirebase
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_WEB_TV
-import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.ID_SERIE
+import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.SERIE_TRANSITION
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.TEXT_PLAIN
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.URL_WEBVIEW
 import kotlinx.android.synthetic.main.fragment_serie.*
 import java.util.*
 
-class SerieFragment : Fragment() {
+class SerieFragment(serie: BasicResponse.SerieBasic) : Fragment() {
 
-    private var idSerie: Int = 0
+    private var basic = serie
+
     private val seriesViewModel: SeriesViewModel by activityViewModels()
+    private val followingViewModel: FollowingViewModel by activityViewModels()
+    private var idSerie: Int = 0
     private val followingList = mutableListOf<SerieResponse.Serie>()
-    private lateinit var serie: SerieResponse.Serie
-    val itemWeb: MenuItem = toolbar.menu.findItem(R.id.action_web)
-
+    private lateinit var mSerie: SerieResponse.Serie
+    private lateinit var itemWeb: MenuItem
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        if (arguments != null) {
-            idSerie = arguments?.getInt(ID_SERIE)!!
-        }
         return inflater.inflate(R.layout.fragment_serie, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        ViewCompat.setTransitionName(posterImage, SERIE_TRANSITION)
+
+        progres.visibility = View.VISIBLE
+        itemWeb = toolbar.menu.findItem(R.id.action_web)
         setToolbar()
         hideKeyboard()
         setViewPager()
+        getSerie()
         getFollowingSeries()
+
     }
 
     private fun getFollowingSeries() {
-        seriesViewModel.getFollowingShows()?.observe(viewLifecycleOwner, Observer {
+        followingViewModel.getFollowing().observe(viewLifecycleOwner, Observer {
             followingList.clear()
             followingList.addAll(it)
-            setSerie()
+            if (this::mSerie.isInitialized) setProgress(mSerie)
         })
     }
 
     private fun getSerie() {
-        seriesViewModel.getShowData(idSerie).observe(viewLifecycleOwner, Observer {
-            serie = it
-            if (serie.homepage != null && serie.homepage!!.isNotEmpty()) {
-                itemWeb.isVisible = true
-            }
-            setProgress(serie)
+        seriesViewModel.getShow().observe(viewLifecycleOwner, Observer {
+            mSerie = it
+            if (mSerie.homepage.isNotEmpty()) itemWeb.isVisible = true
+            setProgress(mSerie)
         })
     }
 
-
-    private fun setSerie() {
-        if (serie == null) {
-            getSerie()
-        } else {
-            setProgress(serie)
-            if (serie.homepage != null && serie.homepage!!.isNotEmpty()) {
-                itemWeb.isVisible = true
-            }
+    private fun setProgress(serie: SerieResponse.Serie) {
+        progres.visibility = View.VISIBLE
+        serie.checkFav(followingList)
+//        seriesViewModel.saveSerie(s)
+        var changed = false
+        followingList.forEachIndexed { index, follow ->
+            val new = serie.updateObject(follow)
+            if (new != null && new != follow) followingList[index] = new; changed = true
         }
+        if (changed) followingList.saveToFirebase()
+
+        SerieAdapter(requireContext(), requireView(), serie).fillCollapseBar(basic)
+        setFloatingButton()
+        progres.visibility = View.GONE
     }
 
     private fun setFloatingButton() {
         fab.visibility = View.VISIBLE
         fab.setOnClickListener { viewFab: View? ->
-            if (!serie.added) {
+            if (!mSerie.followingData.added) {
                 addFav()
                 Snackbar.make(viewFab!!, R.string.add_fav, Snackbar.LENGTH_LONG).show()
             } else {
@@ -96,31 +106,23 @@ class SerieFragment : Fragment() {
         }
     }
 
-    private fun setProgress(s: SerieResponse.Serie) {
-        s.checkFav(followingList)
-//        RxBus.getInstance().publish(s)
-        seriesViewModel.saveSerie(s)
-        SerieAdapter(requireContext(), requireView(), s).fillCollapseBar()
-        setFloatingButton()
-    }
-
     private fun addFav() {
-        serie.added = true
-        serie.addedDate = Date()
-        followingList.add(serie)
+        mSerie.followingData.added = true
+        mSerie.followingData.addedDate = Date()
+        followingList.add(mSerie)
         followingList.saveToFirebase()
-        seriesViewModel.saveSerie(serie)
+        seriesViewModel.saveSerie(mSerie)
 //        RxBus.getInstance().publish(serie)
     }
 
     private fun deleteFav() {
-        val pos = serie.getPosition(followingList)
+        val pos = mSerie.getPosition(followingList)
         if (pos != -1) {
             followingList.removeAt(pos)
             followingList.saveToFirebase()
-            serie.added = false
-            serie.addedDate = null
-            seriesViewModel.saveSerie(serie)
+            mSerie.followingData.added = false
+            mSerie.followingData.addedDate = null
+            seriesViewModel.saveSerie(mSerie)
 //            RxBus.getInstance().publish(serie)
             Toast.makeText(activity, R.string.borrado_correcto, Toast.LENGTH_SHORT).show()
         }
@@ -138,7 +140,7 @@ class SerieFragment : Fragment() {
                 startActivity(
                     Intent(
                         requireContext(), WebViewActivity::class.java
-                    ).putExtra(URL_WEBVIEW, serie.homepage)
+                    ).putExtra(URL_WEBVIEW, mSerie.homepage)
                 )
             }
             false
@@ -169,9 +171,9 @@ class SerieFragment : Fragment() {
 
     private fun setIntent(): Intent {
         val sendIntent = Intent(Intent.ACTION_SEND)
-        sendIntent.putExtra(Intent.EXTRA_TITLE, serie.name)
+        sendIntent.putExtra(Intent.EXTRA_TITLE, mSerie.name)
         sendIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.sharing_url))
-        sendIntent.putExtra(Intent.EXTRA_TEXT, BASE_URL_WEB_TV + serie.id)
+        sendIntent.putExtra(Intent.EXTRA_TEXT, BASE_URL_WEB_TV + mSerie.id)
         sendIntent.type = TEXT_PLAIN
         return sendIntent
     }

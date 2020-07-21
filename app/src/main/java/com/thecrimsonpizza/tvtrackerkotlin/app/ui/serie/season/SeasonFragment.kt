@@ -14,13 +14,14 @@ import com.thecrimsonpizza.tvtrackerkotlin.app.domain.seasons.Season
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie.SeriesViewModel
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.*
+import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_POSTER
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.ID_SEASON
 import kotlinx.android.synthetic.main.fragment_seasons.*
-import kotlinx.android.synthetic.main.list_season.*
+import kotlinx.android.synthetic.main.list_season.view.*
 
 class SeasonFragment : Fragment() {
 
-    private var serie: SerieResponse.Serie? = null
+    private lateinit var serie: SerieResponse.Serie
     private val followingList: MutableList<SerieResponse.Serie> = mutableListOf()
     private val seriesViewModel: SeriesViewModel by activityViewModels()
 
@@ -41,33 +42,33 @@ class SeasonFragment : Fragment() {
     }
 
     private fun setAdapter() {
+        val sortedSeasons = serie.seasons.sortedBy { it.seasonNumber }
         gridSeasons.setBaseAdapter(
-            serie!!.seasons, R.layout.list_season,
+            sortedSeasons, R.layout.list_season,
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         ) {
-            if (serie!!.added) setWatchCheck(adapterPosition, it)
+            if (serie.followingData.added) setWatchCheck(itemView, adapterPosition, it)
 
-            image_season.getImage(requireContext(), it.posterPath)
-            season_name.text = it.name
-            episode_number
-            checkbox_watched
+            itemView.image_season.getImage(requireContext(), BASE_URL_IMAGES_POSTER + it.posterPath)
+            itemView.season_name.text = it.name
+//            itemView.episode_number
+//            itemView.checkbox_watched
 
             if (!it.episodes.isNullOrEmpty()) {
-                if (serie!!.added)
-                    episode_number.text =
+                if (serie.followingData.added)
+                    itemView.episode_number.text =
                         requireContext().resources.getQuantityString(
                             R.plurals.num_episodes_follow,
                             it.episodes.size,
-                            serie?.countEpisodesWatched(),
+                            serie.countEpisodesWatched(),
                             it.episodes.size
                         )
-                else
-                    episode_number.text = requireContext().resources.getQuantityString(
-                        R.plurals.n_episodes,
-                        it.episodes.size,
-                        it.episodes.size
-                    )
-            } else episode_number.text = requireContext().getString(R.string.no_data)
+                else itemView.episode_number.text = requireContext().resources.getQuantityString(
+                    R.plurals.n_episodes,
+                    it.episodes.size,
+                    it.episodes.size
+                )
+            } else itemView.episode_number.text = requireContext().getString(R.string.no_data)
 
             itemView.setOnClickListener { goToEpisodes(adapterPosition) }
         }
@@ -77,15 +78,13 @@ class SeasonFragment : Fragment() {
         seriesViewModel.getFollowingShows()?.observe(viewLifecycleOwner, Observer {
             followingList.clear()
             followingList.addAll(it)
-            if (serie != null) {
-                serie!!.checkFav(followingList)
-            }
+            serie.checkFav(followingList)
             gridSeasons.adapter?.notifyDataSetChanged()
         })
     }
 
     private fun getSerie() {
-        seriesViewModel.serieMutable.observe(viewLifecycleOwner, Observer {
+        seriesViewModel.getShow().observe(viewLifecycleOwner, Observer {
             serie = it
             setAdapter()
         })
@@ -98,7 +97,7 @@ class SeasonFragment : Fragment() {
     }
 
     private fun watchSeason(posSeason: Int, watched: Boolean = true) {
-        val pos: Int = serie?.getPosition(followingList) ?: -1
+        val pos: Int = serie.getPosition(followingList)
         if (pos != -1) {
             followingList[pos].seasons[posSeason].markAsWatched(watched)
             followingList[pos].markAsWatched(followingList[pos].checkSeasonsFinished())
@@ -106,10 +105,10 @@ class SeasonFragment : Fragment() {
         }
     }
 
-    private fun setWatchCheck(pos: Int, season: Season) {
-        checkbox_watched.visibility = View.VISIBLE
-        checkbox_watched.isChecked = season.watched
-        checkbox_watched.setOnCheckedChangeListener { _, isChecked: Boolean ->
+    private fun setWatchCheck(itemView: View, pos: Int, season: Season) {
+        itemView.checkbox_watched.visibility = View.VISIBLE
+        itemView.checkbox_watched.isChecked = season.followingData.watched
+        itemView.checkbox_watched.setOnCheckedChangeListener { _, isChecked: Boolean ->
             watchSeason(pos, !isChecked)
         }
     }

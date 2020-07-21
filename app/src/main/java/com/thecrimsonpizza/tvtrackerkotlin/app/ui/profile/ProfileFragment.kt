@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.anychart.APIlib
 import com.anychart.AnyChart
 import com.anychart.chart.common.dataentry.DataEntry
@@ -37,9 +37,7 @@ class ProfileFragment : Fragment() {
     )
 
 
-    private val followingViewModel: FollowingViewModel by lazy {
-        ViewModelProvider(this@ProfileFragment).get(FollowingViewModel::class.java)
-    }
+    private val followingViewModel: FollowingViewModel by activityViewModels()
 
 
     override fun onCreateView(
@@ -60,7 +58,7 @@ class ProfileFragment : Fragment() {
             requireActivity().finish()
         }
 
-        followingViewModel.followingMutable.observe(viewLifecycleOwner, Observer {
+        followingViewModel.getFollowing().observe(viewLifecycleOwner, Observer {
             followingList.clear()
             followingList.addAll(it)
             initGenrePieChart()

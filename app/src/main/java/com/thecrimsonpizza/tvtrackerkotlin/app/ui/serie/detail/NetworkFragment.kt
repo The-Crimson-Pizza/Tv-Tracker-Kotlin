@@ -1,4 +1,4 @@
-package com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie.overview
+package com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie.detail
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,11 +15,12 @@ import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie.SeriesViewModel
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.getImage
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.setBaseAdapter
+import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_NETWORK
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.ID_NETWORK
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.ID_SERIE
 import kotlinx.android.synthetic.main.fragment_network.*
-import kotlinx.android.synthetic.main.lista_series_basic_vertical.*
+import kotlinx.android.synthetic.main.lista_series_basic_vertical.view.*
 
 class NetworkFragment : Fragment() {
 
@@ -63,11 +64,11 @@ class NetworkFragment : Fragment() {
             R.layout.lista_series_basic_vertical,
             GridLayoutManager(activity, 3)
         ) { serie ->
-            posterBasicVertical.getImage(requireContext(), serie.posterPath)
-            titleBasicVertical.text = serie.name
-            ratingBasicVertical.text = serie.voteAverage.toString()
+            itemView.posterBasicVertical.getImage(requireContext(), GlobalConstants.BASE_URL_IMAGES_POSTER +serie.posterPath)
+            itemView.titleBasicVertical.text = serie.name
+            itemView.ratingBasicVertical.text = serie.voteAverage.toString()
 
-            ratingBasicVertical.visibility = View.GONE
+            itemView.ratingBasicVertical.visibility = View.GONE
             itemView.setOnClickListener {
                 val bundle = Bundle()
                 bundle.putInt(ID_SERIE, serie.id)

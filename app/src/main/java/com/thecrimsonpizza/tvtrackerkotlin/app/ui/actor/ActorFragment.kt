@@ -7,13 +7,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.thecrimsonpizza.tvtrackerkotlin.R
+import com.thecrimsonpizza.tvtrackerkotlin.app.domain.actor.Credits
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.actor.PersonResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.ui.webview.WebViewActivity
+import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.ACTOR_TRANSITION
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_INSTAGRAM
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_INSTAGRAM_U
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_WEB_PERSON
@@ -22,26 +24,24 @@ import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.ID_ACTOR
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.URL_WEBVIEW
 import kotlinx.android.synthetic.main.fragment_actor.*
 
-class ActorFragment : Fragment() {
+class ActorFragment(person: Credits.Cast?) : Fragment() {
 
     private var idActor: Int = 0
 
     private lateinit var actor: PersonResponse.Person
-    private val viewModel: ActorViewModel by lazy {
-        ViewModelProvider(this@ActorFragment).get(ActorViewModel::class.java)
-    }
+    private val personViewModel: ActorViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        if (arguments != null) {
-            idActor = requireArguments().getInt(ID_ACTOR)
-        }
+        idActor = arguments?.getInt(ID_ACTOR) ?: 0
         return inflater.inflate(R.layout.fragment_actor, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        ViewCompat.setTransitionName(profile_image, ACTOR_TRANSITION)
 
         toolbar_actor.setNavigationIcon(R.drawable.ic_arrow_back)
         toolbar_actor.setNavigationOnClickListener { requireActivity().onBackPressed() }
@@ -54,20 +54,17 @@ class ActorFragment : Fragment() {
             true
         }
 
-        viewModel.getActor(idActor)?.observe(viewLifecycleOwner, Observer {
-            // Here we observe livedata
+        personViewModel.getPerson().observe(viewLifecycleOwner, Observer {
             ActorAdapter(requireContext(), requireView(), it).fillActor()
             actor = it
-            if (!it.externalIds?.instagramId.isNullOrEmpty())
+            if (!it.externalIds.instagramId.isNullOrEmpty())
                 toolbar_actor.menu.findItem(R.id.action_insta).isVisible = true
         })
-
-
     }
 
     private fun goToInstagram() {
         val uri =
-            Uri.parse(BASE_URL_INSTAGRAM_U + actor.externalIds?.instagramId)
+            Uri.parse(BASE_URL_INSTAGRAM_U + actor.externalIds.instagramId)
         val likeIng = Intent(Intent.ACTION_VIEW, uri)
         likeIng.setPackage(COM_INSTAGRAM_ANDROID)
         try {
@@ -77,7 +74,7 @@ class ActorFragment : Fragment() {
                 Intent(requireContext(), WebViewActivity::class.java)
                     .putExtra(
                         URL_WEBVIEW,
-                        BASE_URL_INSTAGRAM + actor.externalIds?.instagramId
+                        BASE_URL_INSTAGRAM + actor.externalIds.instagramId
                     )
             )
         }

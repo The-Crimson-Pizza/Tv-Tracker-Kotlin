@@ -50,6 +50,8 @@ data class SerieResponse(
 
     ) : Serializable {
 
+
+
         fun withSeasons(seasonsList: MutableList<Season>, serie: Serie): Serie {
             serie.seasons = seasonsList
             serie.seasons.sort()

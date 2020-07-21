@@ -18,6 +18,7 @@
             android:id="@+id/posterBasic"
             android:layout_width="match_parent"
             android:layout_height="190dp"
+            android:transitionName="poster_transition"
             android:contentDescription="@string/serie_poster_description"
             android:scaleType="centerCrop" />
 
@@ -36,6 +37,7 @@
                 android:maxLines="2"
                 android:textAlignment="center"
                 android:textAllCaps="true"
+                android:transitionName="title_transition"
                 android:textColor="@color/colorPrimary"
                 android:textSize="6pt"
                 android:textStyle="bold" />

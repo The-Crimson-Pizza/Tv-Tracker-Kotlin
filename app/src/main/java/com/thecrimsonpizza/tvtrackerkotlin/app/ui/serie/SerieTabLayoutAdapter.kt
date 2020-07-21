@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.thecrimsonpizza.tvtrackerkotlin.app.ui.home.HomeFragment
 import com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie.cast.CastFragment
-import com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie.overview.SinopsisFragment
+import com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie.detail.DetailFragment
 import com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie.season.SeasonFragment
 
 class SerieTabLayoutAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
@@ -15,7 +15,7 @@ class SerieTabLayoutAdapter(fragment: Fragment) : FragmentStateAdapter(fragment)
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            0 -> SinopsisFragment()
+            0 -> DetailFragment()
             1 -> CastFragment()
             2 -> SeasonFragment()
             else -> HomeFragment()

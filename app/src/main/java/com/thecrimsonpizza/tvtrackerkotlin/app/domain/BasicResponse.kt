@@ -11,7 +11,7 @@ class BasicResponse(@SerializedName("results") @Expose var basicSeries: List<Ser
         val id: Int,
         val name: String,
         @SerializedName("poster_path") val posterPath: String?,
-        @SerializedName("vote_average") var voteAverage: Float
+        @SerializedName("vote_average") var voteAverage: Float=0.0f
     ) : Parcelable {
 
         fun isFav(followingList: List<SerieBasic>): Boolean {

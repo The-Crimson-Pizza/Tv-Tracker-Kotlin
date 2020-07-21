@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.thecrimsonpizza.tvtrackerkotlin.app.data.remote.TmdbRepository
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.actor.PersonResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 
 class SearchViewModel : ViewModel() {
@@ -26,7 +26,7 @@ class SearchViewModel : ViewModel() {
 
     fun setPersonList(query: String) {
         TmdbRepository.searchPerson(query)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(Schedulers.io())
             .doOnError(Throwable::printStackTrace)
             .subscribe {
                 searchPersonList.value = it
@@ -39,10 +39,10 @@ class SearchViewModel : ViewModel() {
 
     fun setShowList(query: String) {
         TmdbRepository.searchSerie(query)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(Schedulers.io())
             .doOnError(Throwable::printStackTrace)
             .subscribe {
-                searchShowList.value = it
+                searchShowList.postValue(it)
             }
     }
     fun getShowList(): LiveData<SerieResponse> {

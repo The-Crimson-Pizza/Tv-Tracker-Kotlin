@@ -1,5 +1,6 @@
 package com.thecrimsonpizza.tvtrackerkotlin.app.ui.following
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -12,7 +13,11 @@ import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
 
 class FollowingViewModel : ViewModel() {
 
-    val followingMutable = MutableLiveData<List<SerieResponse.Serie>>()
+    private val followingMutable = MutableLiveData<List<SerieResponse.Serie>>()
+
+    fun getFollowing(): LiveData<List<SerieResponse.Serie>>{
+        return followingMutable
+    }
 
     fun init() {
         FirebaseDatabaseRealtime(FirebaseAuth.getInstance().currentUser).seriesFav.addValueEventListener(

@@ -14,10 +14,4 @@ data class Season(
     @SerializedName("poster_path") var posterPath: String? = "",
     @SerializedName("season_number") var seasonNumber: Int = 0,
     @SerializedName("episode_count") var episodeCount: Int = 0
-) : Serializable {
-
-    fun sort(seasons: MutableList<Season>) {
-        seasons.sortedBy { it.seasonNumber }
-        // todo - comprobar que funciona la ordenación
-    }
-}
+) : Serializable

@@ -19,7 +19,6 @@ object GlobalConstants {
     const val BASE_URL_INSTAGRAM = "https://www.instagram.com/"
     const val BASE_URL_INSTAGRAM_U = "https://www.instagram.com/_u/"
     const val BASE_URL_YOUTUBE = "http://youtu.be/"
-    
 
     //    ID'S
     const val ID_SERIE = "id_serie"
@@ -50,6 +49,8 @@ object GlobalConstants {
     //    INTENT KEYS
     const val URL_WEBVIEW = "URL"
     const val ID = "id"
+    const val BASIC_SERIE = "basic_serie"
+    const val BASIC_PERSON = "basic_person"
 
     //    EXTRAS
     const val SEASON_ID_EXTRA = "SEASON_ID"
@@ -75,5 +76,9 @@ object GlobalConstants {
 
 
     const val EMPTY_STRING = ""
+
+    //    TBC
+    const val ACTOR_TRANSITION = "actor_transition"
+    const val SERIE_TRANSITION = "serie_transition"
 
 }

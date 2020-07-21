@@ -44,14 +44,14 @@ class FollowingFragment : Fragment() {
 
         setAdapter()
 
-        followingViewModel.followingMutable.observe(viewLifecycleOwner, Observer {
+        followingViewModel.getFollowing().observe(viewLifecycleOwner, Observer {
             followingList.clear()
             followingList.addAll(it)
             grid_favoritas.adapter?.notifyDataSetChanged()
         })
 
         radioSortAdded.setOnClickListener {
-            followingList.sortedWith(nullsLast(compareBy { it.addedDate }))
+            followingList.sortedWith(nullsLast(compareBy { it.followingData.addedDate }))
             grid_favoritas.adapter?.notifyDataSetChanged()
         }
 
@@ -61,7 +61,7 @@ class FollowingFragment : Fragment() {
         }
         radioSortWatched.setOnClickListener {
             followingList.setLastWatched()
-            followingList.sortedWith(nullsLast(compareBy { it.lastEpisodeWatched?.watchedDate }))
+            followingList.sortedWith(nullsLast(compareBy { it.lastEpisodeWatched.followingData.watchedDate }))
             grid_favoritas.adapter?.notifyDataSetChanged()
         }
 
@@ -102,10 +102,10 @@ class FollowingFragment : Fragment() {
                     .navigate(R.id.action_navigation_fav_to_navigation_series, bundle)
             }
 
-            if (serie.finished) itemView.next_episode_main_menu.visibility = View.GONE
+            if (serie.followingData.watched) itemView.next_episode_main_menu.visibility = View.GONE
             itemView.next_episode_main_menu.setOnClickListener {
                 serie.watchEpisode(followingList, true)
-                if (serie.finishDate != null) {
+                if (serie.followingData.watchedDate != null) {
                     itemView.next_episode_main_menu.visibility = View.GONE
                 }
             }
