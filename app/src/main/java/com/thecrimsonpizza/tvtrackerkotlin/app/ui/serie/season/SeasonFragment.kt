@@ -7,12 +7,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thecrimsonpizza.tvtrackerkotlin.R
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.seasons.Season
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie.SeriesViewModel
+import com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie.season.episode.EpisodesFragment
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.*
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_POSTER
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.ID_SEASON
@@ -91,9 +91,12 @@ class SeasonFragment : Fragment() {
     }
 
     private fun goToEpisodes(pos: Int) {
-        val bundle = Bundle()
-        bundle.putInt(ID_SEASON, pos)
-        Navigation.findNavController(requireView()).navigate(R.id.action_series_to_episodes, bundle)
+        val fragment = EpisodesFragment()
+        fragment.arguments = Bundle().apply { putInt(ID_SEASON, pos) }
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .commit()
+
     }
 
     private fun watchSeason(posSeason: Int, watched: Boolean = true) {

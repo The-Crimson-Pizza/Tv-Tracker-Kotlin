@@ -3,8 +3,6 @@ package com.thecrimsonpizza.tvtrackerkotlin.device
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkInfo
-import android.net.NetworkRequest
-import android.os.Build
 import androidx.lifecycle.LiveData
 
 class ConnHelper  constructor(private val cm: ConnectivityManager) : LiveData<Boolean>() {
@@ -20,12 +18,7 @@ class ConnHelper  constructor(private val cm: ConnectivityManager) : LiveData<Bo
         val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
         postValue(activeNetwork?.isConnectedOrConnecting == true)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            cm.registerDefaultNetworkCallback(networkCallback)
-        } else {
-            val builder = NetworkRequest.Builder()
-            cm.registerNetworkCallback(builder.build(), networkCallback)
-        }
+        cm.registerDefaultNetworkCallback(networkCallback)
     }
 
     override fun onInactive() {

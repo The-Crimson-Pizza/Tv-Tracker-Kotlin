@@ -16,8 +16,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".app.ui.serie.SerieActivity"/>
-        <activity android:name=".app.ui.actor.PersonActivity"/>
+        <activity android:name=".app.ui.serie.SerieActivity" />
+        <activity android:name=".app.ui.actor.PersonActivity" />
+        <activity android:name=".app.ui.webview.WebViewActivity" />
+        <activity
+            android:name=".app.ui.login.LoginActivity"
+            android:label="@string/sign_in" />
+        <activity
+            android:name=".app.ui.tutorial.TutorialActivity"
+            android:label="Tutorial Intro" />
 
         <service
             android:name=".device.NewSeasonNotifications"
@@ -28,30 +35,26 @@
             android:enabled="true"
             android:exported="false" />
 
-        <activity
-            android:name=".app.ui.login.LoginActivity"
-            android:label="@string/sign_in" />
-        <activity android:name=".app.ui.webview.WebViewActivity" />
+
         <activity
             android:name=".app.ui.splash.SplashScreen"
-            android:noHistory="true"
-            android:theme="@style/bgSplashScreenStyle">
+            android:theme="@style/appTheme.Splash"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <action android:name="android.intent.action.VIEW" />
+<!--                <action android:name="android.intent.action.VIEW" />-->
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".app.ui.tutorial.TutorialActivity"
-            android:label="Tutorial Intro" />
+
+
         <activity
             android:name=".core.base.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <action android:name="android.intent.action.VIEW" />
+<!--                <action android:name="android.intent.action.MAIN" />-->
+<!--                <action android:name="android.intent.action.VIEW" />-->
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

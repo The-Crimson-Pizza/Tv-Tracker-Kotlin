@@ -14,6 +14,17 @@
         <item name="android:windowSharedElementExitTransition" tools:ignore="NewApi">
             @transition/grid_detail_transition
         </item>
+
+    </style>
+
+    <style name="appTheme.Splash" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:background">@drawable/splash_screen</item>
     </style>
 
     <style name="AppTheme2" parent="Theme.AppCompat.Light.NoActionBar">
@@ -38,8 +49,5 @@
         <item name="android:scaleY">3</item>
     </style>
 
-    <style name="bgSplashScreenStyle" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowBackground">@drawable/bgsplashscreen</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-    </style>
+
 </resources>
