@@ -1,6 +1,7 @@
 package com.thecrimsonpizza.tvtrackerkotlin.app.ui.home
 
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
-import androidx.core.util.Pair
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -22,15 +22,16 @@ import com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie.SerieActivity
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.getImage
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.setBaseAdapter
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.toBasic
+import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_POSTER
-import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASIC_SERIE
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.ID_SERIE
-import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.SERIE_TRANSITION
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.lista_series_basic.view.*
 
 
 class HomeFragment : Fragment() {
+
+    val TAG: String? = this::class.simpleName
 
     private val homeViewModel: HomeViewModel by activityViewModels()
     private val followingViewModel: FollowingViewModel by activityViewModels()
@@ -44,6 +45,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         homeViewModel.init()
+        followingViewModel.init()
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
@@ -113,17 +115,31 @@ class HomeFragment : Fragment() {
 
     private fun goToSerieFragment(view: View, idSerie: Int, serie: BasicResponse.SerieBasic) {
 
-        val intent = Intent(activity, SerieActivity::class.java).apply {
+        val intent = Intent(context, SerieActivity::class.java).apply {
             putExtras(Bundle().apply {
                 putExtra(ID_SERIE, idSerie)
-                putParcelable(BASIC_SERIE, serie)
+                putExtra(GlobalConstants.BASIC_SERIE_POSTER_PATH, serie.posterPath)
             })
         }
+
         val activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(
-            requireActivity(),
-            Pair(view.posterBasic, SERIE_TRANSITION)
+            context as Activity, androidx.core.util.Pair(view.posterBasic, view.posterBasic.transitionName)
         )
 
         ActivityCompat.startActivity(requireContext(), intent, activityOptions.toBundle())
+
+//        val fragment = SerieFragment()
+//        val data = Bundle().apply {
+//            putInt(ID_SERIE, idSerie)
+//        }
+//        fragment.arguments = data
+//
+//
+//        parentFragmentManager
+//            .beginTransaction()
+//            .addSharedElement(view.posterBasic, view.posterBasic.transitionName)
+//            .addToBackStack(TAG)
+//            .replace(R.id.nav_host_fragment, fragment)
+//            .commit()
     }
 }

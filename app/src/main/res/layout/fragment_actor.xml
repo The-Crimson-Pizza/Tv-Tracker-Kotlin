@@ -31,12 +31,15 @@
                 android:orientation="vertical"
                 app:layout_collapseMode="pin">
 
-                <de.hdodenhof.circleimageview.CircleImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/profile_image"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    app:civ_border_color="@color/whiteColor"
-                    app:civ_border_width="2dp" />
+                    android:layout_width="175dp"
+                    android:transitionName="@string/actor_transition"
+                    app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
+                    app:strokeColor="@color/colorPrimary"
+                    app:strokeWidth="1dp"
+                    android:scaleType="centerCrop"
+                    android:layout_height="175dp" />
             </LinearLayout>
 
             <androidx.appcompat.widget.Toolbar

@@ -7,12 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 import com.thecrimsonpizza.tvtrackerkotlin.R
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie.SerieAdapter
 import com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie.SeriesViewModel
-import kotlinx.android.synthetic.main.fragment_sinopsis.*
 
 
 class DetailFragment : Fragment() {
@@ -23,11 +21,7 @@ class DetailFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        val root = inflater.inflate(R.layout.fragment_sinopsis, container, false)
-        val youTubePlayerView: YouTubePlayerView = root.findViewById(R.id.youtube_player_view)
-        lifecycle.addObserver(youTubePlayerView)
-        return root
-
+        return inflater.inflate(R.layout.fragment_sinopsis, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -37,7 +31,6 @@ class DetailFragment : Fragment() {
         {
             mSerie = it
             SerieAdapter(requireContext(), requireView(), mSerie).fillOverview()
-            progreso.visibility = View.GONE
         })
     }
 }

@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/layout_episode"
-    tools:context=".ui.series.EpisodesFragment">
+    android:background="@color/almostWhite"
+    tools:context=".app.ui.serie.season.episode.EpisodesFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/gridEpisodes"

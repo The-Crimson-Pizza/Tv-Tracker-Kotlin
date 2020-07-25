@@ -93,8 +93,15 @@ class SeasonFragment : Fragment() {
     private fun goToEpisodes(pos: Int) {
         val fragment = EpisodesFragment()
         fragment.arguments = Bundle().apply { putInt(ID_SEASON, pos) }
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
+//        requireActivity().supportFragmentManager.beginTransaction()
+//            .replace(R.id.fragment_container, fragment)
+//            .commit()
+
+        requireActivity().supportFragmentManager
+            .beginTransaction()
+//            .addSharedElement(view.posterBasic, view.posterBasic.transitionName)
+            .addToBackStack("TAG")
+            .add(R.id.fragment_container, fragment)
             .commit()
 
     }

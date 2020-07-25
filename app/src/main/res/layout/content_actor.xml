@@ -89,13 +89,11 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
-        <com.borjabravo.readmoretextview.ReadMoreTextView
+        <TextView
             android:id="@+id/bio_text"
+            android:maxLines="2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:colorClickableText="@color/colorPrimary"
-            app:trimLines="70"
-            app:trimMode="trimModeLength" />
+            android:layout_height="wrap_content" />
 
         <LinearLayout
             android:id="@+id/tvCreditsView"

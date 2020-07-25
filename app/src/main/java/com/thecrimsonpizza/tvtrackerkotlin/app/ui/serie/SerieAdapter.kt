@@ -1,20 +1,20 @@
 package com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import androidx.navigation.Navigation
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback
 import com.thecrimsonpizza.tvtrackerkotlin.R
-import com.thecrimsonpizza.tvtrackerkotlin.app.domain.BasicResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.*
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_BACK
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_NETWORK
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_POSTER
+import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_YOUTUBE
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.FORMAT_YEAR
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.ID_GENRE
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.ID_NETWORK
@@ -22,9 +22,10 @@ import com.thecrimsonpizza.tvtrackerkotlin.core.utils.Util
 import kotlinx.android.synthetic.main.fragment_serie.view.*
 import kotlinx.android.synthetic.main.fragment_sinopsis.view.*
 
+
 class SerieAdapter(val context: Context, val view: View, private val serie: SerieResponse.Serie) {
 
-    fun fillCollapseBar(basic: BasicResponse.SerieBasic?) {
+    fun fillCollapseBar(basic: String?) {
         fillBasics()
         fillImages(basic)
     }
@@ -35,6 +36,20 @@ class SerieAdapter(val context: Context, val view: View, private val serie: Seri
     fun fillOverview() {
         view.seguimiento.visibility = if (serie.followingData.added) View.VISIBLE else View.GONE
         view.sinopsis_text.text = serie.overview.checkNull(context)
+
+        var isTextViewClicked = false
+        view.sinopsis_text.setOnClickListener {
+            if(isTextViewClicked){
+                //This will shrink textview to 2 lines if it is expanded.
+                view.sinopsis_text.maxLines = 2
+                isTextViewClicked = false
+            } else {
+                //This will expand the textview if it is of 2 lines
+                view.sinopsis_text.maxLines = Integer.MAX_VALUE
+                isTextViewClicked = true
+            }
+        }
+
         fillGenres()
         fillNetworks()
         fillTrailer()
@@ -45,13 +60,16 @@ class SerieAdapter(val context: Context, val view: View, private val serie: Seri
      */
     private fun fillTrailer() {
         if (serie.video != null) {
-            view.youtube_player_view.getYouTubePlayerWhenReady(object : YouTubePlayerCallback {
-                override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
-                    youTubePlayer.cueVideo(serie.video!!.key, 0f)
-                    view.youtube_player_view.visibility = View.VISIBLE
-                }
-            })
-        } else view.trailerContainer.visibility = View.GONE
+            view.trailer_link.setOnClickListener {
+                val youtubePlayer =
+                    Intent(Intent.ACTION_VIEW, Uri.parse("$BASE_URL_YOUTUBE${serie.video!!.key}"))
+                val chooser: Intent =
+                    Intent.createChooser(youtubePlayer, context.getString(R.string.open_with));
+
+                if (youtubePlayer.resolveActivity(context.packageManager) != null)
+                    context.startActivity(chooser)
+            }
+        } else view.trailer_link.visibility = View.GONE
     }
 
     /**
@@ -125,11 +143,11 @@ class SerieAdapter(val context: Context, val view: View, private val serie: Seri
     /**
      * Fills all the images in the fragment
      */
-    private fun fillImages(basic: BasicResponse.SerieBasic?) {
-        if (basic == null || basic.posterPath == serie.posterPath) {
+    private fun fillImages(basicPosterPath: String?) {
+        if (basicPosterPath == null || basicPosterPath == serie.posterPath) {
             view.posterImage.getImage(context, BASE_URL_IMAGES_POSTER + serie.posterPath.toString())
         } else {
-            view.posterImage.getImage(context, BASE_URL_IMAGES_POSTER + basic.posterPath.toString())
+            view.posterImage.getImage(context, BASE_URL_IMAGES_POSTER + basicPosterPath.toString())
         }
         view.imagen_background.getImageNoPlaceholder(
             context, BASE_URL_IMAGES_BACK + serie.backdropPath.toString()
@@ -162,7 +180,7 @@ class SerieAdapter(val context: Context, val view: View, private val serie: Seri
      */
     private fun goToNetworkFragment(pos: Int, v: View) {
         val bundle = Bundle()
-        bundle.putParcelable(ID_NETWORK, serie.networks?.get(pos))
+        bundle.putParcelable(ID_NETWORK, serie.networks[pos])
         Navigation.findNavController(v)
             .navigate(R.id.action_navigation_series_to_networkFragment, bundle)
     }
@@ -175,7 +193,7 @@ class SerieAdapter(val context: Context, val view: View, private val serie: Seri
      */
     private fun goToGenreFragment(pos: Int, v: View) {
         val bundle = Bundle()
-        bundle.putParcelable(ID_GENRE, serie.genres?.get(pos))
+        bundle.putParcelable(ID_GENRE, serie.genres[pos])
         Navigation.findNavController(v)
             .navigate(R.id.action_navigation_series_to_genreFragment, bundle)
     }

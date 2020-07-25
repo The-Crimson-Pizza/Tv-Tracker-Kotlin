@@ -18,21 +18,17 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.android.material.tabs.TabLayoutMediator.TabConfigurationStrategy
 import com.thecrimsonpizza.tvtrackerkotlin.R
-import com.thecrimsonpizza.tvtrackerkotlin.app.domain.BasicResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.ui.following.FollowingViewModel
 import com.thecrimsonpizza.tvtrackerkotlin.app.ui.webview.WebViewActivity
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.saveToFirebase
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_WEB_TV
-import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.SERIE_TRANSITION
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.TEXT_PLAIN
-import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.URL_WEBVIEW
+import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.URL_WEB_VIEW
 import kotlinx.android.synthetic.main.fragment_serie.*
 import java.util.*
 
-class SerieFragment(serie: BasicResponse.SerieBasic) : Fragment() {
-
-    private var basic = serie
+class SerieFragment(private val posterPath: String? = null) : Fragment() {
 
     private val seriesViewModel: SeriesViewModel by activityViewModels()
     private val followingViewModel: FollowingViewModel by activityViewModels()
@@ -41,15 +37,25 @@ class SerieFragment(serie: BasicResponse.SerieBasic) : Fragment() {
     private lateinit var mSerie: SerieResponse.Serie
     private lateinit var itemWeb: MenuItem
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        followingViewModel.init()
+//        this.sharedElementEnterTransition =
+//            TransitionInflater.from(context).inflateTransition(R.transition.grid_detail_transition);
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
+//        idSerie = intent.getInt(GlobalConstants.ID_SERIE, 0)
+//        idSerie = requireArguments().getInt(GlobalConstants.ID_SERIE, 0)
+//        seriesViewModel.getShowData(idSerie)
         return inflater.inflate(R.layout.fragment_serie, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        ViewCompat.setTransitionName(posterImage, SERIE_TRANSITION)
+        ViewCompat.setTransitionName(posterImage, posterImage.transitionName)
 
         progres.visibility = View.VISIBLE
         itemWeb = toolbar.menu.findItem(R.id.action_web)
@@ -88,7 +94,7 @@ class SerieFragment(serie: BasicResponse.SerieBasic) : Fragment() {
         }
         if (changed) followingList.saveToFirebase()
 
-        SerieAdapter(requireContext(), requireView(), serie).fillCollapseBar(basic)
+        SerieAdapter(requireContext(), requireView(), serie).fillCollapseBar(posterPath)
         setFloatingButton()
         progres.visibility = View.GONE
     }
@@ -112,7 +118,6 @@ class SerieFragment(serie: BasicResponse.SerieBasic) : Fragment() {
         followingList.add(mSerie)
         followingList.saveToFirebase()
         seriesViewModel.saveSerie(mSerie)
-//        RxBus.getInstance().publish(serie)
     }
 
     private fun deleteFav() {
@@ -140,7 +145,7 @@ class SerieFragment(serie: BasicResponse.SerieBasic) : Fragment() {
                 startActivity(
                     Intent(
                         requireContext(), WebViewActivity::class.java
-                    ).putExtra(URL_WEBVIEW, mSerie.homepage)
+                    ).putExtra(URL_WEB_VIEW, mSerie.homepage)
                 )
             }
             false

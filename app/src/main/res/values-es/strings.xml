@@ -84,4 +84,6 @@
     <string name="series_seguidas">series seguidas</string>
     <string name="notificacion_nueva_temporada">¡La temporada %1$s de %2$s se estrena hoy!</string>
     <string name="next_episode_watched">Visto</string>
+    <string name="where_to_watch">Dónde verlo</string>
+    <string name="trailer">Trailer</string>
 </resources>

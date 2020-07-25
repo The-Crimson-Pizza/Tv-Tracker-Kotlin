@@ -97,4 +97,9 @@
     <string name="next_episode_watched">Watched</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="where_to_watch">Where to watch</string>
+    <string name="trailer">Trailer</string>
+    <string name="open_with">Open With</string>
+    <string name="serie_transition">serie_transition</string>
+    <string name="actor_transition">actor_transition</string>
 </resources>

@@ -19,9 +19,8 @@ import com.thecrimsonpizza.tvtrackerkotlin.app.ui.actor.PersonActivity
 import com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie.SeriesViewModel
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.getImagePortrait
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.setBaseAdapter
-import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.ACTOR_TRANSITION
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_PORTRAIT
-import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASIC_PERSON
+import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASIC_PERSON_POSTER_PATH
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.ID_ACTOR
 import kotlinx.android.synthetic.main.fragment_cast.*
 import kotlinx.android.synthetic.main.lista_cast_vertical.view.*
@@ -51,21 +50,21 @@ class CastFragment : Fragment() {
         ) { cast ->
             itemView.actor_name.text = cast.name
             itemView.character_name.text = cast.character
-            itemView.profile_image.getImagePortrait(requireContext(), BASE_URL_IMAGES_PORTRAIT +cast.profilePath.toString())
+            itemView.profile_image.getImagePortrait(
+                requireContext(),
+                BASE_URL_IMAGES_PORTRAIT + cast.profilePath.toString()
+            )
             itemView.setOnClickListener { v ->
-//                val bundle = Bundle()
-//                bundle.putInt(ID_ACTOR, cast.id)
-//                Navigation.findNavController(v).navigate(R.id.action_series_to_actores, bundle)
 
                 val intent = Intent(activity, PersonActivity::class.java).apply {
                     putExtras(Bundle().apply {
                         putExtra(ID_ACTOR, cast.id)
-                        putParcelable(BASIC_PERSON, cast)
+                        putParcelable(BASIC_PERSON_POSTER_PATH, cast)
                     })
                 }
                 val activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(
                     requireActivity(),
-                    Pair(view.profile_image, ACTOR_TRANSITION)
+                    Pair(itemView.profile_image, v.profile_image.transitionName)
                 )
 
                 ActivityCompat.startActivity(requireContext(), intent, activityOptions.toBundle())
@@ -77,7 +76,9 @@ class CastFragment : Fragment() {
             it.credits.cast.let { it1 -> mCast.addAll(it1) }
             gridCasting.adapter?.notifyDataSetChanged()
 
-            if (R.id.gridCasting == switcher_cast.nextView.id) switcher_cast.showNext()
+            if (mCast.isNotEmpty()) {
+                if (R.id.gridCasting == switcher_cast.nextView.id) switcher_cast.showNext()
+            } else if (R.id.no_data_cast == switcher_cast.nextView.id) switcher_cast.showNext()
         })
     }
 }

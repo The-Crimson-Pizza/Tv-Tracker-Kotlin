@@ -18,7 +18,7 @@ import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse.Serie
 import com.thecrimsonpizza.tvtrackerkotlin.app.ui.following.FollowingViewModel
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.SEASON_ID_EXTRA
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.SEASON_NUMBER_EXTRA
-import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.SERIE_NOMBRE_EXTRA
+import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.SERIE_NAME_EXTRA
 import com.thecrimsonpizza.tvtrackerkotlin.device.Receiver
 import com.thecrimsonpizza.tvtrackerkotlin.device.Receiver.Companion.ACTION_ALARM_RECEIVER
 import kotlinx.android.synthetic.main.activity_main.*
@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        followingViewModel.init()
+//        followingViewModel.init()
         navController = Navigation.findNavController(
             this@MainActivity,
             R.id.nav_host_fragment
@@ -102,7 +102,7 @@ class MainActivity : AppCompatActivity() {
             Intent(this@MainActivity, Receiver::class.java)
                 .setAction(ACTION_ALARM_RECEIVER + season.id)
                 .putExtra(SEASON_ID_EXTRA, season.id)
-                .putExtra(SERIE_NOMBRE_EXTRA, name)
+                .putExtra(SERIE_NAME_EXTRA, name)
                 .putExtra(SEASON_NUMBER_EXTRA, season.seasonNumber), flag
         )
     }

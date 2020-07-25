@@ -4,8 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.thecrimsonpizza.tvtrackerkotlin.R
-import com.thecrimsonpizza.tvtrackerkotlin.app.domain.BasicResponse
-import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASIC_SERIE
+import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASIC_SERIE_POSTER_PATH
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.ID_SERIE
 
 class SerieActivity : AppCompatActivity() {
@@ -21,11 +20,11 @@ class SerieActivity : AppCompatActivity() {
 
         idSerie = intent.getIntExtra(ID_SERIE, 0)
 
-        val serie = intent.getParcelableExtra<BasicResponse.SerieBasic>(BASIC_SERIE)
+        val basicPosterPath = intent.getStringExtra(BASIC_SERIE_POSTER_PATH)
 
         seriesViewModel.getShowData(idSerie)
         supportFragmentManager.beginTransaction()
-            .add(R.id.fragment_container, SerieFragment(serie))
+            .add(R.id.fragment_container, SerieFragment(basicPosterPath))
             .commit()
     }
 }

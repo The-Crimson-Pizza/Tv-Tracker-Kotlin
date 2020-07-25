@@ -4,8 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.thecrimsonpizza.tvtrackerkotlin.R
-import com.thecrimsonpizza.tvtrackerkotlin.app.domain.actor.Credits
-import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASIC_PERSON
+import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASIC_PERSON_POSTER_PATH
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.ID_ACTOR
 
 class PersonActivity : AppCompatActivity() {
@@ -21,11 +20,11 @@ class PersonActivity : AppCompatActivity() {
 
         idPerson = intent.getIntExtra(ID_ACTOR, 0)
 
-        val person = intent.getParcelableExtra<Credits.Cast>(BASIC_PERSON)
+        val personPath = intent.getStringExtra(BASIC_PERSON_POSTER_PATH)
 
         personViewModel.retrievePerson(idPerson)
         supportFragmentManager.beginTransaction()
-            .add(R.id.fragment_container, ActorFragment(person)).commit()
+            .add(R.id.fragment_container, ActorFragment(personPath)).commit()
     }
 
 }

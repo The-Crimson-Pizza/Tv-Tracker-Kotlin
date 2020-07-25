@@ -20,11 +20,10 @@ import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.*
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_PORTRAIT
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_POSTER
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_WEB_MOVIE
-import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASIC_SERIE
+import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASIC_SERIE_POSTER_PATH
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.FORMAT_LONG
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.ID_SERIE
-import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.SERIE_TRANSITION
-import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.URL_WEBVIEW
+import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.URL_WEB_VIEW
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.getImageNoPlaceholder
 import kotlinx.android.synthetic.main.content_actor.view.*
 import kotlinx.android.synthetic.main.fragment_actor.view.*
@@ -59,7 +58,20 @@ class ActorAdapter(
         }
 
         includeView.lugar_actor.text = person.placeOfBirth.checkNull(context)
+
         includeView.bio_text.text = person.biography.checkNull(context)
+        var isTextViewClicked = false
+        includeView.bio_text.setOnClickListener {
+            if(isTextViewClicked){
+                //This will shrink textview to 2 lines if it is expanded.
+                includeView.bio_text.maxLines = 2
+                isTextViewClicked = false
+            } else {
+                //This will expand the textview if it is of 2 lines
+                includeView.bio_text.maxLines = Integer.MAX_VALUE
+                isTextViewClicked = true
+            }
+        }
 
         val sortedMovies = person.movieCredits.cast.sortedByDescending { it.releaseDate }
         person.movieCredits.cast.let {
@@ -87,7 +99,7 @@ class ActorAdapter(
                     context, BASE_URL_IMAGES_POSTER + cast.posterPath
                 )
                 itemView.ratingBasic.text = cast.voteAverage.toString()
-                itemView.setOnClickListener { v: View -> goToSerie(cast, v) }
+                itemView.setOnClickListener { v: View -> goToSerie(cast, itemView) }
             }
         }
 
@@ -105,7 +117,7 @@ class ActorAdapter(
             .setAction(R.string.open_web) {
                 context.startActivity(
                     Intent(context, WebViewActivity::class.java).putExtra(
-                        URL_WEBVIEW, BASE_URL_WEB_MOVIE + movie.id
+                        URL_WEB_VIEW, BASE_URL_WEB_MOVIE + movie.id
                     )
                 )
             }.show()
@@ -115,11 +127,11 @@ class ActorAdapter(
         val intent = Intent(context, SerieActivity::class.java).apply {
             putExtras(Bundle().apply {
                 putExtra(ID_SERIE, cast.id)
-                putParcelable(BASIC_SERIE, cast.toBasic())
+                putExtra(BASIC_SERIE_POSTER_PATH, cast.posterPath)
             })
         }
         val activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(
-            context as Activity, Pair(view.posterBasic, SERIE_TRANSITION)
+            context as Activity, Pair(view.posterBasic, view.posterBasic.transitionName)
         )
         ActivityCompat.startActivity(context, intent, activityOptions.toBundle())
     }
@@ -150,11 +162,7 @@ class ActorAdapter(
             )
         }
 
-        return if (dead) {
-            deathDateNew
-        } else {
-            bornDateNew
-        }
+        return if (dead) deathDateNew else bornDateNew
 
     }
 }

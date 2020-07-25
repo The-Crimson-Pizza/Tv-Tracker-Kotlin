@@ -18,7 +18,7 @@ object GlobalConstants {
     const val BASE_URL_IMAGES_NETWORK = "https://image.tmdb.org/t/p/w92/"
     const val BASE_URL_INSTAGRAM = "https://www.instagram.com/"
     const val BASE_URL_INSTAGRAM_U = "https://www.instagram.com/_u/"
-    const val BASE_URL_YOUTUBE = "http://youtu.be/"
+    const val BASE_URL_YOUTUBE = "http://www.youtube.com/watch?v=/"
 
     //    ID'S
     const val ID_SERIE = "id_serie"
@@ -47,14 +47,14 @@ object GlobalConstants {
     const val FIRST_OPENED = "first_opened"
 
     //    INTENT KEYS
-    const val URL_WEBVIEW = "URL"
+    const val URL_WEB_VIEW = "URL"
     const val ID = "id"
-    const val BASIC_SERIE = "basic_serie"
-    const val BASIC_PERSON = "basic_person"
+    const val BASIC_SERIE_POSTER_PATH = "basic-serie-poster-path"
+    const val BASIC_PERSON_POSTER_PATH = "basic-person-poster-path"
 
     //    EXTRAS
     const val SEASON_ID_EXTRA = "SEASON_ID"
-    const val SERIE_NOMBRE_EXTRA = "SERIE_NOMBRE"
+    const val SERIE_NAME_EXTRA = "SERIE_NA"
     const val SEASON_NUMBER_EXTRA = "SEASON_NUMBER"
 
     //    NOTIFICACIONES

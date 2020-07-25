@@ -12,19 +12,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.thecrimsonpizza.tvtrackerkotlin.R
-import com.thecrimsonpizza.tvtrackerkotlin.app.domain.actor.Credits
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.actor.PersonResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.ui.webview.WebViewActivity
-import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.ACTOR_TRANSITION
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_INSTAGRAM
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_INSTAGRAM_U
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_WEB_PERSON
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.COM_INSTAGRAM_ANDROID
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.ID_ACTOR
-import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.URL_WEBVIEW
+import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.URL_WEB_VIEW
 import kotlinx.android.synthetic.main.fragment_actor.*
 
-class ActorFragment(person: Credits.Cast?) : Fragment() {
+class ActorFragment(personPath: String?) : Fragment() {
 
     private var idActor: Int = 0
 
@@ -41,7 +39,7 @@ class ActorFragment(person: Credits.Cast?) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        ViewCompat.setTransitionName(profile_image, ACTOR_TRANSITION)
+        ViewCompat.setTransitionName(profile_image, profile_image.transitionName)
 
         toolbar_actor.setNavigationIcon(R.drawable.ic_arrow_back)
         toolbar_actor.setNavigationOnClickListener { requireActivity().onBackPressed() }
@@ -73,7 +71,7 @@ class ActorFragment(person: Credits.Cast?) : Fragment() {
             startActivity(
                 Intent(requireContext(), WebViewActivity::class.java)
                     .putExtra(
-                        URL_WEBVIEW,
+                        URL_WEB_VIEW,
                         BASE_URL_INSTAGRAM + actor.externalIds.instagramId
                     )
             )

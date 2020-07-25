@@ -12,13 +12,4 @@
     <dimen name="z_app_bar">4dp</dimen>
     <dimen name="details_poster_not_elevation">0dp</dimen>
 
-
-    <!-- standard metrics -->
-    <dimen name="padding_micro">4dp</dimen>
-    <dimen name="padding_small">6dp</dimen>
-    <dimen name="padding_normal">16dp</dimen>
-    <dimen name="padding_large">32dp</dimen>
-
-    <dimen name="column_width">180dp</dimen>
-    <dimen name="details_corner_cutout">64dp</dimen>
 </resources>

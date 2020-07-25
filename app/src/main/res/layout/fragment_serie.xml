@@ -2,10 +2,10 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-android:background="@color/bgTotal"
     android:id="@+id/layout_serie"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bgTotal"
     tools:context=".app.ui.serie.SerieFragment">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -40,29 +40,18 @@ android:background="@color/bgTotal"
                     app:layout_collapseMode="parallax" />
 
 
-                <FrameLayout
+                <ImageView
+                    android:id="@+id/posterImage"
                     android:layout_width="100dp"
                     android:layout_height="150dp"
                     android:layout_gravity="bottom|end"
                     android:layout_margin="7.5dp"
-                    app:layout_collapseMode="none">
+                    android:padding="4.5dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/default_poster"
+                    android:transitionName="@string/serie_transition"
+                    app:layout_collapseMode="none" />
 
-                    <ImageView
-                        android:id="@+id/posterImage"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:padding="4.5dp"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/default_poster" />
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:transitionName="poster_transition"
-
-                        android:layout_height="match_parent"
-                        android:src="@drawable/frame" />
-
-                </FrameLayout>
 
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbar"
@@ -153,7 +142,6 @@ android:background="@color/bgTotal"
         android:scaleX="2"
         android:scaleY="2"
         android:visibility="visible" />
-
 
 
 </FrameLayout>

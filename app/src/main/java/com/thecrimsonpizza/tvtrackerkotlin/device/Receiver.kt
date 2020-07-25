@@ -15,7 +15,7 @@ import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.NEW_SEASON
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.NEW_SEASON_NOTIFICATION_CHANNEL_NAME
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.SEASON_ID_EXTRA
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.SEASON_NUMBER_EXTRA
-import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.SERIE_NOMBRE_EXTRA
+import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.SERIE_NAME_EXTRA
 
 class Receiver : BroadcastReceiver() {
     private var notificationManager: NotificationManager? = null
@@ -23,7 +23,7 @@ class Receiver : BroadcastReceiver() {
     //    NotificationManagerCompat notificationManager;
     private var summaryNotificationBuilder: NotificationCompat.Builder? = null
     override fun onReceive(context: Context, intent: Intent) {
-        val name = intent.getStringExtra(SERIE_NOMBRE_EXTRA)
+        val name = intent.getStringExtra(SERIE_NAME_EXTRA)
         val numTemporada = intent.getIntExtra(SEASON_NUMBER_EXTRA, 0)
         val id = intent.getIntExtra(SEASON_ID_EXTRA, 0)
         notificationManager =
