@@ -19,7 +19,7 @@ import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.ID_GENRE
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.ID_SERIE
 import kotlinx.android.synthetic.main.fragment_genre.*
-import kotlinx.android.synthetic.main.lista_series_basic_vertical.view.*
+import kotlinx.android.synthetic.main.lista_series_basic.view.*
 
 class GenreFragment : Fragment() {
 
@@ -82,14 +82,14 @@ class GenreFragment : Fragment() {
     private fun setAdapter() {
         rv_genres.setBaseAdapter(
             mSeriesByGenre,
-            R.layout.lista_series_basic_vertical,
+            R.layout.lista_series_basic,
             GridLayoutManager(activity, 3)
         ) { serie ->
-            itemView.posterBasicVertical.getImage(requireContext(), GlobalConstants.BASE_URL_IMAGES_POSTER +serie.posterPath)
-            itemView.titleBasicVertical.text = serie.name
-            itemView.ratingBasicVertical.text = serie.voteAverage.toString()
+            itemView.posterBasic.getImage(requireContext(), GlobalConstants.BASE_URL_IMAGES_POSTER +serie.posterPath)
+            itemView.titleBasic.text = serie.name
+            itemView.ratingBasic.text = serie.voteAverage.toString()
 
-            itemView.ratingBasicVertical.visibility = View.GONE
+            itemView.ratingBasic.visibility = View.GONE
             itemView.setOnClickListener {
                 val bundle = Bundle()
                 bundle.putInt(ID_SERIE, serie.id)

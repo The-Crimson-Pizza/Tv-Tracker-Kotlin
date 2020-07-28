@@ -79,7 +79,7 @@ class ActorAdapter(
                 sortedMovies, R.layout.lista_series_basic,
                 LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             ) { cast ->
-                itemView.titleBasicTutorial.text = cast.title
+                itemView.titleBasic.text = cast.title
                 itemView.posterBasic.getImage(
                     context, BASE_URL_IMAGES_POSTER + cast.posterPath
                 )
@@ -94,12 +94,12 @@ class ActorAdapter(
                 sortedShows, R.layout.lista_series_basic,
                 LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             ) { cast ->
-                itemView.titleBasicTutorial.text = cast.name
+                itemView.titleBasic.text = cast.name
                 itemView.posterBasic.getImage(
                     context, BASE_URL_IMAGES_POSTER + cast.posterPath
                 )
                 itemView.ratingBasic.text = cast.voteAverage.toString()
-                itemView.setOnClickListener { v: View -> goToSerie(cast, itemView) }
+                itemView.setOnClickListener { v: View -> goToSerie(cast, v) }
             }
         }
 

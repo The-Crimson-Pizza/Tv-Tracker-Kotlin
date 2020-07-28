@@ -18,7 +18,7 @@ import com.thecrimsonpizza.tvtrackerkotlin.app.domain.BasicResponse
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.getImage
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.setBaseAdapter
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.MY_PREFS
-import kotlinx.android.synthetic.main.lista_series_basic_vertical_tutorial.*
+import kotlinx.android.synthetic.main.lista_series_basic.view.*
 import kotlinx.android.synthetic.main.tutorial_slide5.*
 
 class IntroductionFragment : Fragment(), SlidePolicy {
@@ -47,7 +47,7 @@ class IntroductionFragment : Fragment(), SlidePolicy {
 
     private fun setAdapter() {
         recyclerTutorial.setBaseAdapter(
-            mPopulares, R.layout.lista_series_basic_vertical_tutorial,
+            mPopulares, R.layout.lista_series_basic,
             GridLayoutManager(activity, 3)
         ) {
             val selectedItems = SparseBooleanArray()
@@ -55,17 +55,17 @@ class IntroductionFragment : Fragment(), SlidePolicy {
                 MY_PREFS,
                 Context.MODE_PRIVATE
             )
-            cardViewTutorial.isSelected = selectedItems[adapterPosition, false]
-            posterBasicTutorial.getImage(requireContext(), it.posterPath)
-            titleBasicTutorial.text = it.name
+            itemView.cardViewBasic.isSelected = selectedItems[adapterPosition, false]
+            itemView.posterBasic.getImage(requireContext(), it.posterPath)
+            itemView.titleBasic.text = it.name
             itemView.setOnClickListener {
                 if (selectedItems[adapterPosition, false]) {
                     selectedItems.delete(adapterPosition)
-                    cardViewTutorial.isSelected = false
+                    itemView.cardViewBasic.isSelected = false
                     mCodes.remove(adapterPosition)
                 } else {
                     selectedItems.put(adapterPosition, true)
-                    cardViewTutorial.isSelected = true
+                    itemView.cardViewBasic.isSelected = true
                     mCodes[adapterPosition] = id
                 }
                 SharedPreferencesController().setPrefIntArray(

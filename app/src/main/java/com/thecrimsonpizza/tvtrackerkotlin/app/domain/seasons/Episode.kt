@@ -22,7 +22,7 @@ data class Episode(
     var followingData: Following = Following(),
 
     @SerializedName("show_id") var showId: Int = 0,
-    @SerializedName("air_date") var airDate: String = "",
+    @SerializedName("air_date") var airDate: String? = "",
     @SerializedName("episode_number") var episodeNumber: Int = 0,
     @SerializedName("season_number") var seasonNumber: Int = 0,
     @SerializedName("still_path") var stillPath: String? = null,

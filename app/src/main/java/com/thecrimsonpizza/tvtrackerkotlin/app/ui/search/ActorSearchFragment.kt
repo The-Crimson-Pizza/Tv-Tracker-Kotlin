@@ -1,22 +1,26 @@
 package com.thecrimsonpizza.tvtrackerkotlin.app.ui.search
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.util.Pair
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import com.thecrimsonpizza.tvtrackerkotlin.R
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.actor.PersonResponse
+import com.thecrimsonpizza.tvtrackerkotlin.app.ui.actor.PersonActivity
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.getImagePortrait
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.setBaseAdapter
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_POSTER
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.ID_ACTOR
 import kotlinx.android.synthetic.main.fragment_actor_search.*
-import kotlinx.android.synthetic.main.lista_series_basic_vertical.view.*
+import kotlinx.android.synthetic.main.lista_series_basic.view.*
 
 class ActorSearchFragment : Fragment() {
 
@@ -38,19 +42,17 @@ class ActorSearchFragment : Fragment() {
 
     private fun setAdapter() {
         rvActores.setBaseAdapter(
-            personList, R.layout.lista_series_basic_vertical,
+            personList, R.layout.lista_series_basic,
             GridLayoutManager(activity, 3)
         ) {
             itemView.layoutParams.width = (requireView().width * 0.3).toInt()
 
-            itemView.posterBasicVertical.getImagePortrait(
+            itemView.posterBasic.getImagePortrait(
                 requireContext(), BASE_URL_IMAGES_POSTER + it.profilePath
             )
-            itemView.ratingBasicVertical.visibility = View.GONE
-            itemView.titleBasicVertical.text = it.name
-            itemView.setOnClickListener { view ->
-                goToFragment(view, it.id)
-            }
+            itemView.ratingBasic.visibility = View.GONE
+            itemView.titleBasic.text = it.name
+            itemView.setOnClickListener { view -> goToPersonActivity(view, it) }
         }
     }
 
@@ -74,9 +76,20 @@ class ActorSearchFragment : Fragment() {
         })
     }
 
-    private fun goToFragment(v: View, id: Int) {
-        val bundle = Bundle()
-        bundle.putInt(ID_ACTOR, id)
-        Navigation.findNavController(v).navigate(R.id.action_search_to_actores, bundle)
+    private fun goToPersonActivity(v: View, person: PersonResponse.Person) {
+
+        val intent = Intent(activity, PersonActivity::class.java).apply {
+            putExtras(Bundle().apply {
+                putExtra(ID_ACTOR, person.id)
+//                    putParcelable(GlobalConstants.BASIC_PERSON_POSTER_PATH, person)
+            })
+        }
+        val activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(
+            requireActivity(),
+            Pair(v.posterBasic, v.posterBasic.transitionName)
+        )
+
+        ActivityCompat.startActivity(requireContext(), intent, activityOptions.toBundle())
+
     }
 }

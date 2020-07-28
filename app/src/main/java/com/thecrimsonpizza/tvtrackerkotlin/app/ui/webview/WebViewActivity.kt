@@ -1,7 +1,6 @@
 package com.thecrimsonpizza.tvtrackerkotlin.app.ui.webview
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import android.webkit.WebChromeClient
 import android.webkit.WebViewClient
@@ -22,6 +21,6 @@ class WebViewActivity : AppCompatActivity() {
 //        web_view.settings.userAgentString = "Android"
         web_view.settings.javaScriptEnabled = true
         web_view.settings.setAppCacheEnabled(true)
-        web_view.loadUrl(Intent().getStringExtra(URL_WEB_VIEW))
+        web_view.loadUrl(intent.getStringExtra(URL_WEB_VIEW))
     }
 }

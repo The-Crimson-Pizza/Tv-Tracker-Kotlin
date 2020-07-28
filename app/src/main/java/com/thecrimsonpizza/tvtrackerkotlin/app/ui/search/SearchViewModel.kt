@@ -29,7 +29,7 @@ class SearchViewModel : ViewModel() {
             .observeOn(Schedulers.io())
             .doOnError(Throwable::printStackTrace)
             .subscribe {
-                searchPersonList.value = it
+                searchPersonList.postValue(it)
             }
     }
     fun getPersonList(): LiveData<PersonResponse> {

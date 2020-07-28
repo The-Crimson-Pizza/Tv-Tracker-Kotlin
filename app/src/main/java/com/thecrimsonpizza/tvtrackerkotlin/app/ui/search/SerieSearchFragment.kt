@@ -1,23 +1,28 @@
 package com.thecrimsonpizza.tvtrackerkotlin.app.ui.search
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import com.thecrimsonpizza.tvtrackerkotlin.R
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
+import com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie.SerieActivity
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.getImage
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.setBaseAdapter
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_POSTER
+import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASIC_SERIE_POSTER_PATH
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.EMPTY_STRING
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.ID_SERIE
 import kotlinx.android.synthetic.main.fragment_serie_search.*
-import kotlinx.android.synthetic.main.lista_series_basic_vertical.view.*
+import kotlinx.android.synthetic.main.lista_series_basic.view.*
 
 class SerieSearchFragment : Fragment() {
     private val showList = mutableListOf<SerieResponse.Serie>()
@@ -59,29 +64,39 @@ class SerieSearchFragment : Fragment() {
 
     private fun setAdapter() {
         rvSeriesSearch.setBaseAdapter(
-            showList, R.layout.lista_series_basic_vertical,
+            showList, R.layout.lista_series_basic,
             GridLayoutManager(activity, 3)
         ) {
 
             itemView.layoutParams.width = (requireView().width * 0.3).toInt()
 
-            itemView.posterBasicVertical.getImage(
+            itemView.posterBasic.getImage(
                 requireContext(), BASE_URL_IMAGES_POSTER + it.posterPath
             )
-            itemView.titleBasicVertical.text = it.name
+            itemView.titleBasic.text = it.name
 
-            if (it.voteAverage > 0) itemView.ratingBasicVertical.text = it.voteAverage.toString()
-            else itemView.ratingBasicVertical.visibility = View.GONE
+            if (it.voteAverage > 0) itemView.ratingBasic.text = it.voteAverage.toString()
+            else itemView.ratingBasic.visibility = View.GONE
 
-            itemView.setOnClickListener { view ->
-                goToFragment(view, it.id)
-            }
+            itemView.setOnClickListener { view -> goToSerieActivity(view, it) }
         }
     }
 
-    private fun goToFragment(v: View, id: Int) {
-        val bundle = Bundle()
-        bundle.putInt(ID_SERIE, id)
-        Navigation.findNavController(v).navigate(R.id.action_search_to_series, bundle)
+    private fun goToSerieActivity(v: View, serie: SerieResponse.Serie) {
+
+        val intent = Intent(context, SerieActivity::class.java).apply {
+            putExtras(Bundle().apply {
+                putExtra(ID_SERIE, serie.id)
+                putExtra(BASIC_SERIE_POSTER_PATH, serie.posterPath)
+            })
+        }
+
+        val activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(
+            context as Activity,
+            androidx.core.util.Pair(v.posterBasic, v.posterBasic.transitionName)
+        )
+
+        ActivityCompat.startActivity(requireContext(), intent, activityOptions.toBundle())
+
     }
 }

@@ -47,12 +47,11 @@ class SeasonFragment : Fragment() {
             sortedSeasons, R.layout.list_season,
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         ) {
+
             if (serie.followingData.added) setWatchCheck(itemView, adapterPosition, it)
 
             itemView.image_season.getImage(requireContext(), BASE_URL_IMAGES_POSTER + it.posterPath)
             itemView.season_name.text = it.name
-//            itemView.episode_number
-//            itemView.checkbox_watched
 
             if (!it.episodes.isNullOrEmpty()) {
                 if (serie.followingData.added)
@@ -91,15 +90,12 @@ class SeasonFragment : Fragment() {
     }
 
     private fun goToEpisodes(pos: Int) {
-        val fragment = EpisodesFragment()
-        fragment.arguments = Bundle().apply { putInt(ID_SEASON, pos) }
-//        requireActivity().supportFragmentManager.beginTransaction()
-//            .replace(R.id.fragment_container, fragment)
-//            .commit()
+        val fragment = EpisodesFragment().apply {
+            arguments = Bundle().apply { putInt(ID_SEASON, pos) }
+        }
 
         requireActivity().supportFragmentManager
             .beginTransaction()
-//            .addSharedElement(view.posterBasic, view.posterBasic.transitionName)
             .addToBackStack("TAG")
             .add(R.id.fragment_container, fragment)
             .commit()
@@ -116,7 +112,9 @@ class SeasonFragment : Fragment() {
     }
 
     private fun setWatchCheck(itemView: View, pos: Int, season: Season) {
-        itemView.checkbox_watched.visibility = View.VISIBLE
+        if (!season.episodes.isNullOrEmpty()) {
+            itemView.checkbox_watched.visibility = View.VISIBLE
+        }
         itemView.checkbox_watched.isChecked = season.followingData.watched
         itemView.checkbox_watched.setOnCheckedChangeListener { _, isChecked: Boolean ->
             watchSeason(pos, !isChecked)

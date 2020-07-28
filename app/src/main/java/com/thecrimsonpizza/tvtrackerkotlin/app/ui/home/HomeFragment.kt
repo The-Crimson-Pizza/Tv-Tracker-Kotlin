@@ -92,7 +92,7 @@ class HomeFragment : Fragment() {
                 requireContext(),
                 BASE_URL_IMAGES_POSTER + show.posterPath.toString()
             )
-            itemView.titleBasicTutorial.text = show.name
+            itemView.titleBasic.text = show.name
             itemView.ratingBasic.text = show.voteAverage.toString()
             itemView.setOnClickListener { goToSerieFragment(it, show.id, show) }
         }
@@ -107,7 +107,7 @@ class HomeFragment : Fragment() {
                 requireContext(),
                 BASE_URL_IMAGES_POSTER + show.posterPath.toString()
             )
-            itemView.titleBasicTutorial.text = show.originalName
+            itemView.titleBasic.text = show.originalName
             itemView.ratingBasic.text = show.voteAverage.toString()
             itemView.setOnClickListener { goToSerieFragment(it, show.id, show.toBasic()) }
         }
@@ -123,7 +123,8 @@ class HomeFragment : Fragment() {
         }
 
         val activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(
-            context as Activity, androidx.core.util.Pair(view.posterBasic, view.posterBasic.transitionName)
+            context as Activity,
+            androidx.core.util.Pair(view.posterBasic, view.posterBasic.transitionName)
         )
 
         ActivityCompat.startActivity(requireContext(), intent, activityOptions.toBundle())

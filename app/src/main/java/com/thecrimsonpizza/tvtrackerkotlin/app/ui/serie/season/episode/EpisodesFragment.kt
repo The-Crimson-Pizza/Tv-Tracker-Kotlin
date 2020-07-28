@@ -101,7 +101,7 @@ class EpisodesFragment : Fragment() {
             itemView.image_episode.getImage(requireContext(), BASE_URL_IMAGES_POSTER + it.stillPath)
             itemView.episode_name.text = it.name
             itemView.nextEpisodeNameExpandable.text = it.name
-            itemView.episode_fecha.text = it.airDate.changeDateFormat(FORMAT_LONG)
+            itemView.episode_fecha.text =  if(it.airDate!= null) it.airDate?.changeDateFormat(FORMAT_LONG) else getString(R.string.no_data)
             itemView.episode_sinopsis.text = it.overview.checkNull(requireContext())
             itemView.episode_time.text =
                 (if (!serie.episodeRunTime.isNullOrEmpty()) {

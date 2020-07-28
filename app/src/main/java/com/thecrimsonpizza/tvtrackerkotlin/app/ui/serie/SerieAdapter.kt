@@ -40,8 +40,7 @@ class SerieAdapter(val context: Context, val view: View, private val serie: Seri
         var isTextViewClicked = false
         view.sinopsis_text.setOnClickListener {
             if(isTextViewClicked){
-                //This will shrink textview to 2 lines if it is expanded.
-                view.sinopsis_text.maxLines = 2
+                view.sinopsis_text.maxLines = 4
                 isTextViewClicked = false
             } else {
                 //This will expand the textview if it is of 2 lines

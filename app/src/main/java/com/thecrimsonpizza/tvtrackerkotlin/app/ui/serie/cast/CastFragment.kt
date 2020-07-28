@@ -29,8 +29,6 @@ import kotlinx.android.synthetic.main.lista_cast_vertical.view.*
 class CastFragment : Fragment() {
 
     private val serieViewModel: SeriesViewModel by activityViewModels()
-
-    private var mSerie: SerieResponse.Serie? = null
     private val mCast: MutableList<Credits.Cast> = mutableListOf()
 
     override fun onCreateView(
@@ -44,6 +42,11 @@ class CastFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setAdapter()
+        serieViewModel.getShow().observe(viewLifecycleOwner, Observer { refreshData(it) })
+    }
+
+    private fun setAdapter() {
         gridCasting.setBaseAdapter(
             mCast, R.layout.lista_cast_vertical,
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
@@ -54,31 +57,32 @@ class CastFragment : Fragment() {
                 requireContext(),
                 BASE_URL_IMAGES_PORTRAIT + cast.profilePath.toString()
             )
-            itemView.setOnClickListener { v ->
-
-                val intent = Intent(activity, PersonActivity::class.java).apply {
-                    putExtras(Bundle().apply {
-                        putExtra(ID_ACTOR, cast.id)
-                        putParcelable(BASIC_PERSON_POSTER_PATH, cast)
-                    })
-                }
-                val activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    requireActivity(),
-                    Pair(itemView.profile_image, v.profile_image.transitionName)
-                )
-
-                ActivityCompat.startActivity(requireContext(), intent, activityOptions.toBundle())
-            }
+            itemView.setOnClickListener { v -> goToPersonActivity(v, cast) }
         }
+    }
 
-        serieViewModel.getShow().observe(viewLifecycleOwner, Observer {
-            mCast.clear()
-            it.credits.cast.let { it1 -> mCast.addAll(it1) }
-            gridCasting.adapter?.notifyDataSetChanged()
+    private fun refreshData(it: SerieResponse.Serie) {
+        mCast.clear()
+        it.credits.cast.let { it1 -> mCast.addAll(it1) }
+        gridCasting.adapter?.notifyDataSetChanged()
 
-            if (mCast.isNotEmpty()) {
-                if (R.id.gridCasting == switcher_cast.nextView.id) switcher_cast.showNext()
-            } else if (R.id.no_data_cast == switcher_cast.nextView.id) switcher_cast.showNext()
-        })
+        if (mCast.isNotEmpty()) {
+            if (R.id.gridCasting == switcher_cast.nextView.id) switcher_cast.showNext()
+        } else if (R.id.no_data_cast == switcher_cast.nextView.id) switcher_cast.showNext()
+    }
+
+    private fun goToPersonActivity(v: View, cast: Credits.Cast) {
+        val intent = Intent(activity, PersonActivity::class.java).apply {
+            putExtras(Bundle().apply {
+                putExtra(ID_ACTOR, cast.id)
+                putParcelable(BASIC_PERSON_POSTER_PATH, cast)
+            })
+        }
+        val activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(
+            requireActivity(),
+            Pair(v.profile_image, v.profile_image.transitionName)
+        )
+
+        ActivityCompat.startActivity(requireContext(), intent, activityOptions.toBundle())
     }
 }
