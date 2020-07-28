@@ -1,6 +1,5 @@
 package com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie
 
-import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
@@ -9,6 +8,7 @@ import com.thecrimsonpizza.tvtrackerkotlin.app.domain.seasons.Episode
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.seasons.Season
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.sort
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants
+import kotlinx.android.parcel.Parcelize
 import java.io.Serializable
 import java.util.*
 
@@ -49,7 +49,6 @@ data class SerieResponse(
         var followingData: Following = Following()
 
     ) : Serializable {
-
 
 
         fun withSeasons(seasonsList: MutableList<Season>, serie: Serie): Serie {
@@ -189,66 +188,18 @@ data class SerieResponse(
             return -1
         }
 
+        @Parcelize
         data class Genre(
             var id: Int = 0,
             var name: String = ""
-        ) : Parcelable {
+        ) : Parcelable
 
-            override fun writeToParcel(dest: Parcel?, flags: Int) {
-                dest?.let {
-                    dest.writeInt(id)
-                    dest.writeString(name)
-                }
-            }
-
-            override fun describeContents(): Int = 0
-
-            companion object {
-                @JvmField
-                val CREATOR: Parcelable.Creator<Genre> = object : Parcelable.Creator<Genre> {
-                    override fun newArray(size: Int): Array<Genre?> = arrayOfNulls(size)
-                    override fun createFromParcel(source: Parcel): Genre = Genre(source)
-                }
-            }
-
-            constructor(source: Parcel) : this(
-                source.readInt(),
-                source.readString().toString()
-            )
-        }
-
+        @Parcelize
         data class Network(
             var id: Int = 0,
             var name: String = "",
             @SerializedName("logo_path") var logoPath: String? = ""
-        ) : Parcelable {
-
-
-            override fun writeToParcel(dest: Parcel?, flags: Int) {
-                dest?.let {
-                    dest.writeInt(id)
-                    dest.writeString(name)
-                    dest.writeString(logoPath)
-                }
-            }
-
-            override fun describeContents(): Int = 0
-
-            companion object {
-                @JvmField
-                val CREATOR: Parcelable.Creator<Network> =
-                    object : Parcelable.Creator<Network> {
-                        override fun newArray(size: Int): Array<Network?> = arrayOfNulls(size)
-                        override fun createFromParcel(source: Parcel): Network = Network(source)
-                    }
-            }
-
-            constructor(source: Parcel) : this(
-                source.readInt(),
-                source.readString().toString(),
-                source.readString().toString()
-            )
-        }
+        ) : Parcelable
 
         data class ExternalIds(
             @SerializedName("imdb_id") var imdbId: String? = null,

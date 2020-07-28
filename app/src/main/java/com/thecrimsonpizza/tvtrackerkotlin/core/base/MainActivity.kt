@@ -27,6 +27,8 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
+    private val TAG = MainActivity::class.java.simpleName
+
     private val followingViewModel: FollowingViewModel by lazy {
         ViewModelProvider(this@MainActivity).get(FollowingViewModel::class.java)
     }

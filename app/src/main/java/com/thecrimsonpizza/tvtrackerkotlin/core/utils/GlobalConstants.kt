@@ -19,6 +19,8 @@ object GlobalConstants {
     const val BASE_URL_INSTAGRAM = "https://www.instagram.com/"
     const val BASE_URL_INSTAGRAM_U = "https://www.instagram.com/_u/"
     const val BASE_URL_YOUTUBE = "http://www.youtube.com/watch?v=/"
+    const val BASE_URL_IMDB_PERSON = "https://www.imdb.com/name/"
+    const val BASE_URL_IMDB_TITLE = "https://www.imdb.com/title/"
 
     //    ID'S
     const val ID_SERIE = "id_serie"
