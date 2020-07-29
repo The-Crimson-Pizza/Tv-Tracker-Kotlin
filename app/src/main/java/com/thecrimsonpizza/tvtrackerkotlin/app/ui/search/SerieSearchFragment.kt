@@ -14,7 +14,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.thecrimsonpizza.tvtrackerkotlin.R
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
-import com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie.SerieActivity
+import com.thecrimsonpizza.tvtrackerkotlin.core.base.BaseActivity
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.getImage
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.setBaseAdapter
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_POSTER
@@ -84,7 +84,7 @@ class SerieSearchFragment : Fragment() {
 
     private fun goToSerieActivity(v: View, serie: SerieResponse.Serie) {
 
-        val intent = Intent(context, SerieActivity::class.java).apply {
+        val intent = Intent(context, BaseActivity::class.java).apply {
             putExtras(Bundle().apply {
                 putExtra(ID_SERIE, serie.id)
                 putExtra(BASIC_SERIE_POSTER_PATH, serie.posterPath)

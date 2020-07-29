@@ -1,13 +1,9 @@
 package com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie.cast
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityCompat
-import androidx.core.app.ActivityOptionsCompat
-import androidx.core.util.Pair
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -15,13 +11,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.thecrimsonpizza.tvtrackerkotlin.R
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.actor.Credits
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
-import com.thecrimsonpizza.tvtrackerkotlin.app.ui.actor.PersonActivity
 import com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie.SeriesViewModel
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.getImagePortrait
+import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.goToPersonActivity
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.setBaseAdapter
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_PORTRAIT
-import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASIC_PERSON_POSTER_PATH
-import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.ID_ACTOR
 import kotlinx.android.synthetic.main.fragment_cast.*
 import kotlinx.android.synthetic.main.lista_cast_vertical.view.*
 
@@ -57,7 +51,7 @@ class CastFragment : Fragment() {
                 requireContext(),
                 BASE_URL_IMAGES_PORTRAIT + cast.profilePath.toString()
             )
-            itemView.setOnClickListener { v -> goToPersonActivity(v, cast) }
+            itemView.setOnClickListener { v -> cast.goToPersonActivity(requireContext(), v) }
         }
     }
 
@@ -71,18 +65,4 @@ class CastFragment : Fragment() {
         } else if (R.id.no_data_cast == switcher_cast.nextView.id) switcher_cast.showNext()
     }
 
-    private fun goToPersonActivity(v: View, cast: Credits.Cast) {
-        val intent = Intent(activity, PersonActivity::class.java).apply {
-            putExtras(Bundle().apply {
-                putExtra(ID_ACTOR, cast.id)
-                putParcelable(BASIC_PERSON_POSTER_PATH, cast)
-            })
-        }
-        val activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(
-            requireActivity(),
-            Pair(v.profile_image, v.profile_image.transitionName)
-        )
-
-        ActivityCompat.startActivity(requireContext(), intent, activityOptions.toBundle())
-    }
 }

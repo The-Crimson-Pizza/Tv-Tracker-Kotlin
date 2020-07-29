@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scroll_overview"
     android:layout_width="match_parent"
@@ -51,11 +52,11 @@
             android:textStyle="bold" />
 
         <TextView
-            android:maxLines="4"
             android:id="@+id/sinopsis_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"/>
+            android:layout_marginBottom="15dp"
+            android:maxLines="4" />
 
         <Button
             android:id="@+id/trailer_link"
@@ -72,146 +73,183 @@
 
         <!-- GÉNEROS -->
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/genres"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="@string/genres_title"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:layout_marginBottom="20dp"
+            android:orientation="vertical">
 
-        <ViewSwitcher
-            android:id="@+id/switcher_genres"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:id="@+id/genres"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:orientation="horizontal">
+                android:text="@string/genres_title"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-                <Button
-                    android:id="@+id/genre1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:background="@drawable/ripple"
-                    android:minWidth="0dp"
-                    android:minHeight="0dp"
-                    android:padding="7.5dp"
-                    android:text="@string/genre"
-                    android:textAllCaps="false"
-                    android:textColor="@color/whiteColor"
-                    android:textStyle="bold"
-                    android:visibility="gone" />
-
-                <Button
-                    android:id="@+id/genre2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:background="@drawable/ripple"
-                    android:minWidth="0dp"
-                    android:minHeight="0dp"
-                    android:padding="7.5dp"
-                    android:text="@string/genre"
-                    android:textAllCaps="false"
-                    android:textColor="@color/whiteColor"
-                    android:textStyle="bold"
-                    android:visibility="gone" />
-
-                <Button
-                    android:id="@+id/genre3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:background="@drawable/ripple"
-                    android:minWidth="0dp"
-                    android:minHeight="0dp"
-                    android:padding="7.5dp"
-                    android:text="@string/genre"
-                    android:textAllCaps="false"
-                    android:textColor="@color/whiteColor"
-                    android:textStyle="bold"
-                    android:visibility="gone" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/no_data_genres"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerGenres"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
-                android:text="@string/no_data" />
-        </ViewSwitcher>
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:itemCount="3"
+                tools:listitem="@layout/list_genres" />
+
+        </LinearLayout>
+
+
+        <!--        <ViewSwitcher-->
+        <!--            android:id="@+id/switcher_genres"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content">-->
+
+        <!--            <LinearLayout-->
+        <!--                android:id="@+id/genres"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_marginBottom="10dp"-->
+        <!--                android:orientation="horizontal">-->
+
+        <!--                <Button-->
+        <!--                    android:id="@+id/genre1"-->
+        <!--                    android:layout_width="wrap_content"-->
+        <!--                    android:layout_height="wrap_content"-->
+        <!--                    android:layout_marginEnd="10dp"-->
+        <!--                    android:background="@drawable/ripple"-->
+        <!--                    android:minWidth="0dp"-->
+        <!--                    android:minHeight="0dp"-->
+        <!--                    android:padding="7.5dp"-->
+        <!--                    android:text="@string/genre"-->
+        <!--                    android:textAllCaps="false"-->
+        <!--                    android:textColor="@color/whiteColor"-->
+        <!--                    android:textStyle="bold"-->
+        <!--                    android:visibility="gone" />-->
+
+        <!--                <Button-->
+        <!--                    android:id="@+id/genre2"-->
+        <!--                    android:layout_width="wrap_content"-->
+        <!--                    android:layout_height="wrap_content"-->
+        <!--                    android:layout_marginEnd="10dp"-->
+        <!--                    android:background="@drawable/ripple"-->
+        <!--                    android:minWidth="0dp"-->
+        <!--                    android:minHeight="0dp"-->
+        <!--                    android:padding="7.5dp"-->
+        <!--                    android:text="@string/genre"-->
+        <!--                    android:textAllCaps="false"-->
+        <!--                    android:textColor="@color/whiteColor"-->
+        <!--                    android:textStyle="bold"-->
+        <!--                    android:visibility="gone" />-->
+
+        <!--                <Button-->
+        <!--                    android:id="@+id/genre3"-->
+        <!--                    android:layout_width="wrap_content"-->
+        <!--                    android:layout_height="wrap_content"-->
+        <!--                    android:layout_marginEnd="10dp"-->
+        <!--                    android:background="@drawable/ripple"-->
+        <!--                    android:minWidth="0dp"-->
+        <!--                    android:minHeight="0dp"-->
+        <!--                    android:padding="7.5dp"-->
+        <!--                    android:text="@string/genre"-->
+        <!--                    android:textAllCaps="false"-->
+        <!--                    android:textColor="@color/whiteColor"-->
+        <!--                    android:textStyle="bold"-->
+        <!--                    android:visibility="gone" />-->
+        <!--            </LinearLayout>-->
+
+        <!--            <TextView-->
+        <!--                android:id="@+id/no_data_genres"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_marginBottom="15dp"-->
+        <!--                android:text="@string/no_data" />-->
+        <!--        </ViewSwitcher>-->
 
         <!-- NETWORKS -->
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/networks"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:text="@string/networks_title"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <ViewSwitcher
-            android:id="@+id/switcher_networks"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:id="@+id/networks"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:orientation="horizontal">
-
-                <ImageButton
-                    android:id="@+id/network1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="15dp"
-                    android:background="@drawable/button_effect"
-                    android:padding="6dp"
-                    android:scaleType="fitCenter"
-                    android:visibility="gone" />
-
-                <ImageButton
-                    android:id="@+id/network2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="15dp"
-                    android:background="@drawable/button_effect"
-                    android:padding="6dp"
-                    android:scaleType="fitCenter"
-                    android:visibility="gone" />
-
-                <ImageButton
-                    android:id="@+id/network3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="15dp"
-                    android:background="@drawable/button_effect"
-                    android:padding="6dp"
-                    android:scaleType="fitCenter"
-                    android:visibility="gone" />
-
-            </LinearLayout>
+            android:layout_marginBottom="20dp"
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/no_data_networks"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
-                android:text="@string/no_data" />
+                android:text="@string/networks_title"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerNetworks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:itemCount="3"
+                tools:listitem="@layout/list_networks" />
+
+        </LinearLayout>
+
+        <!--        <ViewSwitcher-->
+        <!--            android:id="@+id/switcher_networks"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content">-->
+
+        <!--            <LinearLayout-->
+        <!--                android:id="@+id/networks"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_marginBottom="20dp"-->
+        <!--                android:orientation="horizontal">-->
+
+        <!--                <ImageButton-->
+        <!--                    android:id="@+id/network1"-->
+        <!--                    android:layout_width="wrap_content"-->
+        <!--                    android:layout_height="30dp"-->
+        <!--                    android:layout_gravity="center_vertical"-->
+        <!--                    android:layout_marginEnd="15dp"-->
+        <!--                    android:background="@drawable/button_effect"-->
+        <!--                    android:padding="6dp"-->
+        <!--                    android:scaleType="fitCenter"-->
+        <!--                    android:visibility="gone" />-->
+
+        <!--                <ImageButton-->
+        <!--                    android:id="@+id/network2"-->
+        <!--                    android:layout_width="wrap_content"-->
+        <!--                    android:layout_height="30dp"-->
+        <!--                    android:layout_gravity="center_vertical"-->
+        <!--                    android:layout_marginEnd="15dp"-->
+        <!--                    android:background="@drawable/button_effect"-->
+        <!--                    android:padding="6dp"-->
+        <!--                    android:scaleType="fitCenter"-->
+        <!--                    android:visibility="gone" />-->
+
+        <!--                <ImageButton-->
+        <!--                    android:id="@+id/network3"-->
+        <!--                    android:layout_width="wrap_content"-->
+        <!--                    android:layout_height="30dp"-->
+        <!--                    android:layout_gravity="center_vertical"-->
+        <!--                    android:layout_marginEnd="15dp"-->
+        <!--                    android:background="@drawable/button_effect"-->
+        <!--                    android:padding="6dp"-->
+        <!--                    android:scaleType="fitCenter"-->
+        <!--                    android:visibility="gone" />-->
+
+        <!--            </LinearLayout>-->
+
+        <!--            <TextView-->
+        <!--                android:id="@+id/no_data_networks"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_marginBottom="15dp"-->
+        <!--                android:text="@string/no_data" />-->
 
 
-        </ViewSwitcher>
+        <!--        </ViewSwitcher>-->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -224,9 +262,9 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="10dp"
                 android:text="@string/where_to_watch"
-                android:visibility="gone"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone" />
         </LinearLayout>
 
     </LinearLayout>

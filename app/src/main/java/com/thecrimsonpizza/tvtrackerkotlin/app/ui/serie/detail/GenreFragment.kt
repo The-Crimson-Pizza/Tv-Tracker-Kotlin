@@ -8,30 +8,24 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
-import androidx.recyclerview.widget.GridLayoutManager
 import com.thecrimsonpizza.tvtrackerkotlin.R
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.BasicResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie.SeriesViewModel
+import com.thecrimsonpizza.tvtrackerkotlin.core.base.BaseClass
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.getImage
-import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.setBaseAdapter
+import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.setBaseAdapterTwo
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants
-import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.ID_GENRE
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.ID_SERIE
 import kotlinx.android.synthetic.main.fragment_genre.*
 import kotlinx.android.synthetic.main.lista_series_basic.view.*
 
-class GenreFragment : Fragment() {
+class GenreFragment(genre: BaseClass) : Fragment() {
 
     private val seriesViewModel: SeriesViewModel by activityViewModels()
 
-    private lateinit var mGenre: SerieResponse.Serie.Genre
+    private var mGenre = genre as SerieResponse.Serie.Genre
     private val mSeriesByGenre: MutableList<BasicResponse.SerieBasic> = mutableListOf()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        mGenre = requireArguments().getParcelable(ID_GENRE)!!
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -80,12 +74,14 @@ class GenreFragment : Fragment() {
     }
 
     private fun setAdapter() {
-        rv_genres.setBaseAdapter(
+        rv_genres.setBaseAdapterTwo(
             mSeriesByGenre,
-            R.layout.lista_series_basic,
-            GridLayoutManager(activity, 3)
+            R.layout.lista_series_basic
         ) { serie ->
-            itemView.posterBasic.getImage(requireContext(), GlobalConstants.BASE_URL_IMAGES_POSTER +serie.posterPath)
+            itemView.posterBasic.getImage(
+                requireContext(),
+                GlobalConstants.BASE_URL_IMAGES_POSTER + serie.posterPath
+            )
             itemView.titleBasic.text = serie.name
             itemView.ratingBasic.text = serie.voteAverage.toString()
 

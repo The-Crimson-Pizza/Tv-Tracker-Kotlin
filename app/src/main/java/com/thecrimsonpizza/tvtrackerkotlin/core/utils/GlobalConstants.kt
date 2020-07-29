@@ -51,13 +51,14 @@ object GlobalConstants {
     //    INTENT KEYS
     const val URL_WEB_VIEW = "URL"
     const val ID = "id"
+    const val DATA = "data"
     const val BASIC_SERIE_POSTER_PATH = "basic-serie-poster-path"
     const val BASIC_PERSON_POSTER_PATH = "basic-person-poster-path"
-
-    //    EXTRAS
     const val SEASON_ID_EXTRA = "SEASON_ID"
     const val SERIE_NAME_EXTRA = "SERIE_NA"
     const val SEASON_NUMBER_EXTRA = "SEASON_NUMBER"
+    const val TYPE_FRAGMENT = "TYPE"
+
 
     //    NOTIFICACIONES
     const val NEW_SEASON_NOTIFICATION_BUNDLE_CHANNEL_ID = "new_season_notification_bundle_channel"

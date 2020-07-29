@@ -16,7 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".app.ui.serie.SerieActivity" />
+        <activity android:name=".app.ui.serie.detail.GenreNetworkActivity"></activity>
+        <activity android:name=".core.base.BaseActivity" />
         <activity android:name=".app.ui.actor.PersonActivity" />
         <activity android:name=".app.ui.webview.WebViewActivity" />
         <activity
@@ -35,26 +36,24 @@
             android:enabled="true"
             android:exported="false" />
 
-
         <activity
             android:name=".app.ui.splash.SplashScreen"
-            android:theme="@style/appTheme.Splash"
-            android:noHistory="true">
+            android:noHistory="true"
+            android:theme="@style/appTheme.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-<!--                <action android:name="android.intent.action.VIEW" />-->
+                <!-- <action android:name="android.intent.action.VIEW" /> -->
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
         <activity
             android:name=".core.base.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
-<!--                <action android:name="android.intent.action.MAIN" />-->
-<!--                <action android:name="android.intent.action.VIEW" />-->
+
+                <!-- <action android:name="android.intent.action.MAIN" /> -->
+                <!-- <action android:name="android.intent.action.VIEW" /> -->
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

@@ -14,8 +14,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.thecrimsonpizza.tvtrackerkotlin.R
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.actor.Credits
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.actor.PersonResponse
-import com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie.SerieActivity
 import com.thecrimsonpizza.tvtrackerkotlin.app.ui.webview.WebViewActivity
+import com.thecrimsonpizza.tvtrackerkotlin.core.base.BaseActivity
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.*
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_PORTRAIT
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_POSTER
@@ -124,7 +124,7 @@ class ActorAdapter(
     }
 
     private fun goToSerie(cast: Credits.Cast, view: View) {
-        val intent = Intent(context, SerieActivity::class.java).apply {
+        val intent = Intent(context, BaseActivity::class.java).apply {
             putExtras(Bundle().apply {
                 putExtra(ID_SERIE, cast.id)
                 putExtra(BASIC_SERIE_POSTER_PATH, cast.posterPath)

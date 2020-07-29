@@ -25,3 +25,16 @@ fun <T : Any> RecyclerView.setBaseAdapter(
     this.isSaveEnabled = true
     return recyclerAdapter
 }
+
+fun <T : Any> RecyclerView.setBaseAdapterTwo(
+    dataList: List<T>,
+    @LayoutRes layoutID: Int,
+    onBindView: BaseViewHolder<T>.(data: T) -> Unit
+): SimpleRecyclerAdapter<T> {
+    val recyclerAdapter = SimpleRecyclerAdapter(dataList, layoutID, onBindView)
+    adapter = recyclerAdapter
+    this.setHasFixedSize(true)
+    this.setItemViewCacheSize(20)
+    this.isSaveEnabled = true
+    return recyclerAdapter
+}

@@ -14,11 +14,13 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.thecrimsonpizza.tvtrackerkotlin.R
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.actor.PersonResponse
-import com.thecrimsonpizza.tvtrackerkotlin.app.ui.actor.PersonActivity
+import com.thecrimsonpizza.tvtrackerkotlin.core.base.BaseActivity
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.getImagePortrait
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.setBaseAdapter
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_POSTER
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.ID_ACTOR
+import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.TYPE_FRAGMENT
+import com.thecrimsonpizza.tvtrackerkotlin.core.utils.Type
 import kotlinx.android.synthetic.main.fragment_actor_search.*
 import kotlinx.android.synthetic.main.lista_series_basic.view.*
 
@@ -78,8 +80,9 @@ class ActorSearchFragment : Fragment() {
 
     private fun goToPersonActivity(v: View, person: PersonResponse.Person) {
 
-        val intent = Intent(activity, PersonActivity::class.java).apply {
+        val intent = Intent(activity, BaseActivity::class.java).apply {
             putExtras(Bundle().apply {
+                putExtra(TYPE_FRAGMENT, Type.PERSON)
                 putExtra(ID_ACTOR, person.id)
 //                    putParcelable(GlobalConstants.BASIC_PERSON_POSTER_PATH, person)
             })

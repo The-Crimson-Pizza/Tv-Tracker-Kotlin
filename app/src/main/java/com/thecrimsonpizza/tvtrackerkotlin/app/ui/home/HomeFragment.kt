@@ -1,30 +1,22 @@
 package com.thecrimsonpizza.tvtrackerkotlin.app.ui.home
 
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityCompat
-import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.thecrimsonpizza.tvtrackerkotlin.R
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.BasicResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.ui.following.FollowingViewModel
-import com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie.SerieActivity
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.getImage
-import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.setBaseAdapter
-import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.toBasic
-import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants
+import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.goToBaseActivity
+import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.setBaseAdapterTwo
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_POSTER
-import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.ID_SERIE
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.lista_series_basic.view.*
 
@@ -54,7 +46,7 @@ class HomeFragment : Fragment() {
 
         setBaseAdapter(gridTrend, trendList)
         setBaseAdapter(gridNew, newList)
-        setFollowingAdapter(gridFollowing, followingList)
+        setBaseAdapter(gridFollowing, followingList)
 
         followingViewModel.getFollowing().observe(viewLifecycleOwner, Observer {
             if (it.isNotEmpty()) {
@@ -70,8 +62,6 @@ class HomeFragment : Fragment() {
         homeViewModel.getTrendingShows().observe(viewLifecycleOwner, Observer {
             refreshData(trendList, it.basicSeries, gridTrend)
         })
-
-
     }
 
     private fun <T : Any> refreshData(
@@ -83,64 +73,13 @@ class HomeFragment : Fragment() {
     }
 
     private fun setBaseAdapter(recycler: RecyclerView, list: List<BasicResponse.SerieBasic>) {
-        recycler.setBaseAdapter(
-            list,
-            R.layout.lista_series_basic,
-            LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-        ) { show ->
+        recycler.setBaseAdapterTwo(list, R.layout.lista_series_basic) { show ->
             itemView.posterBasic.getImage(
-                requireContext(),
-                BASE_URL_IMAGES_POSTER + show.posterPath.toString()
+                requireContext(), BASE_URL_IMAGES_POSTER + show.posterPath.toString()
             )
             itemView.titleBasic.text = show.name
             itemView.ratingBasic.text = show.voteAverage.toString()
-            itemView.setOnClickListener { goToSerieFragment(it, show.id, show) }
+            itemView.setOnClickListener { show.goToBaseActivity(requireContext(), it) }
         }
-    }
-
-    private fun setFollowingAdapter(recycler: RecyclerView, list: List<SerieResponse.Serie>) {
-        recycler.setBaseAdapter(
-            list, R.layout.lista_series_basic,
-            LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-        ) { show ->
-            itemView.posterBasic.getImage(
-                requireContext(),
-                BASE_URL_IMAGES_POSTER + show.posterPath.toString()
-            )
-            itemView.titleBasic.text = show.originalName
-            itemView.ratingBasic.text = show.voteAverage.toString()
-            itemView.setOnClickListener { goToSerieFragment(it, show.id, show.toBasic()) }
-        }
-    }
-
-    private fun goToSerieFragment(view: View, idSerie: Int, serie: BasicResponse.SerieBasic) {
-
-        val intent = Intent(context, SerieActivity::class.java).apply {
-            putExtras(Bundle().apply {
-                putExtra(ID_SERIE, idSerie)
-                putExtra(GlobalConstants.BASIC_SERIE_POSTER_PATH, serie.posterPath)
-            })
-        }
-
-        val activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(
-            context as Activity,
-            androidx.core.util.Pair(view.posterBasic, view.posterBasic.transitionName)
-        )
-
-        ActivityCompat.startActivity(requireContext(), intent, activityOptions.toBundle())
-
-//        val fragment = SerieFragment()
-//        val data = Bundle().apply {
-//            putInt(ID_SERIE, idSerie)
-//        }
-//        fragment.arguments = data
-//
-//
-//        parentFragmentManager
-//            .beginTransaction()
-//            .addSharedElement(view.posterBasic, view.posterBasic.transitionName)
-//            .addToBackStack(TAG)
-//            .replace(R.id.nav_host_fragment, fragment)
-//            .commit()
     }
 }

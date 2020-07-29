@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImageButton xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:id="@+id/ibNetwork"
+    android:layout_height="30dp"
+    android:layout_marginEnd="15dp"
+    android:background="@drawable/button_effect"
+    android:padding="6dp"
+    android:scaleType="fitCenter"
+    android:src="@drawable/ic_youtube_32"
+    android:contentDescription="@string/genre" />
