@@ -1,8 +1,8 @@
 package com.thecrimsonpizza.tvtrackerkotlin.app.domain.actor
 
-import android.os.Parcelable
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import com.thecrimsonpizza.tvtrackerkotlin.core.base.BaseClass
 import kotlinx.android.parcel.Parcelize
 import java.io.Serializable
 
@@ -10,12 +10,12 @@ data class Credits(@Expose var cast: List<Cast> = mutableListOf()) : Serializabl
 
     @Parcelize
     data class Cast(
-        var id: Int = 0,
-        var name: String = "",
+        override var id: Int = 0,
+        override var name: String = "",
         var character: String = "",
 
         @SerializedName("episode_count") var episodeCount: Int = 0,
-        @SerializedName("poster_path") var posterPath: String? = null,
+        @SerializedName("poster_path") override var posterPath: String? = null,
         @SerializedName("first_air_date") var firstAirDate: String = "",
         @SerializedName("vote_average") var voteAverage: Float = 0f,
 
@@ -25,5 +25,5 @@ data class Credits(@Expose var cast: List<Cast> = mutableListOf()) : Serializabl
         @SerializedName("original_title") var originalTitle: String = "",
         @SerializedName("release_date") var releaseDate: String = ""
 
-    ) : Serializable, Parcelable
+    ) : BaseClass
 }

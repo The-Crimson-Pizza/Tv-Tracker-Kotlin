@@ -39,7 +39,7 @@ class ActorFragment(personPath: String?) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        ViewCompat.setTransitionName(profile_image, profile_image.transitionName)
+        ViewCompat.setTransitionName(portraitImage, portraitImage.transitionName)
 
         toolbar_actor.setNavigationIcon(R.drawable.ic_arrow_back)
         toolbar_actor.setNavigationOnClickListener { requireActivity().onBackPressed() }
@@ -55,14 +55,14 @@ class ActorFragment(personPath: String?) : Fragment() {
         personViewModel.getPerson().observe(viewLifecycleOwner, Observer {
             ActorAdapter(requireContext(), requireView(), it).fillActor()
             actor = it
-            if (!it.externalIds.instagramId.isNullOrEmpty())
+            if (it.externalIds!=null && !it.externalIds.instagramId.isNullOrEmpty())
                 toolbar_actor.menu.findItem(R.id.action_insta).isVisible = true
         })
     }
 
     private fun goToInstagram() {
         val uri =
-            Uri.parse(BASE_URL_INSTAGRAM_U + actor.externalIds.instagramId)
+            Uri.parse(BASE_URL_INSTAGRAM_U + actor.externalIds?.instagramId)
         val likeIng = Intent(Intent.ACTION_VIEW, uri)
         likeIng.setPackage(COM_INSTAGRAM_ANDROID)
         try {
@@ -72,7 +72,7 @@ class ActorFragment(personPath: String?) : Fragment() {
                 Intent(requireContext(), WebViewActivity::class.java)
                     .putExtra(
                         URL_WEB_VIEW,
-                        BASE_URL_INSTAGRAM + actor.externalIds.instagramId
+                        BASE_URL_INSTAGRAM + actor.externalIds?.instagramId
                     )
             )
         }

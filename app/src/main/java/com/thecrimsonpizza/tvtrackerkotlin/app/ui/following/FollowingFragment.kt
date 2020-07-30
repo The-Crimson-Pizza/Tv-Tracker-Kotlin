@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import com.thecrimsonpizza.tvtrackerkotlin.R
@@ -73,14 +72,17 @@ class FollowingFragment : Fragment() {
     }
 
     private fun setAdapter() {
-        grid_favoritas.setBaseAdapter(
-            followingList, R.layout.list_series_following,
-            StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
+        grid_favoritas.setBaseAdapterTwo(
+            followingList, R.layout.list_series_following
+
         ) { serie ->
 
             serie.seasons.sortedWith(nullsLast(compareBy { season -> season.seasonNumber }))
             itemView.nameFollowing.text = serie.name
-            itemView.posterFollowing.getImage(requireContext(), BASE_URL_IMAGES_POSTER + serie.posterPath)
+            itemView.posterFollowing.getImage(
+                requireContext(),
+                BASE_URL_IMAGES_POSTER + serie.posterPath
+            )
             if (Util().getLanguageString() == ES) itemView.episodeFollowingDate.text =
                 serie.status?.translateStatus()
             else itemView.episodeFollowingDate.text = serie.status
@@ -119,7 +121,8 @@ class FollowingFragment : Fragment() {
             itemView.followingProgress.progress = serie.getProgress()
 
             val last: Episode? = serie.getLastUnwatched()
-            itemView.nextEpisodeNameExpandable.text = last?.getUnwatchedTitle(requireContext(), serie)
+            itemView.nextEpisodeNameExpandable.text =
+                last?.getUnwatchedTitle(requireContext(), serie)
             itemView.nextEpisodeName.text = last?.getUnwatchedTitle(requireContext(), serie)
             itemView.sinopsis.text = last?.getUnwatchedOverview(requireContext(), serie)
 

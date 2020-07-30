@@ -2,6 +2,7 @@ package com.thecrimsonpizza.tvtrackerkotlin.core.extensions
 
 import android.content.Context
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.MutableLiveData
@@ -22,14 +23,17 @@ fun String?.checkNull(context: Context): String? {
     else context.getString(R.string.no_data)
 }
 
+fun <T : Any> T?.notNull(view: View, f: (it: T) -> Unit) {
+    if (this != null ) f(this)
+
+}
+
 fun String.changeDateFormat(format: String): String {
     if(this == null || this.isEmpty()) Log.e("TAG", "NULO")
     val localDate = LocalDate.parse(this, DateTimeFormatter.ofPattern(FORMAT_DEFAULT))
     val formatter =
         DateTimeFormatter.ofPattern(format)
-    val formattedString: String = localDate.format(formatter)
-    return formattedString
-//    return SimpleDateFormat(format, Locale.getDefault())        .format(LocalDate.parse(this, format))
+    return localDate.format(formatter)
 }
 
 fun String.parseToDate(): Date? {

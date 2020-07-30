@@ -192,15 +192,16 @@ data class SerieResponse(
 
         @Parcelize
         data class Genre(
-            var id: Int = 0,
-            var name: String = ""
+            override var id: Int = 0,
+            override var name: String = "",
+            override var posterPath: String? = null
         ) : BaseClass
 
         @Parcelize
         data class Network(
-            var id: Int = 0,
-            var name: String = "",
-            @SerializedName("logo_path") var logoPath: String? = ""
+            override var id: Int = 0,
+            override var name: String = "",
+            @SerializedName("logo_path") override var posterPath: String? = ""
         ) : BaseClass
 
         data class ExternalIds(

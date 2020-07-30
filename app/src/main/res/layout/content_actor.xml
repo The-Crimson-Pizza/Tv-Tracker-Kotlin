@@ -91,9 +91,9 @@
 
         <TextView
             android:id="@+id/bio_text"
-            android:maxLines="2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:maxLines="4" />
 
         <LinearLayout
             android:id="@+id/tvCreditsView"
@@ -115,7 +115,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="15dp"
-                android:orientation="horizontal" />
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/lista_series_basic" />
 
         </LinearLayout>
 
@@ -139,7 +141,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="15dp"
-                android:orientation="horizontal" />
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/lista_series_basic" />
 
         </LinearLayout>
 

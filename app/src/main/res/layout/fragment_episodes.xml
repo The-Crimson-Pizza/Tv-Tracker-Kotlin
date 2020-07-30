@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_episode"
     android:background="@color/almostWhite"
     tools:context=".app.ui.serie.season.episode.EpisodesFragment">
@@ -11,6 +12,8 @@
         android:id="@+id/gridEpisodes"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/list_episodes"
         android:orientation="vertical" />
 
 </FrameLayout>

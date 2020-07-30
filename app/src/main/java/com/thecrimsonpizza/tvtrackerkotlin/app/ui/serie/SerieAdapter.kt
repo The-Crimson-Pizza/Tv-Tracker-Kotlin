@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.core.app.ActivityCompat
+
 import com.thecrimsonpizza.tvtrackerkotlin.R
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
 import com.thecrimsonpizza.tvtrackerkotlin.core.base.BaseActivity
@@ -21,7 +22,7 @@ import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.TYPE_FRAGM
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.Type
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.Util
 import kotlinx.android.synthetic.main.fragment_serie.view.*
-import kotlinx.android.synthetic.main.fragment_sinopsis.view.*
+import kotlinx.android.synthetic.main.fragment_serie_details.view.*
 import kotlinx.android.synthetic.main.list_genres.view.*
 import kotlinx.android.synthetic.main.list_networks.view.*
 
@@ -104,9 +105,9 @@ class SerieAdapter(val context: Context, val view: View, private val serie: Seri
                 serie.networks, R.layout.list_networks
             ) { network ->
                 itemView.ibNetwork.getImageNoPlaceholder(
-                    context, BASE_URL_IMAGES_NETWORK + network.logoPath.toString()
+                    context, BASE_URL_IMAGES_NETWORK + network.posterPath.toString()
                 )
-                itemView.ibNetwork.setOnClickListener { goToBaseActivity(Type.NETWORK, network) }
+                itemView.ibNetwork.setOnClickListener { network.goToBaseActivityNoAnimation(context, Type.NETWORK) }
             }
         } else view.networks.visibility = View.GONE
     }
@@ -116,7 +117,9 @@ class SerieAdapter(val context: Context, val view: View, private val serie: Seri
         if (!serie.genres.isNullOrEmpty()) {
             view.recyclerGenres.setBaseAdapterTwo(serie.genres, R.layout.list_genres) { genre ->
                 itemView.btGenre.text = genre.name
-                itemView.btGenre.setOnClickListener { goToBaseActivity(Type.GENRE, genre) }
+                itemView.btGenre.setOnClickListener {
+                    genre.goToBaseActivityNoAnimation(context, Type.GENRE)
+                }
             }
         } else view.genres.visibility = View.GONE
     }
@@ -129,15 +132,6 @@ class SerieAdapter(val context: Context, val view: View, private val serie: Seri
 //                putExtra(GlobalConstants.BASIC_SERIE_POSTER_PATH, serie.posterPath)
             })
         }
-
-        // TODO - SI ES GENRE ANIMAR EL NOMBRE SI ES NETWORK ANIMAR IMAGE BUTTON
-
-//        val activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(
-//            context as Activity,
-//            androidx.core.util.Pair(view.posterBasic, view.posterBasic.transitionName)
-//        )
-
-//        ActivityCompat.startActivity(context, intent, activityOptions.toBundle())
         ActivityCompat.startActivity(context, intent, null)
     }
 }

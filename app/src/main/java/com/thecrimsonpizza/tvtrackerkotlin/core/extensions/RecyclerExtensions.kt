@@ -12,7 +12,7 @@ fun ViewGroup.inflater(layoutRes: Int): View =
     LayoutInflater.from(context).inflate(layoutRes, this, false)
 
 fun <T : Any> RecyclerView.setBaseAdapter(
-    dataList: List<T>,
+    dataList: List<T>?,
     @LayoutRes layoutID: Int,
     layoutManager: RecyclerView.LayoutManager,
     onBindView: BaseViewHolder<T>.(data: T) -> Unit

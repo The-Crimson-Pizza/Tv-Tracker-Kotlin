@@ -45,18 +45,18 @@ class BaseActivity : AppCompatActivity() {
                 supportFragmentManager.beginTransaction()
                     .add(R.id.fragment_container, SerieFragment(basicPosterPath)).commit()
             }
-            Type.PERSON -> {
+            Type.PERSON, Type.CAST -> {
                 idPerson = intent.getIntExtra(GlobalConstants.ID_ACTOR, 0)
                 val personPath = intent.getStringExtra(GlobalConstants.BASIC_PERSON_POSTER_PATH)
                 personViewModel.retrievePerson(idPerson)
                 supportFragmentManager.beginTransaction()
                     .add(R.id.fragment_container, ActorFragment(personPath)).commit()
             }
+
             Type.GENRE -> {
                 val data = intent.getParcelableExtra<BaseClass>(DATA)
                 supportFragmentManager.beginTransaction()
                     .add(R.id.fragment_container, GenreFragment(data)).commit()
-
             }
 
             Type.NETWORK -> {
@@ -64,9 +64,6 @@ class BaseActivity : AppCompatActivity() {
                 supportFragmentManager.beginTransaction()
                     .add(R.id.fragment_container, NetworkFragment(data)).commit()
             }
-
         }
-
-
     }
 }

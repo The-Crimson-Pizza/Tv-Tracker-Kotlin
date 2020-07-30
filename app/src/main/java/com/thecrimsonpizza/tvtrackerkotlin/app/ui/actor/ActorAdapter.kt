@@ -1,28 +1,19 @@
 package com.thecrimsonpizza.tvtrackerkotlin.app.ui.actor
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import android.view.View
-import androidx.core.app.ActivityCompat
-import androidx.core.app.ActivityOptionsCompat
-import androidx.core.util.Pair
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.thecrimsonpizza.tvtrackerkotlin.R
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.actor.Credits
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.actor.PersonResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.ui.webview.WebViewActivity
-import com.thecrimsonpizza.tvtrackerkotlin.core.base.BaseActivity
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.*
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_PORTRAIT
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_POSTER
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_WEB_MOVIE
-import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASIC_SERIE_POSTER_PATH
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.FORMAT_LONG
-import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.ID_SERIE
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.URL_WEB_VIEW
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.getImageNoPlaceholder
 import kotlinx.android.synthetic.main.content_actor.view.*
@@ -43,8 +34,8 @@ class ActorAdapter(
 
         view.toolbar_actor.title = person.name
         getImageNoPlaceholder(
-            BASE_URL_IMAGES_PORTRAIT + person.profilePath,
-            view.profile_image,
+            BASE_URL_IMAGES_PORTRAIT + person.posterPath,
+            view.portraitImage,
             context
         )
 
@@ -62,22 +53,19 @@ class ActorAdapter(
         includeView.bio_text.text = person.biography.checkNull(context)
         var isTextViewClicked = false
         includeView.bio_text.setOnClickListener {
-            if(isTextViewClicked){
-                //This will shrink textview to 2 lines if it is expanded.
-                includeView.bio_text.maxLines = 2
+            if (isTextViewClicked) {
+                includeView.bio_text.maxLines = 4
                 isTextViewClicked = false
             } else {
-                //This will expand the textview if it is of 2 lines
                 includeView.bio_text.maxLines = Integer.MAX_VALUE
                 isTextViewClicked = true
             }
         }
 
-        val sortedMovies = person.movieCredits.cast.sortedByDescending { it.releaseDate }
-        person.movieCredits.cast.let {
-            includeView.rv_movies.setBaseAdapter(
-                sortedMovies, R.layout.lista_series_basic,
-                LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        if (person.movieCredits != null && person.movieCredits.cast.isNotEmpty()) {
+            val sortedMovies = person.movieCredits.cast.sortedByDescending { it.releaseDate }
+            includeView.rv_movies.setBaseAdapterTwo(
+                sortedMovies, R.layout.lista_series_basic
             ) { cast ->
                 itemView.titleBasic.text = cast.title
                 itemView.posterBasic.getImage(
@@ -86,34 +74,29 @@ class ActorAdapter(
                 itemView.ratingBasic.text = cast.voteAverage.toString()
                 itemView.setOnClickListener { v: View -> goToTmdbMovie(cast, context, v) }
             }
-        }
+        } else includeView.movieCreditsView.visibility = View.GONE
 
-        val sortedShows = person.tvCredits.cast.sortedByDescending { it.firstAirDate }
-        person.tvCredits.cast.let {
-            includeView.rvSeries.setBaseAdapter(
-                sortedShows, R.layout.lista_series_basic,
-                LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        if (person.tvCredits != null && person.tvCredits.cast.isNotEmpty()) {
+            val sortedShows = person.tvCredits.cast.sortedByDescending { it.firstAirDate }
+            includeView.rvSeries.setBaseAdapterTwo(
+                sortedShows, R.layout.lista_series_basic
             ) { cast ->
                 itemView.titleBasic.text = cast.name
                 itemView.posterBasic.getImage(
                     context, BASE_URL_IMAGES_POSTER + cast.posterPath
                 )
                 itemView.ratingBasic.text = cast.voteAverage.toString()
-                itemView.setOnClickListener { v: View -> goToSerie(cast, v) }
+                itemView.setOnClickListener { cast.goToBaseActivity(context, it) }
             }
-        }
-
-        if (person.movieCredits.cast.isNullOrEmpty())
-            includeView.movieCreditsView.visibility = View.GONE
-        else includeView.movieCreditsView.visibility = View.VISIBLE
-
-        if (person.tvCredits.cast.isNullOrEmpty()) includeView.tvCreditsView.visibility = View.GONE
-        else includeView.tvCreditsView.visibility = View.VISIBLE
-
+        } else includeView.tvCreditsView.visibility = View.GONE
     }
 
     private fun goToTmdbMovie(movie: Credits.Cast, context: Context, view: View) {
-        Snackbar.make(view, "Ver ficha técnica", BaseTransientBottomBar.LENGTH_LONG)
+        Snackbar.make(
+            view,
+            context.getString(R.string.go_to_tmdb),
+            BaseTransientBottomBar.LENGTH_LONG
+        )
             .setAction(R.string.open_web) {
                 context.startActivity(
                     Intent(context, WebViewActivity::class.java).putExtra(
@@ -121,19 +104,6 @@ class ActorAdapter(
                     )
                 )
             }.show()
-    }
-
-    private fun goToSerie(cast: Credits.Cast, view: View) {
-        val intent = Intent(context, BaseActivity::class.java).apply {
-            putExtras(Bundle().apply {
-                putExtra(ID_SERIE, cast.id)
-                putExtra(BASIC_SERIE_POSTER_PATH, cast.posterPath)
-            })
-        }
-        val activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(
-            context as Activity, Pair(view.posterBasic, view.posterBasic.transitionName)
-        )
-        ActivityCompat.startActivity(context, intent, activityOptions.toBundle())
     }
 
     private fun calculateAge(dead: Boolean): String {

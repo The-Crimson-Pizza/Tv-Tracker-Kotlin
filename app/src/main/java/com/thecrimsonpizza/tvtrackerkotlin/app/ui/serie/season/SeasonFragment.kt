@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.thecrimsonpizza.tvtrackerkotlin.R
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.seasons.Season
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
@@ -43,9 +42,8 @@ class SeasonFragment : Fragment() {
 
     private fun setAdapter() {
         val sortedSeasons = serie.seasons.sortedBy { it.seasonNumber }
-        gridSeasons.setBaseAdapter(
-            sortedSeasons, R.layout.list_season,
-            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        gridSeasons.setBaseAdapterTwo(
+            sortedSeasons, R.layout.list_season
         ) {
 
             if (serie.followingData.added) setWatchCheck(itemView, adapterPosition, it)

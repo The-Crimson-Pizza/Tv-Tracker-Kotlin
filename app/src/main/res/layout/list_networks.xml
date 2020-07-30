@@ -8,4 +8,5 @@
     android:padding="6dp"
     android:scaleType="fitCenter"
     android:src="@drawable/ic_youtube_32"
+    android:transitionName="@string/network_transition"
     android:contentDescription="@string/genre" />
