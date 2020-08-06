@@ -85,7 +85,8 @@ class SerieAdapter(val context: Context, val view: View, private val serie: Seri
 
 
     private fun fillBasics() {
-        view.fechaSerie.text = serie.firstAirDate.changeDateFormat(FORMAT_YEAR)
+        view.fechaSerie.text =
+            serie.firstAirDate?.changeDateFormat(FORMAT_YEAR) ?: context.getString(R.string.no_data)
         view.country_serie.text =
             if (serie.originCountry.isNotEmpty()) serie.originCountry[0] else context.getString(
                 R.string.no_data
@@ -101,13 +102,18 @@ class SerieAdapter(val context: Context, val view: View, private val serie: Seri
 
     private fun fillNetworks() {
         if (!serie.networks.isNullOrEmpty()) {
-            view.recyclerNetworks.setBaseAdapterTwo(
+            view.recyclerNetworks.setBaseAdapter(
                 serie.networks, R.layout.list_networks
             ) { network ->
                 itemView.ibNetwork.getImageNoPlaceholder(
                     context, BASE_URL_IMAGES_NETWORK + network.posterPath.toString()
                 )
-                itemView.ibNetwork.setOnClickListener { network.goToBaseActivityNoAnimation(context, Type.NETWORK) }
+                itemView.ibNetwork.setOnClickListener {
+                    network.goToBaseActivityNoAnimation(
+                        context,
+                        Type.NETWORK
+                    )
+                }
             }
         } else view.networks.visibility = View.GONE
     }
@@ -115,7 +121,7 @@ class SerieAdapter(val context: Context, val view: View, private val serie: Seri
 
     private fun fillGenres() {
         if (!serie.genres.isNullOrEmpty()) {
-            view.recyclerGenres.setBaseAdapterTwo(serie.genres, R.layout.list_genres) { genre ->
+            view.recyclerGenres.setBaseAdapter(serie.genres, R.layout.list_genres) { genre ->
                 itemView.btGenre.text = genre.name
                 itemView.btGenre.setOnClickListener {
                     genre.goToBaseActivityNoAnimation(context, Type.GENRE)

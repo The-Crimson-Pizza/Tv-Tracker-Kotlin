@@ -13,7 +13,7 @@ import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie.SeriesViewModel
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.getImagePortrait
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.goToPersonActivity
-import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.setBaseAdapterTwo
+import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.setBaseAdapter
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_PORTRAIT
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.Type
 import kotlinx.android.synthetic.main.fragment_cast.*
@@ -41,7 +41,7 @@ class CastFragment : Fragment() {
     }
 
     private fun setAdapter() {
-        gridCasting.setBaseAdapterTwo(
+        gridCasting.setBaseAdapter(
             mCast, R.layout.lista_cast_vertical
         ) { cast ->
             itemView.actor_name.text = cast.name

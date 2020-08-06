@@ -42,7 +42,7 @@ class SeasonFragment : Fragment() {
 
     private fun setAdapter() {
         val sortedSeasons = serie.seasons.sortedBy { it.seasonNumber }
-        gridSeasons.setBaseAdapterTwo(
+        gridSeasons.setBaseAdapter(
             sortedSeasons, R.layout.list_season
         ) {
 
@@ -65,9 +65,9 @@ class SeasonFragment : Fragment() {
                     it.episodes.size,
                     it.episodes.size
                 )
+                itemView.setOnClickListener { goToEpisodes(adapterPosition) }
             } else itemView.episode_number.text = requireContext().getString(R.string.no_data)
 
-            itemView.setOnClickListener { goToEpisodes(adapterPosition) }
         }
     }
 
@@ -88,15 +88,11 @@ class SeasonFragment : Fragment() {
     }
 
     private fun goToEpisodes(pos: Int) {
+
         val fragment = EpisodesFragment().apply {
             arguments = Bundle().apply { putInt(ID_SEASON, pos) }
         }
-
-        requireActivity().supportFragmentManager
-            .beginTransaction()
-            .addToBackStack("TAG")
-            .add(R.id.fragment_container, fragment)
-            .commit()
+        fragment.show(parentFragmentManager, EpisodesFragment.TAG)
 
     }
 

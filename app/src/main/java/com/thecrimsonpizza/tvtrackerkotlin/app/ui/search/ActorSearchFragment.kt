@@ -11,11 +11,11 @@ import com.thecrimsonpizza.tvtrackerkotlin.R
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.actor.PersonResponse
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.getImagePortrait
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.goToPersonActivity
-import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.setBaseAdapterTwo
+import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.setBaseAdapter
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_POSTER
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.Type
 import kotlinx.android.synthetic.main.detail_fragment_search.*
-import kotlinx.android.synthetic.main.lista_series_basic.view.*
+import kotlinx.android.synthetic.main.list_series_basic.view.*
 
 class ActorSearchFragment : Fragment() {
 
@@ -36,8 +36,8 @@ class ActorSearchFragment : Fragment() {
     }
 
     private fun setAdapter() {
-        rvSearch.setBaseAdapterTwo(
-            personList, R.layout.lista_series_basic
+        rvSearch.setBaseAdapter(
+            personList, R.layout.list_series_basic
         ) { person ->
             itemView.layoutParams.width = (requireView().width * 0.3).toInt()
 

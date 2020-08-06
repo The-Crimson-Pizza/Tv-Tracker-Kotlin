@@ -4,13 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/switcherSearch"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:background="@color/almostWhite"
+    android:layout_height="match_parent"
+    android:padding="5dp">
 
-        <include
-            android:id="@+id/search_image"
-            layout="@layout/search_info"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+    <include
+        android:id="@+id/search_image"
+        layout="@layout/search_info"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvSearch"
@@ -19,6 +21,6 @@
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="3"
-        tools:listitem="@layout/lista_series_basic" />
+        tools:listitem="@layout/list_series_basic" />
 </ViewSwitcher>
 

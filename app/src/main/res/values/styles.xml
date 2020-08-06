@@ -16,9 +16,14 @@
         </item>
     </style>
 
-    <style name="roundedImageViewRounded">
+    <style name="circlePortraitStyle">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="roundedCornersPosterStyle">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">4%</item>
     </style>
 
     <style name="appTheme.Splash" parent="Theme.AppCompat.DayNight.NoActionBar">

@@ -8,8 +8,8 @@ import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
 import java.util.*
 
 
-fun List<Season>.sort() {
-    this.sortedWith(nullsLast(compareBy { it.seasonNumber }))
+fun List<Season>.sort(): List<Season>{
+   return this.sortedWith(nullsLast(compareBy { it.seasonNumber }))
 }
 
 fun List<SerieResponse.Serie>.setLastWatched() {
@@ -29,7 +29,6 @@ fun SerieResponse.Serie.countEpisodesWatched(): Int {
 }
 
 fun SerieResponse.Serie.getLastUnwatched(): Episode? {
-    this.seasons.sort()
     for (s in this.seasons) {
         for (e in s.episodes) {
             if (!e.followingData.watched) return e

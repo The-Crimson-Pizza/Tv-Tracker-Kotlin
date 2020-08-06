@@ -33,7 +33,7 @@ class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_serie_detail)
+        setContentView(R.layout.base_activity_layout)
 
         id = intent.getIntExtra(ID, 0)
 

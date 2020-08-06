@@ -72,7 +72,7 @@ class FollowingFragment : Fragment() {
     }
 
     private fun setAdapter() {
-        grid_favoritas.setBaseAdapterTwo(
+        grid_favoritas.setBaseAdapter(
             followingList, R.layout.list_series_following
 
         ) { serie ->
