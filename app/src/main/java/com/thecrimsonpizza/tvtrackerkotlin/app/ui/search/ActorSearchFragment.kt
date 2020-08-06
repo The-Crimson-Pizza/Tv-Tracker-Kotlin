@@ -1,28 +1,21 @@
 package com.thecrimsonpizza.tvtrackerkotlin.app.ui.search
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityCompat
-import androidx.core.app.ActivityOptionsCompat
-import androidx.core.util.Pair
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.GridLayoutManager
 import com.thecrimsonpizza.tvtrackerkotlin.R
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.actor.PersonResponse
-import com.thecrimsonpizza.tvtrackerkotlin.core.base.BaseActivity
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.getImagePortrait
+import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.goToPersonActivity
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.setBaseAdapter
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_POSTER
-import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.ID_ACTOR
-import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.TYPE_FRAGMENT
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.Type
-import kotlinx.android.synthetic.main.fragment_actor_search.*
-import kotlinx.android.synthetic.main.lista_series_basic.view.*
+import kotlinx.android.synthetic.main.detail_fragment_search.*
+import kotlinx.android.synthetic.main.list_series_basic.view.*
 
 class ActorSearchFragment : Fragment() {
 
@@ -32,7 +25,7 @@ class ActorSearchFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_actor_search, container, false)
+        return inflater.inflate(R.layout.detail_fragment_search, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -43,18 +36,23 @@ class ActorSearchFragment : Fragment() {
     }
 
     private fun setAdapter() {
-        rvActores.setBaseAdapter(
-            personList, R.layout.lista_series_basic,
-            GridLayoutManager(activity, 3)
-        ) {
+        rvSearch.setBaseAdapter(
+            personList, R.layout.list_series_basic
+        ) { person ->
             itemView.layoutParams.width = (requireView().width * 0.3).toInt()
 
             itemView.posterBasic.getImagePortrait(
-                requireContext(), BASE_URL_IMAGES_POSTER + it.profilePath
+                requireContext(), BASE_URL_IMAGES_POSTER + person.posterPath
             )
             itemView.ratingBasic.visibility = View.GONE
-            itemView.titleBasic.text = it.name
-            itemView.setOnClickListener { view -> goToPersonActivity(view, it) }
+            itemView.titleBasic.text = person.name
+            itemView.setOnClickListener {
+                person.goToPersonActivity(
+                    requireContext(),
+                    it,
+                    Type.PERSON
+                )
+            }
         }
     }
 
@@ -62,9 +60,9 @@ class ActorSearchFragment : Fragment() {
         searchViewModel.setQuery(getString(R.string.empty))
         searchViewModel.getQuery().observe(viewLifecycleOwner, Observer {
             if (it.isEmpty()) {
-                if (R.id.search_image == switcherSearchActor.nextView.id) switcherSearchActor.showNext()
+                if (R.id.search_image == switcherSearch.nextView.id) switcherSearch.showNext()
             } else {
-                if (R.id.rvActores == switcherSearchActor.nextView.id) switcherSearchActor.showNext()
+                if (R.id.rvSearch == switcherSearch.nextView.id) switcherSearch.showNext()
                 searchViewModel.setPersonList(it)
             }
         })
@@ -74,25 +72,7 @@ class ActorSearchFragment : Fragment() {
         searchViewModel.getPersonList().observe(viewLifecycleOwner, Observer { personResponse ->
             personList.clear()
             personResponse.results.let { personList.addAll(it) }
-            rvActores.adapter?.notifyDataSetChanged()
+            rvSearch.adapter?.notifyDataSetChanged()
         })
-    }
-
-    private fun goToPersonActivity(v: View, person: PersonResponse.Person) {
-
-        val intent = Intent(activity, BaseActivity::class.java).apply {
-            putExtras(Bundle().apply {
-                putExtra(TYPE_FRAGMENT, Type.PERSON)
-                putExtra(ID_ACTOR, person.id)
-//                    putParcelable(GlobalConstants.BASIC_PERSON_POSTER_PATH, person)
-            })
-        }
-        val activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(
-            requireActivity(),
-            Pair(v.posterBasic, v.posterBasic.transitionName)
-        )
-
-        ActivityCompat.startActivity(requireContext(), intent, activityOptions.toBundle())
-
     }
 }

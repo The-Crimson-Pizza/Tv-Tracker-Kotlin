@@ -20,7 +20,8 @@
             android:gravity="center_vertical"
             android:textColor="@color/colorPrimary"
             android:textSize="12pt"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:transitionName="@string/genre_transition" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -33,7 +34,9 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginEnd="10dp"
-                android:src="@drawable/genre_crime" />
+                android:contentDescription="@string/network_icon_description"
+                android:src="@drawable/genre_crime"
+                android:transitionName="@string/network_transition" />
         </LinearLayout>
     </LinearLayout>
 
@@ -44,5 +47,5 @@
         android:layout_margin="5dp"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="3"
-        tools:listitem="@layout/lista_series_basic" />
+        tools:listitem="@layout/list_series_basic" />
 </LinearLayout>

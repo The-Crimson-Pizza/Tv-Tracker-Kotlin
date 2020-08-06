@@ -9,9 +9,9 @@ class BasicResponse(@SerializedName("results") @Expose var basicSeries: List<Ser
 
     @Parcelize
     open class SerieBasic(
-        open val id: Int,
-        open val name: String,
-        @SerializedName("poster_path") open val posterPath: String?,
+        override var id: Int,
+        override var name: String,
+        @SerializedName("poster_path") override var posterPath: String?,
         @SerializedName("vote_average") open var voteAverage: Float = 0.0f
     ) : BaseClass
 }

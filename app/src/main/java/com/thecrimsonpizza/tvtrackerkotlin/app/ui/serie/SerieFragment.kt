@@ -40,8 +40,6 @@ class SerieFragment(private val posterPath: String? = null) : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         followingViewModel.init()
-//        this.sharedElementEnterTransition =
-//            TransitionInflater.from(context).inflateTransition(R.transition.grid_detail_transition);
     }
 
     override fun onCreateView(
@@ -64,7 +62,6 @@ class SerieFragment(private val posterPath: String? = null) : Fragment() {
         setViewPager()
         getSerie()
         getFollowingSeries()
-
     }
 
     private fun getFollowingSeries() {

@@ -68,7 +68,7 @@
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:itemCount="3"
-                tools:listitem="@layout/lista_series_basic" />
+                tools:listitem="@layout/list_series_basic" />
 
         </ViewSwitcher>
 
@@ -111,7 +111,7 @@
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:itemCount="3"
-            tools:listitem="@layout/lista_series_basic" />
+            tools:listitem="@layout/list_series_basic" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -149,6 +149,6 @@
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:itemCount="3"
-            tools:listitem="@layout/lista_series_basic" />
+            tools:listitem="@layout/list_series_basic" />
     </LinearLayout>
 </ScrollView>

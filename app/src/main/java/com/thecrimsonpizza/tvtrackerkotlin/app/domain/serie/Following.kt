@@ -1,7 +1,6 @@
 package com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie
 
-import com.thecrimsonpizza.tvtrackerkotlin.core.base.BaseClass
-import kotlinx.android.parcel.IgnoredOnParcel
+import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 
@@ -10,8 +9,7 @@ data class Following(
     var added: Boolean = false,
     var addedDate: Date? = null,
     var watchedDate: Date? = null
-) : BaseClass {
-    @IgnoredOnParcel
+)  :Parcelable{
     var watched: Boolean = false
         set(value) {
             field = value

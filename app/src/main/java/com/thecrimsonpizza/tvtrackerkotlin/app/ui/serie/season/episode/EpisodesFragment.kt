@@ -1,14 +1,14 @@
 package com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie.season.episode
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.thecrimsonpizza.tvtrackerkotlin.R
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.seasons.Episode
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
@@ -21,7 +21,12 @@ import kotlinx.android.synthetic.main.fragment_episodes.*
 import kotlinx.android.synthetic.main.list_episodes.view.*
 
 
-class EpisodesFragment : Fragment() {
+class EpisodesFragment : BottomSheetDialogFragment() {
+
+
+    companion object {
+        const val TAG = "ActionBottomDialog"
+    }
 
     private var seasonPos = -1
     private var rvEpisodes: RecyclerView? = null
@@ -45,6 +50,7 @@ class EpisodesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+//        dismissAllowingStateLoss()
 
         seriesViewModel.getShow().observe(viewLifecycleOwner, Observer<SerieResponse.Serie>
         {
@@ -92,8 +98,7 @@ class EpisodesFragment : Fragment() {
     private fun setAdapter() {
 
         gridEpisodes.setBaseAdapter(
-            mEpisodes, R.layout.list_episodes,
-            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            mEpisodes, R.layout.list_episodes
         ) {
 
             if (serie.followingData.added) setWatchCheck(itemView, adapterPosition, it)
@@ -101,7 +106,8 @@ class EpisodesFragment : Fragment() {
             itemView.image_episode.getImage(requireContext(), BASE_URL_IMAGES_POSTER + it.stillPath)
             itemView.episode_name.text = it.name
             itemView.nextEpisodeNameExpandable.text = it.name
-            itemView.episode_fecha.text =  if(it.airDate!= null) it.airDate?.changeDateFormat(FORMAT_LONG) else getString(R.string.no_data)
+            itemView.episode_fecha.text =
+                if (it.airDate != null) it.airDate?.changeDateFormat(FORMAT_LONG) else getString(R.string.no_data)
             itemView.episode_sinopsis.text = it.overview.checkNull(requireContext())
             itemView.episode_time.text =
                 (if (!serie.episodeRunTime.isNullOrEmpty()) {
@@ -117,5 +123,14 @@ class EpisodesFragment : Fragment() {
                 }
             }
         }
+    }
+
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+    }
+
+    override fun onDetach() {
+        super.onDetach()
     }
 }

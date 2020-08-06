@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.thecrimsonpizza.tvtrackerkotlin.R
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.seasons.Season
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
@@ -44,8 +43,7 @@ class SeasonFragment : Fragment() {
     private fun setAdapter() {
         val sortedSeasons = serie.seasons.sortedBy { it.seasonNumber }
         gridSeasons.setBaseAdapter(
-            sortedSeasons, R.layout.list_season,
-            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            sortedSeasons, R.layout.list_season
         ) {
 
             if (serie.followingData.added) setWatchCheck(itemView, adapterPosition, it)
@@ -67,9 +65,9 @@ class SeasonFragment : Fragment() {
                     it.episodes.size,
                     it.episodes.size
                 )
+                itemView.setOnClickListener { goToEpisodes(adapterPosition) }
             } else itemView.episode_number.text = requireContext().getString(R.string.no_data)
 
-            itemView.setOnClickListener { goToEpisodes(adapterPosition) }
         }
     }
 
@@ -90,15 +88,11 @@ class SeasonFragment : Fragment() {
     }
 
     private fun goToEpisodes(pos: Int) {
+
         val fragment = EpisodesFragment().apply {
             arguments = Bundle().apply { putInt(ID_SEASON, pos) }
         }
-
-        requireActivity().supportFragmentManager
-            .beginTransaction()
-            .addToBackStack("TAG")
-            .add(R.id.fragment_container, fragment)
-            .commit()
+        fragment.show(parentFragmentManager, EpisodesFragment.TAG)
 
     }
 

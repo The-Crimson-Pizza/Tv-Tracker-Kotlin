@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardViewBasic"
+    android:layout_width="130dp"
+    android:layout_height="225dp"
+    android:layout_margin="5dp"
+    android:foreground="?android:attr/selectableItemBackground"
+    app:cardCornerRadius="5dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_default="percent"
+        app:layout_constraintWidth_percent=".4">
+
+        <ImageView
+            android:id="@+id/posterBasic"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:contentDescription="@string/serie_poster_description"
+            android:scaleType="centerCrop"
+            android:transitionName="@string/serie_transition"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:src="@drawable/default_poster"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/titleBasic"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:ellipsize="marquee"
+            android:gravity="center"
+            android:maxLines="2"
+            android:padding="2dp"
+            android:text="gg"
+            android:textAllCaps="true"
+            android:textColor="@color/colorPrimary"
+            android:textSize="6pt"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/posterBasic" />
+
+
+        <TextView
+            android:id="@+id/ratingBasic"
+            android:layout_width="30dp"
+            android:layout_height="20dp"
+            android:layout_gravity="end|top"
+            android:layout_margin="5dp"
+            android:text="0.0"
+            android:gravity="center"
+            android:background="@drawable/round_val_movie"
+            android:padding="2dp"
+            android:textColor="@color/whiteColor"
+            android:textSize="5pt"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

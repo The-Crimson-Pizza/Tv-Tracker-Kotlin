@@ -16,9 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".app.ui.serie.detail.GenreNetworkActivity"></activity>
         <activity android:name=".core.base.BaseActivity" />
-        <activity android:name=".app.ui.actor.PersonActivity" />
         <activity android:name=".app.ui.webview.WebViewActivity" />
         <activity
             android:name=".app.ui.login.LoginActivity"

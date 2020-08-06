@@ -15,10 +15,10 @@ import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.ui.following.FollowingViewModel
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.getImage
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.goToBaseActivity
-import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.setBaseAdapterTwo
+import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.setBaseAdapter
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_POSTER
 import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.lista_series_basic.view.*
+import kotlinx.android.synthetic.main.list_series_basic.view.*
 
 
 class HomeFragment : Fragment() {
@@ -48,19 +48,30 @@ class HomeFragment : Fragment() {
         setBaseAdapter(gridNew, newList)
         setBaseAdapter(gridFollowing, followingList)
 
+        getFollowingShows()
+        getNewShows()
+        getTrendingShows()
+
+    }
+
+    private fun getTrendingShows() {
+        homeViewModel.getTrendingShows().observe(viewLifecycleOwner, Observer {
+            refreshData(trendList, it.basicSeries, gridTrend)
+        })
+    }
+
+    private fun getNewShows() {
+        homeViewModel.getNewShows().observe(viewLifecycleOwner, Observer {
+            refreshData(newList, it.basicSeries, gridNew)
+        })
+    }
+
+    private fun getFollowingShows() {
         followingViewModel.getFollowing().observe(viewLifecycleOwner, Observer {
             if (it.isNotEmpty()) {
                 if (gridFollowing.id == switcher_favs.nextView.id) switcher_favs.showNext()
                 refreshData(followingList, it, gridFollowing)
             } else if (no_data_favs.id == switcher_favs.nextView.id) switcher_favs.showNext()
-        })
-
-        homeViewModel.getNewShows().observe(viewLifecycleOwner, Observer {
-            refreshData(newList, it.basicSeries, gridNew)
-        })
-
-        homeViewModel.getTrendingShows().observe(viewLifecycleOwner, Observer {
-            refreshData(trendList, it.basicSeries, gridTrend)
         })
     }
 
@@ -73,7 +84,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun setBaseAdapter(recycler: RecyclerView, list: List<BasicResponse.SerieBasic>) {
-        recycler.setBaseAdapterTwo(list, R.layout.lista_series_basic) { show ->
+        recycler.setBaseAdapter(list, R.layout.list_series_basic) { show ->
             itemView.posterBasic.getImage(
                 requireContext(), BASE_URL_IMAGES_POSTER + show.posterPath.toString()
             )

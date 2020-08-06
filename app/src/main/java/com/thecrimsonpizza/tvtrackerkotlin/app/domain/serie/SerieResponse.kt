@@ -29,11 +29,11 @@ data class SerieResponse(
         var networks: List<Network> = listOf(),
         var credits: Credits = Credits(),
         var similar: Similar = Similar(),
-        var seasons: MutableList<Season> = mutableListOf(),
+        var seasons: List<Season> = listOf(),
         var video: VideoResponse.Video? = null,
         var lastEpisodeWatched: Episode = Episode(),
         @SerializedName("original_name") var originalName: String = "",
-        @SerializedName("first_air_date") var firstAirDate: String = "",
+        @SerializedName("first_air_date") var firstAirDate: String? = "",
         @SerializedName("last_air_date") var lastAirDate: String = "",
 //        @SerializedName("poster_path")  var posterPath: String? = null,
         @SerializedName("backdrop_path") var backdropPath: String? = null,
@@ -53,9 +53,9 @@ data class SerieResponse(
     ) : BasicResponse.SerieBasic(0, "", "", 0f) {
 
 
-        fun withSeasons(seasonsList: MutableList<Season>, serie: Serie): Serie {
-            serie.seasons = seasonsList
-            serie.seasons.sort()
+        fun withSeasons(seasonsList: List<Season>, serie: Serie): Serie {
+            serie.seasons = seasonsList.sort()
+//            serie.seasons.sort()
             return serie
         }
 
@@ -192,15 +192,16 @@ data class SerieResponse(
 
         @Parcelize
         data class Genre(
-            var id: Int = 0,
-            var name: String = ""
+            override var id: Int = 0,
+            override var name: String = "",
+            override var posterPath: String? = null
         ) : BaseClass
 
         @Parcelize
         data class Network(
-            var id: Int = 0,
-            var name: String = "",
-            @SerializedName("logo_path") var logoPath: String? = ""
+            override var id: Int = 0,
+            override var name: String = "",
+            @SerializedName("logo_path") override var posterPath: String? = ""
         ) : BaseClass
 
         data class ExternalIds(

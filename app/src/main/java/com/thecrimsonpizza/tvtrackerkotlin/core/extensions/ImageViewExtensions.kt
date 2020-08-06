@@ -11,7 +11,7 @@ fun ImageView.getImage(context: Context, url: String?) {
     Glide.with(context).load(url)
         .apply(
             RequestOptions()
-                .placeholder(R.drawable.loading_poster)
+//                .placeholder(R.drawable.loading_poster)
                 .error(R.drawable.default_poster)
 //                .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
@@ -24,8 +24,8 @@ fun ImageView.getImagePortrait(context: Context, url: String) {
     Glide.with(context).load(url)
         .apply(
             RequestOptions()
-                .placeholder(R.drawable.loading_poster)
-                .error(R.drawable.default_portrait_big)
+//                .placeholder(R.drawable.loading_poster)
+                .error(R.drawable.default_portrait)
 //                .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
         )

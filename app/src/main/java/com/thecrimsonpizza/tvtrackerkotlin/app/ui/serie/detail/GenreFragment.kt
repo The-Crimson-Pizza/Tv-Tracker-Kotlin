@@ -7,20 +7,19 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.navigation.Navigation
 import com.thecrimsonpizza.tvtrackerkotlin.R
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.BasicResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie.SeriesViewModel
 import com.thecrimsonpizza.tvtrackerkotlin.core.base.BaseClass
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.getImage
-import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.setBaseAdapterTwo
+import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.goToBaseActivity
+import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.setBaseAdapter
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants
-import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.ID_SERIE
-import kotlinx.android.synthetic.main.fragment_genre.*
-import kotlinx.android.synthetic.main.lista_series_basic.view.*
+import kotlinx.android.synthetic.main.fragment_genre_network.*
+import kotlinx.android.synthetic.main.list_series_basic.view.*
 
-class GenreFragment(genre: BaseClass) : Fragment() {
+class GenreFragment(genre: BaseClass?) : Fragment() {
 
     private val seriesViewModel: SeriesViewModel by activityViewModels()
 
@@ -30,7 +29,7 @@ class GenreFragment(genre: BaseClass) : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_genre, container, false)
+        return inflater.inflate(R.layout.fragment_genre_network, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -74,24 +73,20 @@ class GenreFragment(genre: BaseClass) : Fragment() {
     }
 
     private fun setAdapter() {
-        rv_genres.setBaseAdapterTwo(
+        rv_genres.setBaseAdapter(
             mSeriesByGenre,
-            R.layout.lista_series_basic
+            R.layout.list_series_basic
         ) { serie ->
+            itemView.layoutParams.width = (requireView().width * 0.3).toInt()
+
             itemView.posterBasic.getImage(
-                requireContext(),
-                GlobalConstants.BASE_URL_IMAGES_POSTER + serie.posterPath
+                requireContext(), GlobalConstants.BASE_URL_IMAGES_POSTER + serie.posterPath
             )
             itemView.titleBasic.text = serie.name
             itemView.ratingBasic.text = serie.voteAverage.toString()
-
             itemView.ratingBasic.visibility = View.GONE
-            itemView.setOnClickListener {
-                val bundle = Bundle()
-                bundle.putInt(ID_SERIE, serie.id)
-                Navigation.findNavController(it)
-                    .navigate(R.id.action_global_navigation_series, bundle)
-            }
+
+            itemView.setOnClickListener { serie.goToBaseActivity(requireContext(), it) }
         }
     }
 }

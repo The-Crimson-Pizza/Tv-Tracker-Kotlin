@@ -126,7 +126,10 @@
         android:id="@+id/grid_favoritas"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
+        tools:listitem="@layout/list_series_following"
         android:orientation="vertical"
+        app:spanCount="1"
         tools:visibility="visible" />
 
 </LinearLayout>

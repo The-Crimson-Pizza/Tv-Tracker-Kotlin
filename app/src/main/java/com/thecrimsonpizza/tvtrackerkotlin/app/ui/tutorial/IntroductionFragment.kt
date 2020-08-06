@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.GridLayoutManager
 import com.github.appintro.SlidePolicy
 import com.thecrimsonpizza.tvtrackerkotlin.R
 import com.thecrimsonpizza.tvtrackerkotlin.app.data.local.SharedPreferencesController
@@ -18,7 +17,7 @@ import com.thecrimsonpizza.tvtrackerkotlin.app.domain.BasicResponse
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.getImage
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.setBaseAdapter
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.MY_PREFS
-import kotlinx.android.synthetic.main.lista_series_basic.view.*
+import kotlinx.android.synthetic.main.list_series_basic.view.*
 import kotlinx.android.synthetic.main.tutorial_slide5.*
 
 class IntroductionFragment : Fragment(), SlidePolicy {
@@ -47,9 +46,11 @@ class IntroductionFragment : Fragment(), SlidePolicy {
 
     private fun setAdapter() {
         recyclerTutorial.setBaseAdapter(
-            mPopulares, R.layout.lista_series_basic,
-            GridLayoutManager(activity, 3)
+            mPopulares, R.layout.list_series_basic
         ) {
+
+            itemView.layoutParams.width = (requireView().width * 0.3).toInt()
+
             val selectedItems = SparseBooleanArray()
             val prefs: SharedPreferences = requireContext().applicationContext.getSharedPreferences(
                 MY_PREFS,

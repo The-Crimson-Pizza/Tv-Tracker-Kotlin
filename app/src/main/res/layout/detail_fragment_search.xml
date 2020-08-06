@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ViewSwitcher xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/switcherSearchActor"
+    android:id="@+id/switcherSearch"
     android:layout_width="match_parent"
+    android:background="@color/almostWhite"
     android:layout_height="match_parent"
-    tools:context=".ui.search.ActorSearchFragment">
+    android:padding="5dp">
 
     <include
         android:id="@+id/search_image"
@@ -13,9 +15,12 @@
         android:layout_height="match_parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvActores"
+        android:id="@+id/rvSearch"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" />
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="3"
+        tools:listitem="@layout/list_series_basic" />
 </ViewSwitcher>
 

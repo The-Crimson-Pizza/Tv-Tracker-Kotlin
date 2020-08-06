@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.thecrimsonpizza.tvtrackerkotlin.R
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.actor.Credits
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
@@ -16,6 +15,7 @@ import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.getImagePortrait
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.goToPersonActivity
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.setBaseAdapter
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_PORTRAIT
+import com.thecrimsonpizza.tvtrackerkotlin.core.utils.Type
 import kotlinx.android.synthetic.main.fragment_cast.*
 import kotlinx.android.synthetic.main.lista_cast_vertical.view.*
 
@@ -42,8 +42,7 @@ class CastFragment : Fragment() {
 
     private fun setAdapter() {
         gridCasting.setBaseAdapter(
-            mCast, R.layout.lista_cast_vertical,
-            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            mCast, R.layout.lista_cast_vertical
         ) { cast ->
             itemView.actor_name.text = cast.name
             itemView.character_name.text = cast.character
@@ -51,7 +50,13 @@ class CastFragment : Fragment() {
                 requireContext(),
                 BASE_URL_IMAGES_PORTRAIT + cast.profilePath.toString()
             )
-            itemView.setOnClickListener { v -> cast.goToPersonActivity(requireContext(), v) }
+            itemView.setOnClickListener { v ->
+                cast.goToPersonActivity(
+                    requireContext(),
+                    v,
+                    Type.PERSON
+                )
+            }
         }
     }
 
