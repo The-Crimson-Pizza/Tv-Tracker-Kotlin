@@ -1,0 +1,9 @@
+name: Check leaks
+on: [push]
+jobs:
+  build:
+    name: Check leaks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Gitleaks
+        uses: zricethezav/gitleaks-action@v1.1.2
