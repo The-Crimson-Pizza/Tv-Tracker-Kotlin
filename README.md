@@ -78,16 +78,24 @@ To be made...
 
 ## :pencil2: To-Do (in order of priority) <a name = "todo"></a>
 
+High Priority
+
 - [x] Logout button
 - [ ] Similar Shows
-- [ ] Check network when adding favorites/following
+- [ ] Check network - offline mode
 - [x] Add watched episode directly in following list
 - [ ] How long did it take to watch a season/show?
 - [x] Episodes left to watch
+
+Medium Priority
+
 - [ ] Bars Chart with days of the week and trends
 - [ ] Recommendations
 - [ ] Multiscreen
 - [ ] See crew people, not only actors
+
+Low Priority
+
 - [ ] Discover how many shows/movies of an actor we watched
 - [ ] Make lists / default list
 - [ ] Follow actors / mark as favorite
