@@ -66,7 +66,7 @@ To be made...
 
 ## ⛏️ Built Using <a name = "built_using"></a>
 - [Android Studio](https://developer.android.com/) - IDE
-- [Java 8](https://docs.oracle.com/javase/8/docs/api/) - Programming Language
+- [Kotlin](https://kotlinlang.org/) - Programming Language
 - [Firebase](https://firebase.google.com/) - Database
 - [TMDB](https://www.themoviedb.org/) - API provider
 - [Retrofit3](https://square.github.io/retrofit/) - HTTP client 
@@ -97,4 +97,4 @@ To be made...
 
 ## ✍️ Authors <a name = "authors"></a>
 - [@aareupGH](https://github.com/aareupGH) - Aarón Pérez - Idea & Initial work
-- [@wilkin25](https://github.com/wilkin25) - Andrea Lobo - Idea & Initial work
+- [@awlobo](https://github.com/awlobo) - Andrea Lobo - Idea & Initial work
