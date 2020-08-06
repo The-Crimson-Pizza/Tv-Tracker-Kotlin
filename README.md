@@ -1,10 +1,10 @@
 # Tv-Tracker-Kotlin
 
-![](https://github.com/The-Crimson-Pizza/Tv-Tracker-Kotlin/workflows/Prueba/badge.svg)
+![Github Pages](https://github.com/The-Crimson-Pizza/Tv-Tracker-Kotlin/workflows/Github%20Pages/badge.svg?event=deployment_status)
 
 <p align="center">
   <a href="" rel="noopener">
- <img width=30% src="https://i.imgur.com/x4dlw0B.png" alt="Project logo"></a>
+ <img width=30% src="https://i.imgur.com/EPRsmdj.png" alt="Project logo"></a>
 </p>
 
 <h3 align="center">Tv-Tracker</h3>
