@@ -15,10 +15,9 @@ import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_I
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_WEB_MOVIE
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.FORMAT_LONG
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.URL_WEB_VIEW
-import com.thecrimsonpizza.tvtrackerkotlin.core.utils.getImageNoPlaceholder
 import kotlinx.android.synthetic.main.content_actor.view.*
 import kotlinx.android.synthetic.main.fragment_actor.view.*
-import kotlinx.android.synthetic.main.lista_series_basic.view.*
+import kotlinx.android.synthetic.main.list_series_basic.view.*
 import java.time.LocalDate
 import java.time.Period
 
@@ -33,11 +32,7 @@ class ActorAdapter(
         val includeView: View = view.include_actor
 
         view.toolbar_actor.title = person.name
-        getImageNoPlaceholder(
-            BASE_URL_IMAGES_PORTRAIT + person.posterPath,
-            view.portraitImage,
-            context
-        )
+        view.portraitImage.getImagePortrait(context, "$BASE_URL_IMAGES_PORTRAIT${person.posterPath}")
 
         includeView.fecha_actor.text =
             person.birthday?.let { calculateAge(false) } ?: context.getString(R.string.no_data)
@@ -64,8 +59,8 @@ class ActorAdapter(
 
         if (person.movieCredits != null && person.movieCredits.cast.isNotEmpty()) {
             val sortedMovies = person.movieCredits.cast.sortedByDescending { it.releaseDate }
-            includeView.rv_movies.setBaseAdapterTwo(
-                sortedMovies, R.layout.lista_series_basic
+            includeView.rv_movies.setBaseAdapter(
+                sortedMovies, R.layout.list_series_basic
             ) { cast ->
                 itemView.titleBasic.text = cast.title
                 itemView.posterBasic.getImage(
@@ -78,8 +73,8 @@ class ActorAdapter(
 
         if (person.tvCredits != null && person.tvCredits.cast.isNotEmpty()) {
             val sortedShows = person.tvCredits.cast.sortedByDescending { it.firstAirDate }
-            includeView.rvSeries.setBaseAdapterTwo(
-                sortedShows, R.layout.lista_series_basic
+            includeView.rvSeries.setBaseAdapter(
+                sortedShows, R.layout.list_series_basic
             ) { cast ->
                 itemView.titleBasic.text = cast.name
                 itemView.posterBasic.getImage(

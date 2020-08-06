@@ -102,4 +102,5 @@
     <string name="genre_transition" translatable="false">genre_transition</string>
     <string name="network_transition" translatable="false">network_transition</string>
     <string name="network_icon_description" translatable="false">network_icon</string>
+    <string name="go_to_tmdb">Go to TMDB website</string>
 </resources>

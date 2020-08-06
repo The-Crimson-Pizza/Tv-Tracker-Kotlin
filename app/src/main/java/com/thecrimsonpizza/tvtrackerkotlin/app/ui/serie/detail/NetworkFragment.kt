@@ -14,11 +14,11 @@ import com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie.SeriesViewModel
 import com.thecrimsonpizza.tvtrackerkotlin.core.base.BaseClass
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.getImage
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.goToBaseActivity
-import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.setBaseAdapterTwo
+import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.setBaseAdapter
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_NETWORK
 import kotlinx.android.synthetic.main.fragment_genre_network.*
-import kotlinx.android.synthetic.main.lista_series_basic.view.*
+import kotlinx.android.synthetic.main.list_series_basic.view.*
 
 class NetworkFragment(data: BaseClass?) : Fragment() {
 
@@ -53,10 +53,12 @@ class NetworkFragment(data: BaseClass?) : Fragment() {
     }
 
     private fun setAdapter() {
-        rv_genres.setBaseAdapterTwo(
+        rv_genres.setBaseAdapter(
             seriesByNetwork,
-            R.layout.lista_series_basic
+            R.layout.list_series_basic
         ) { serie ->
+            itemView.layoutParams.width = (requireView().width * 0.3).toInt()
+
             itemView.posterBasic.getImage(
                 requireContext(), GlobalConstants.BASE_URL_IMAGES_POSTER + serie.posterPath
             )

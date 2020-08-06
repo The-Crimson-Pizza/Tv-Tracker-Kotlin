@@ -11,22 +11,8 @@ import com.thecrimsonpizza.tvtrackerkotlin.core.base.SimpleRecyclerAdapter
 fun ViewGroup.inflater(layoutRes: Int): View =
     LayoutInflater.from(context).inflate(layoutRes, this, false)
 
-fun <T : Any> RecyclerView.setBaseAdapter(
-    dataList: List<T>?,
-    @LayoutRes layoutID: Int,
-    layoutManager: RecyclerView.LayoutManager,
-    onBindView: BaseViewHolder<T>.(data: T) -> Unit
-): SimpleRecyclerAdapter<T> {
-    val recyclerAdapter = SimpleRecyclerAdapter(dataList, layoutID, onBindView)
-    adapter = recyclerAdapter
-    this.layoutManager = layoutManager
-    this.setHasFixedSize(true)
-    this.setItemViewCacheSize(20)
-    this.isSaveEnabled = true
-    return recyclerAdapter
-}
 
-fun <T : Any> RecyclerView.setBaseAdapterTwo(
+fun <T : Any> RecyclerView.setBaseAdapter(
     dataList: List<T>,
     @LayoutRes layoutID: Int,
     onBindView: BaseViewHolder<T>.(data: T) -> Unit

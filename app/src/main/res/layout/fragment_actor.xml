@@ -35,7 +35,7 @@
                     android:id="@+id/portraitImage"
                     android:layout_width="175dp"
                     android:transitionName="@string/actor_transition"
-                    app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
+                    app:shapeAppearanceOverlay="@style/circlePortraitStyle"
                     app:strokeColor="@color/colorPrimary"
                     app:strokeWidth="1dp"
                     android:scaleType="centerCrop"

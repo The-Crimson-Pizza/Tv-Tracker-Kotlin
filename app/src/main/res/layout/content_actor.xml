@@ -117,7 +117,7 @@
                 android:layout_marginTop="15dp"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/lista_series_basic" />
+                tools:listitem="@layout/list_series_basic" />
 
         </LinearLayout>
 
@@ -143,7 +143,7 @@
                 android:layout_marginTop="15dp"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/lista_series_basic" />
+                tools:listitem="@layout/list_series_basic" />
 
         </LinearLayout>
 

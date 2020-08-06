@@ -11,11 +11,11 @@ import com.thecrimsonpizza.tvtrackerkotlin.R
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.getImage
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.goToBaseActivity
-import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.setBaseAdapterTwo
+import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.setBaseAdapter
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_POSTER
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.EMPTY_STRING
 import kotlinx.android.synthetic.main.detail_fragment_search.*
-import kotlinx.android.synthetic.main.lista_series_basic.view.*
+import kotlinx.android.synthetic.main.list_series_basic.view.*
 
 class SerieSearchFragment : Fragment() {
     private val showList = mutableListOf<SerieResponse.Serie>()
@@ -56,8 +56,8 @@ class SerieSearchFragment : Fragment() {
     }
 
     private fun setAdapter() {
-        rvSearch.setBaseAdapterTwo(
-            showList, R.layout.lista_series_basic
+        rvSearch.setBaseAdapter(
+            showList, R.layout.list_series_basic
 
         ) { serie ->
 

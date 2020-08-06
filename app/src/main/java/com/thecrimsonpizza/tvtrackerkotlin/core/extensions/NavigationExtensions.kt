@@ -17,8 +17,8 @@ import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.ID_ACTOR
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.ID_SERIE
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.TYPE_FRAGMENT
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.Type
+import kotlinx.android.synthetic.main.list_series_basic.view.*
 import kotlinx.android.synthetic.main.lista_cast_vertical.view.*
-import kotlinx.android.synthetic.main.lista_series_basic.view.*
 
 fun BaseClass.goToBaseActivity(context: Context, view: View) {
     val serie = this
