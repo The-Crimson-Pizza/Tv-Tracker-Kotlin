@@ -27,11 +27,11 @@
 ## 🧐 Screenshots <a name = "screenshots"></a>
 
 <div align="center">
-  <img src="/website/home1.png" width="25%"/>
+  <img src="/website/public/assets/home1.png" width="25%"/>
   
-  <img src="/website/search.png" width="25%"/>
+  <img src="/website/public/assets/search.png" width="25%"/>
   
-  <img src="/website/follow.png" width="25%"/>
+  <img src="/website/public/assets/follow.png" width="25%"/>
 </div>
   
 ## :gear: Functions  <a name = "functions"></a>
