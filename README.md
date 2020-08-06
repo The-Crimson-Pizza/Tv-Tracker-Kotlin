@@ -14,6 +14,9 @@
 <p align="center"> App to keep track of your tv shows. <a href="https://github.com/The-Crimson-Pizza/Tv-Tracker">Tv Tracker</a> Kotlin fork.
     <br> 
 </p>
+<p>
+  <a href="https://the-crimson-pizza.github.io/Tv-Tracker-Kotlin/">the-crimson-pizza.github.io/Tv-Tracker-Kotlin</a>
+</p>
 
 ## 📝 Table of Contents
 - [Screenshots](#screenshots)
