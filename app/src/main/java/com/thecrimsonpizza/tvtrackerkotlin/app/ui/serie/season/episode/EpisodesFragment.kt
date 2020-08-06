@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.thecrimsonpizza.tvtrackerkotlin.R
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.seasons.Episode
@@ -29,7 +28,6 @@ class EpisodesFragment : BottomSheetDialogFragment() {
     }
 
     private var seasonPos = -1
-    private var rvEpisodes: RecyclerView? = null
     private lateinit var serie: SerieResponse.Serie
     private val mFavs: MutableList<SerieResponse.Serie> = mutableListOf()
     private val mEpisodes: MutableList<Episode> = mutableListOf()
