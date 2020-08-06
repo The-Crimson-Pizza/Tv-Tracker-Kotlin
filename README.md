@@ -14,7 +14,7 @@
 <p align="center"> App to keep track of your tv shows. <a href="https://github.com/The-Crimson-Pizza/Tv-Tracker">Tv Tracker</a> Kotlin fork.
     <br> 
 </p>
-<p>
+<p align="center">
   <a href="https://the-crimson-pizza.github.io/Tv-Tracker-Kotlin/">the-crimson-pizza.github.io/Tv-Tracker-Kotlin</a>
 </p>
 
@@ -107,5 +107,5 @@ Low Priority
 - [ ] Sync with trakt.tv
 
 ## ✍️ Authors <a name = "authors"></a>
-- [@aareupGH](https://github.com/aareupGH) - Aarón Pérez - Idea & Initial work
+- [@aareupGH](https://github.com/aareupGH)/[@aaronperezJ23](https://github.com/aaronperezJ23) - Aarón Pérez - Idea & Initial work
 - [@awlobo](https://github.com/awlobo) - Andrea Lobo - Idea & Initial work
