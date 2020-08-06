@@ -15,7 +15,7 @@
     <br> 
 </p>
 <p align="center">
-  <a href="https://the-crimson-pizza.github.io/Tv-Tracker-Kotlin/">the-crimson-pizza.github.io/Tv-Tracker-Kotlin</a>
+  <a href="https://the-crimson-pizza.github.io/Tv-Tracker-Kotlin/" target="blank_">the-crimson-pizza.github.io/Tv-Tracker-Kotlin</a>
 </p>
 
 ## 📝 Table of Contents
