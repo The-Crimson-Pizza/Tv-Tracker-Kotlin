@@ -25,10 +25,11 @@ import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.saveToFirebase
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_WEB_TV
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.TEXT_PLAIN
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.URL_WEB_VIEW
+import com.thecrimsonpizza.tvtrackerkotlin.core.utils.Status
 import kotlinx.android.synthetic.main.fragment_serie.*
 import java.util.*
 
-class SerieFragment(private val posterPath: String? = null) : Fragment() {
+class SerieFragment(private val idS: Int, private val posterPath: String? = null) : Fragment() {
 
     private val seriesViewModel: SeriesViewModel by activityViewModels()
     private val followingViewModel: FollowingViewModel by activityViewModels()
@@ -40,14 +41,12 @@ class SerieFragment(private val posterPath: String? = null) : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         followingViewModel.init()
+        idSerie = idS
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-//        idSerie = intent.getInt(GlobalConstants.ID_SERIE, 0)
-//        idSerie = requireArguments().getInt(GlobalConstants.ID_SERIE, 0)
-//        seriesViewModel.getShowData(idSerie)
         return inflater.inflate(R.layout.fragment_serie, container, false)
     }
 
@@ -68,30 +67,43 @@ class SerieFragment(private val posterPath: String? = null) : Fragment() {
         followingViewModel.getFollowing().observe(viewLifecycleOwner, Observer {
             followingList.clear()
             followingList.addAll(it)
-            if (this::mSerie.isInitialized) setProgress(mSerie)
+            if (this::mSerie.isInitialized) setProgress()
         })
     }
 
     private fun getSerie() {
         seriesViewModel.getShow().observe(viewLifecycleOwner, Observer {
-            mSerie = it
-            if (mSerie.homepage.isNotEmpty()) itemWeb.isVisible = true
-            setProgress(mSerie)
+            when (it.status) {
+//                Status.LOADING -> progressTrend.visibility = View.VISIBLE
+                Status.SUCCESS -> {
+                    mSerie = it.data!!
+                    if (mSerie.homepage.isNotEmpty()) itemWeb.isVisible = true
+                    setProgress()
+                }
+                Status.ERROR ->
+                    Snackbar.make(
+                        requireView(),
+                        "${getString(R.string.no_conn)} - ${it.message}",
+                        Snackbar.LENGTH_INDEFINITE
+                    ).show()
+            }
         })
     }
 
-    private fun setProgress(serie: SerieResponse.Serie) {
+    private fun setProgress() {
         progres.visibility = View.VISIBLE
-        serie.checkFav(followingList)
+        mSerie.checkFav(followingList)
 //        seriesViewModel.saveSerie(s)
         var changed = false
         followingList.forEachIndexed { index, follow ->
-            val new = serie.updateObject(follow)
-            if (new != null && new != follow) followingList[index] = new; changed = true
+            if (mSerie.hasSameId(follow) && mSerie.hasChanged(follow)) {
+                val new = mSerie.updateObject(follow)
+                if (new != null && new != follow) followingList[index] = new; changed = true
+            }
         }
         if (changed) followingList.saveToFirebase()
 
-        SerieAdapter(requireContext(), requireView(), serie).fillCollapseBar(posterPath)
+        SerieAdapter(requireContext(), requireView(), mSerie).fillCollapseBar(posterPath)
         setFloatingButton()
         progres.visibility = View.GONE
     }
@@ -99,7 +111,7 @@ class SerieFragment(private val posterPath: String? = null) : Fragment() {
     private fun setFloatingButton() {
         fab.visibility = View.VISIBLE
         fab.setOnClickListener { viewFab: View? ->
-            if (!mSerie.followingData.added) {
+            if (!mSerie.followingData.added || mSerie.inFollowingList(followingList)) {
                 addFav()
                 Snackbar.make(viewFab!!, R.string.add_fav, Snackbar.LENGTH_LONG).show()
             } else {

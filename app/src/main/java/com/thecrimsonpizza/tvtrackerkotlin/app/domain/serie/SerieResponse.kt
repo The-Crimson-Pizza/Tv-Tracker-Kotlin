@@ -2,12 +2,10 @@ package com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import com.thecrimsonpizza.tvtrackerkotlin.app.domain.BasicResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.actor.Credits
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.seasons.Episode
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.seasons.Season
 import com.thecrimsonpizza.tvtrackerkotlin.core.base.BaseClass
-import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.sort
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants
 import kotlinx.android.parcel.Parcelize
 import java.io.Serializable
@@ -35,7 +33,6 @@ data class SerieResponse(
         @SerializedName("original_name") var originalName: String = "",
         @SerializedName("first_air_date") var firstAirDate: String? = "",
         @SerializedName("last_air_date") var lastAirDate: String = "",
-//        @SerializedName("poster_path")  var posterPath: String? = null,
         @SerializedName("backdrop_path") var backdropPath: String? = null,
         @SerializedName("episode_run_time") var episodeRunTime: List<Int> = listOf(),
         @SerializedName("in_production") var inProduction: Boolean = false,
@@ -43,28 +40,34 @@ data class SerieResponse(
         @SerializedName("number_of_seasons") var numberOfSeasons: Int = 0,
         @SerializedName("origin_country") var originCountry: List<String> = listOf(),
         @SerializedName("original_language") var originalLanguage: String = "",
-//        @SerializedName("vote_average")  var voteAverage: Float = 0f,
         @SerializedName("external_ids") var externalIds: ExternalIds = ExternalIds(),
         @SerializedName("next_episode_to_air") var nextEpisodeToAir: Episode? = null,
         @SerializedName("last_episode_to_air") var lastEpisodeToAir: Episode? = null,
 
-        var followingData: Following = Following()
+        var followingData: FollowingData = FollowingData()
 
     ) : BasicResponse.SerieBasic(0, "", "", 0f) {
 
 
-        fun withSeasons(seasonsList: List<Season>, serie: Serie): Serie {
-            serie.seasons = seasonsList.sort()
-//            serie.seasons.sort()
-            return serie
+        fun hasChanged(serieCompared: Serie): Boolean {
+            return this == serieCompared
+        }
+
+        fun hasSameId(serieCompared: Serie): Boolean {
+            return this.id == serieCompared.id
+        }
+
+        fun inFollowingList(list: List<Serie>): Boolean {
+            val found = list.firstOrNull { it.id == this.id }
+            return found != null
         }
 
         fun updateObject(serie: Serie): Serie? {
             if (this.id == serie.id) {
                 if (this != serie) {
                     val following = serie.followingData
-                    val seasonMap = HashMap<Int, Following>()
-                    val episodeMap = HashMap<Int, Following>()
+                    val seasonMap = HashMap<Int, FollowingData>()
+                    val episodeMap = HashMap<Int, FollowingData>()
 
                     for (season in serie.seasons) {
                         seasonMap[season.id] = season.followingData

@@ -11,12 +11,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.github.appintro.SlidePolicy
+import com.google.android.material.snackbar.Snackbar
 import com.thecrimsonpizza.tvtrackerkotlin.R
 import com.thecrimsonpizza.tvtrackerkotlin.app.data.local.SharedPreferencesController
-import com.thecrimsonpizza.tvtrackerkotlin.app.domain.BasicResponse
+import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.BasicResponse
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.getImage
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.setBaseAdapter
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.MY_PREFS
+import com.thecrimsonpizza.tvtrackerkotlin.core.utils.Status
 import kotlinx.android.synthetic.main.list_series_basic.view.*
 import kotlinx.android.synthetic.main.tutorial_slide5.*
 
@@ -36,10 +38,22 @@ class IntroductionFragment : Fragment(), SlidePolicy {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        tutorialViewModel.getTrendingShows().observe(viewLifecycleOwner, Observer {
-            mPopulares.clear()
-            mPopulares.addAll(it.basicSeries)
-            recyclerTutorial.adapter?.notifyDataSetChanged()
+        tutorialViewModel.trendMutable().observe(viewLifecycleOwner, Observer {
+            when (it.status) {
+//                Status.LOADING -> progressTrend.visibility = View.VISIBLE
+                Status.SUCCESS -> {
+                    mPopulares.clear()
+                    it.data?.basicSeries?.let { it1 -> mPopulares.addAll(it1) }
+                    recyclerTutorial.adapter?.notifyDataSetChanged()
+//                    progressTrend.visibility = View.GONE
+                }
+                Status.ERROR ->
+                    Snackbar.make(
+                        requireView(),
+                        getString(R.string.no_conn),
+                        Snackbar.LENGTH_INDEFINITE
+                    ).show()
+            }
         })
         setAdapter()
     }

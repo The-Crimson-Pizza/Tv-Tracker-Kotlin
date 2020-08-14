@@ -5,7 +5,7 @@ import android.view.View
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.gson.annotations.SerializedName
 import com.thecrimsonpizza.tvtrackerkotlin.R
-import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.Following
+import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.FollowingData
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.checkEpisodesFinished
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.convertToString
@@ -19,7 +19,7 @@ data class Episode(
     var id: Int = 0,
     var name: String = "",
     var overview: String = "",
-    var followingData: Following = Following(),
+    var followingData: FollowingData = FollowingData(),
 
     @SerializedName("show_id") var showId: Int = 0,
     @SerializedName("air_date") var airDate: String? = "",

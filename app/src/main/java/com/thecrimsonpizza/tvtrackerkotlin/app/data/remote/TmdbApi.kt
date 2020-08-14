@@ -1,13 +1,11 @@
 package com.thecrimsonpizza.tvtrackerkotlin.app.data.remote
 
-import androidx.lifecycle.LiveData
-import com.thecrimsonpizza.tvtrackerkotlin.app.domain.BasicResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.actor.PersonResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.seasons.Season
+import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.BasicResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.VideoResponse
 import io.reactivex.rxjava3.core.Observable
-import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Path
@@ -20,31 +18,31 @@ interface TmdbApi {
 
     @Headers("Accept: application/json")
     @GET("trending/tv/day")
-    fun getTrendingSeries(): Observable<BasicResponse>
+    suspend fun getTrendingSeries(): BasicResponse
 
     @GET("discover/tv")
-    fun getNewSeries(
+    suspend fun getNewSeries(
         @Query("first_air_date_year") year: Int,
         @Query("language") language: String,
         @Query("sort_by") sort: String
-    ): Observable<BasicResponse>
+    ): BasicResponse
 
     @GET("tv/{id_serie}")
-    fun getSerie(
+    suspend fun getSerie(
         @Path("id_serie") id: Int,
         @Query("language") language: String,
         @Query("append_to_response") append: String
-    ): Observable<SerieResponse.Serie>
+    ): SerieResponse.Serie
 
     @GET("tv/{tv_id}/videos")
-    fun getTrailer(@Path("tv_id") idSerie: Int): Observable<VideoResponse>
+    suspend fun getTrailer(@Path("tv_id") idSerie: Int): VideoResponse
 
     @GET("tv/{id_serie}/season/{season_number}")
-    fun getSeason(
+    suspend fun getSeason(
         @Path("id_serie") id: Int,
         @Path("season_number") season: Int,
         @Query("language") language: String
-    ): Observable<Season>
+    ): Season
 
     @GET("person/{person_id}")
     fun getPerson(
@@ -68,6 +66,7 @@ interface TmdbApi {
     @GET("discover/tv")
     fun getSeriesByGenre(
         @Query("with_genres") idGenre: Int,
+        @Query("page") page: Int,
         @Query("language") language: String,
         @Query("timezone") zone: String,
         @Query("sort_by") sort: String

@@ -9,14 +9,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.thecrimsonpizza.tvtrackerkotlin.R
-import com.thecrimsonpizza.tvtrackerkotlin.app.domain.BasicResponse
+import com.thecrimsonpizza.tvtrackerkotlin.app.data.remote.ConnectionLiveData
+import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.BasicResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.ui.following.FollowingViewModel
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.getImage
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.goToBaseActivity
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.setBaseAdapter
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_POSTER
+import com.thecrimsonpizza.tvtrackerkotlin.core.utils.Status
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.list_series_basic.view.*
 
@@ -32,11 +35,11 @@ class HomeFragment : Fragment() {
     private val newList = mutableListOf<BasicResponse.SerieBasic>()
     private val followingList = mutableListOf<SerieResponse.Serie>()
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        homeViewModel.init()
         followingViewModel.init()
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
@@ -48,21 +51,57 @@ class HomeFragment : Fragment() {
         setBaseAdapter(gridNew, newList)
         setBaseAdapter(gridFollowing, followingList)
 
-        getFollowingShows()
-        getNewShows()
-        getTrendingShows()
+        val message =
+            Snackbar.make(requireView(), getString(R.string.no_conn), Snackbar.LENGTH_INDEFINITE)
 
+        val connectionLiveData = ConnectionLiveData(requireContext())
+        connectionLiveData.observe(viewLifecycleOwner, Observer { isConnected ->
+            isConnected?.let {
+                if (it) {
+                            getFollowingShows()
+                    getNewShows()
+                    getTrendingShows()
+                    message.dismiss()
+                } else {
+                    message.show()
+                }
+            }
+        })
     }
 
     private fun getTrendingShows() {
-        homeViewModel.getTrendingShows().observe(viewLifecycleOwner, Observer {
-            refreshData(trendList, it.basicSeries, gridTrend)
+        homeViewModel.trendMutable().observe(viewLifecycleOwner, Observer { resource ->
+            when (resource.status) {
+                Status.LOADING -> progressTrend.visibility = View.VISIBLE
+                Status.SUCCESS -> {
+                    refreshData(trendList, resource.data?.basicSeries, gridTrend)
+                    progressTrend.visibility = View.GONE
+                }
+                Status.ERROR ->
+                    Snackbar.make(
+                        requireView(),
+                        getString(R.string.no_conn),
+                        Snackbar.LENGTH_INDEFINITE
+                    ).show()
+            }
         })
     }
 
     private fun getNewShows() {
-        homeViewModel.getNewShows().observe(viewLifecycleOwner, Observer {
-            refreshData(newList, it.basicSeries, gridNew)
+        homeViewModel.newMutable().observe(viewLifecycleOwner, Observer {
+            when (it.status) {
+                Status.LOADING -> progressNew.visibility = View.VISIBLE
+                Status.SUCCESS -> {
+                    progressNew.visibility = View.GONE
+                    refreshData(newList, it.data?.basicSeries, gridNew)
+                }
+                Status.ERROR ->
+                    Snackbar.make(
+                        requireView(),
+                        getString(R.string.no_conn),
+                        Snackbar.LENGTH_INDEFINITE
+                    ).show()
+            }
         })
     }
 
@@ -76,10 +115,10 @@ class HomeFragment : Fragment() {
     }
 
     private fun <T : Any> refreshData(
-        list: MutableList<T>, response: List<T>, recycler: RecyclerView
+        list: MutableList<T>, response: List<T>?, recycler: RecyclerView
     ) {
         list.clear()
-        list.addAll(response)
+        response?.let { list.addAll(it) }
         recycler.adapter?.notifyDataSetChanged()
     }
 

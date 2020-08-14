@@ -20,7 +20,7 @@ class FollowingViewModel : ViewModel() {
     }
 
     fun init() {
-        FirebaseDatabaseRealtime(FirebaseAuth.getInstance().currentUser).seriesFav.addValueEventListener(
+        FirebaseDatabaseRealtime(FirebaseAuth.getInstance().currentUser).followingReference.addValueEventListener(
             object :
                 ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {

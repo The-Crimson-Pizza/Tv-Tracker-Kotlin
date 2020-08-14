@@ -41,7 +41,6 @@
             android:textStyle="bold"
             app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toTopOf="@+id/episode_number"
-            app:layout_constraintEnd_toStartOf="@+id/checkbox_watched"
             app:layout_constraintStart_toEndOf="@+id/image_season"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed" />

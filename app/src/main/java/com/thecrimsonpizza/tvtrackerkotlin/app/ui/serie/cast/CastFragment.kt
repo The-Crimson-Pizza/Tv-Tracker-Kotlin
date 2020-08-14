@@ -15,6 +15,7 @@ import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.getImagePortrait
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.goToPersonActivity
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.setBaseAdapter
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_PORTRAIT
+import com.thecrimsonpizza.tvtrackerkotlin.core.utils.Status
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.Type
 import kotlinx.android.synthetic.main.fragment_cast.*
 import kotlinx.android.synthetic.main.lista_cast_vertical.view.*
@@ -37,7 +38,9 @@ class CastFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setAdapter()
-        serieViewModel.getShow().observe(viewLifecycleOwner, Observer { refreshData(it) })
+        serieViewModel.getShow().observe(viewLifecycleOwner, Observer {
+            if (it.status == Status.SUCCESS) refreshData(it.data!!)
+        })
     }
 
     private fun setAdapter() {

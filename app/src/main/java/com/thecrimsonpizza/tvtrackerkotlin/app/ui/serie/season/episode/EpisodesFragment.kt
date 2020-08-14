@@ -50,9 +50,9 @@ class EpisodesFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 //        dismissAllowingStateLoss()
 
-        seriesViewModel.getShow().observe(viewLifecycleOwner, Observer<SerieResponse.Serie>
+        seriesViewModel.getShow().observe(viewLifecycleOwner, Observer
         {
-            serie = it
+            serie = it.data!!
             mEpisodes.clear()
             mEpisodes.addAll(serie.seasons[seasonPos].episodes)
             gridEpisodes.adapter?.notifyDataSetChanged()

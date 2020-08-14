@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit
 
 object ServiceBuilder {
 
-    class CustomInterceptor : Interceptor {
+    private class TMDBInterceptor : Interceptor {
         override fun intercept(chain: Interceptor.Chain): Response {
             var request: Request = chain.request()
             val url = request.url.newBuilder().addQueryParameter(API_KEY_STRING, API_KEY).build();
@@ -26,7 +26,8 @@ object ServiceBuilder {
     }
 
     private val client = OkHttpClient.Builder()
-        .addInterceptor(CustomInterceptor())
+        .addInterceptor(TMDBInterceptor())
+//        .addInterceptor(NoConnectionInterceptor)
         .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
         .retryOnConnectionFailure(false)
         .connectTimeout(30, TimeUnit.SECONDS) // connect timeout
@@ -41,7 +42,10 @@ object ServiceBuilder {
         .addCallAdapterFactory(RxJava3CallAdapterFactory.createWithScheduler(Schedulers.io()))
         .build()
 
-    fun <T> buildService(service: Class<T>): T {
+    private fun <T> buildService(service: Class<T>): T {
         return retrofit.create(service)
     }
+
+    val apiService: TmdbApi = buildService(TmdbApi::class.java)
+
 }

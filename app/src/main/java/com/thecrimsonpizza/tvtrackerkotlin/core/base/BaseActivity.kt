@@ -43,8 +43,9 @@ class BaseActivity : AppCompatActivity() {
                 val basicPosterPath = intent.getStringExtra(BASIC_SERIE_POSTER_PATH)
                 seriesViewModel.getShowData(idSerie)
                 supportFragmentManager.beginTransaction()
-                    .add(R.id.fragment_container, SerieFragment(basicPosterPath)).commit()
+                    .add(R.id.fragment_container, SerieFragment(idSerie, basicPosterPath)).commit()
             }
+
             Type.PERSON, Type.CAST -> {
                 idPerson = intent.getIntExtra(GlobalConstants.ID_ACTOR, 0)
                 val personPath = intent.getStringExtra(GlobalConstants.BASIC_PERSON_POSTER_PATH)

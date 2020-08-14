@@ -1,7 +1,7 @@
 package com.thecrimsonpizza.tvtrackerkotlin.app.domain.seasons
 
 import com.google.gson.annotations.SerializedName
-import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.Following
+import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.FollowingData
 import java.io.Serializable
 
 data class Season(
@@ -9,7 +9,7 @@ data class Season(
     var name: String = "",
     var episodes: MutableList<Episode> = mutableListOf(),
     var overview: String = "",
-    var followingData: Following = Following(),
+    var followingData: FollowingData = FollowingData(),
     @SerializedName("air_date") var airDate: String = "",
     @SerializedName("poster_path") var posterPath: String? = "",
     @SerializedName("season_number") var seasonNumber: Int = 0,

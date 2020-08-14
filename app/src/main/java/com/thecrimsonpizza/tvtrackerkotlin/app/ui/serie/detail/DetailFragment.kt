@@ -11,6 +11,7 @@ import com.thecrimsonpizza.tvtrackerkotlin.R
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie.SerieAdapter
 import com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie.SeriesViewModel
+import com.thecrimsonpizza.tvtrackerkotlin.core.utils.Status
 
 
 class DetailFragment : Fragment() {
@@ -27,10 +28,13 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        seriesViewModel.getShow().observe(viewLifecycleOwner, Observer<SerieResponse.Serie>
+        seriesViewModel.getShow().observe(viewLifecycleOwner, Observer
         {
-            mSerie = it
-            SerieAdapter(requireContext(), requireView(), mSerie).fillOverview()
+            if (it.status == Status.SUCCESS) {
+                mSerie = it.data!!
+                SerieAdapter(requireContext(), requireView(), mSerie).fillOverview()
+            }
+
         })
     }
 }

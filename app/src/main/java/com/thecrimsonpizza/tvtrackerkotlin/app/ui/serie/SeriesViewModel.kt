@@ -3,40 +3,42 @@ package com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.thecrimsonpizza.tvtrackerkotlin.app.data.remote.TmdbRepository
-import com.thecrimsonpizza.tvtrackerkotlin.app.domain.BasicResponse
+import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.BasicResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.ui.following.FollowingViewModel
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.toLiveData
+import com.thecrimsonpizza.tvtrackerkotlin.core.utils.Resource
 import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 
 class SeriesViewModel : ViewModel() {
 
-    private var serieMutable = MutableLiveData<SerieResponse.Serie>()
-//    private var serieMutable = MutableLiveData<StateUi<SerieResponse.Serie>>()
+    private val repository: TmdbRepository = TmdbRepository
+    private var serieMutable = MutableLiveData<Resource<SerieResponse.Serie>>()
+    private var genres = MutableLiveData<BasicResponse>()
 
-    fun getShowData(id: Int) {
-        TmdbRepository.getSerieWithSeasons(id)
-            .observeOn(Schedulers.io())
-//            .doOnSubscribe(StateUi.Loading)
-            .doOnError(Throwable::printStackTrace)
-            .subscribe {
-                serieMutable.postValue(it)
-            }
+    fun getShowData(id: Int) = viewModelScope.launch(IO) {
+        serieMutable.postValue(Resource.loading(data = null))
+        try {
+            serieMutable.postValue(Resource.success(data = repository.getSerie(id)))
+        } catch (e: Exception) {
+            serieMutable.postValue(Resource.error(data = null, message = e.localizedMessage ?: "Error"))
+        }
     }
 
     fun saveSerie(serie: SerieResponse.Serie) {
-        serieMutable.postValue(serie)
+        val temp = serieMutable.value
+        temp?.data = serie
+        serieMutable.postValue(temp)
     }
 
 
-    fun getShow(): LiveData<SerieResponse.Serie> {
+    fun getShow(): LiveData<Resource<SerieResponse.Serie>> {
         return serieMutable
     }
-//    fun getShow(): LiveData<StateUi<SerieResponse.Serie>> {
-//        return serieMutable
-//    }
-
 
     fun getFollowingShows(): LiveData<List<SerieResponse.Serie>>? {
         return FollowingViewModel().getFollowing()
@@ -46,8 +48,16 @@ class SeriesViewModel : ViewModel() {
         return TmdbRepository.getByNetwork(id).toLiveData()
     }
 
-    fun getShowsByGenre(id: Int): LiveData<BasicResponse> {
-        return TmdbRepository.getByGenre(id).toLiveData()
+    fun getShowsByGenre(): LiveData<BasicResponse> {
+        return genres
     }
 
+    fun retrieveShowsByGenre(id: Int, page: Int = 1) {
+        TmdbRepository.getByGenre(id, page)
+            .observeOn(Schedulers.io())
+            .doOnError(Throwable::printStackTrace)
+            .subscribe {
+                genres.postValue(it)
+            }
+    }
 }

@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.thecrimsonpizza.tvtrackerkotlin.R
-import com.thecrimsonpizza.tvtrackerkotlin.app.domain.BasicResponse
+import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.BasicResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie.SeriesViewModel
 import com.thecrimsonpizza.tvtrackerkotlin.core.base.BaseClass
@@ -49,6 +49,7 @@ class NetworkFragment(data: BaseClass?) : Fragment() {
                 seriesByNetwork.clear()
                 seriesByNetwork.addAll(it.basicSeries)
                 rv_genres.adapter?.notifyDataSetChanged()
+                rv_genres.scheduleLayoutAnimation()
             })
     }
 

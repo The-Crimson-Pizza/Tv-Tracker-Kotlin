@@ -47,5 +47,7 @@
         android:layout_margin="5dp"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="3"
-        tools:listitem="@layout/list_series_basic" />
+        tools:listitem="@layout/list_series_basic"
+        android:layoutAnimation="@anim/layout_animation"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 </LinearLayout>

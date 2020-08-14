@@ -1,4 +1,4 @@
-package com.thecrimsonpizza.tvtrackerkotlin.app.domain
+package com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName

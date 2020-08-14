@@ -42,6 +42,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+
 //        followingViewModel.init()
         navController = Navigation.findNavController(
             this@MainActivity,
@@ -54,6 +55,7 @@ class MainActivity : AppCompatActivity() {
 //        getFavorites()
 
     }
+
 
     private fun getFavorites() {
         followingViewModel.getFollowing().observe(this, Observer {
@@ -75,7 +77,7 @@ class MainActivity : AppCompatActivity() {
                 getPendingIntent(season, name, PendingIntent.FLAG_UPDATE_CURRENT)
             val result: IntArray
             try {
-                result = Arrays.stream(season.airDate!!.split("-".toRegex()).toTypedArray())
+                result = Arrays.stream(season.airDate.split("-".toRegex()).toTypedArray())
                     .mapToInt(Integer::parseInt).toArray()
                 val seasonDate: Date = getSeasonDate(result)
                 val todayDate: Date = getTodayDate()

@@ -15,6 +15,7 @@ import com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie.season.episode.EpisodesF
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.*
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_POSTER
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.ID_SEASON
+import com.thecrimsonpizza.tvtrackerkotlin.core.utils.Status
 import kotlinx.android.synthetic.main.fragment_seasons.*
 import kotlinx.android.synthetic.main.list_season.view.*
 
@@ -82,8 +83,10 @@ class SeasonFragment : Fragment() {
 
     private fun getSerie() {
         seriesViewModel.getShow().observe(viewLifecycleOwner, Observer {
-            serie = it
-            setAdapter()
+            if (it.status == Status.SUCCESS) {
+                serie = it.data!!
+                setAdapter()
+            }
         })
     }
 

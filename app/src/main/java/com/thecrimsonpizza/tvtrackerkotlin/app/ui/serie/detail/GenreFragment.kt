@@ -4,11 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.thecrimsonpizza.tvtrackerkotlin.R
-import com.thecrimsonpizza.tvtrackerkotlin.app.domain.BasicResponse
+import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.BasicResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie.SeriesViewModel
 import com.thecrimsonpizza.tvtrackerkotlin.core.base.BaseClass
@@ -24,6 +28,7 @@ class GenreFragment(genre: BaseClass?) : Fragment() {
     private val seriesViewModel: SeriesViewModel by activityViewModels()
 
     private var mGenre = genre as SerieResponse.Serie.Genre
+    private var page = 1
     private val mSeriesByGenre: MutableList<BasicResponse.SerieBasic> = mutableListOf()
 
     override fun onCreateView(
@@ -34,9 +39,27 @@ class GenreFragment(genre: BaseClass?) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        seriesViewModel.retrieveShowsByGenre(mGenre.id, page++)
         setGenreIcon()
         getSeriesByGenre()
         setAdapter()
+
+        rv_genres.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+            }
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val layoutManager = rv_genres.layoutManager as GridLayoutManager
+
+//                lastVisibleItemId = rv_genres.layoutManager.findLastVisibleItemPosition()
+                if (layoutManager.findLastCompletelyVisibleItemPosition() == mSeriesByGenre.size - 1) {
+                    seriesViewModel.retrieveShowsByGenre(mGenre.id, page++)
+                }
+            }
+        })
     }
 
     private fun setGenreIcon() {
@@ -64,13 +87,19 @@ class GenreFragment(genre: BaseClass?) : Fragment() {
     }
 
     private fun getSeriesByGenre() {
-        seriesViewModel.getShowsByGenre(mGenre.id)
+        seriesViewModel.getShowsByGenre()
             .observe(viewLifecycleOwner, Observer<BasicResponse> {
-                mSeriesByGenre.clear()
+//                mSeriesByGenre.clear()
                 mSeriesByGenre.addAll(it.basicSeries)
+                rv_genres.adapter?.notifyItemRangeChanged(
+                    mSeriesByGenre.size + 1,
+                    it.basicSeries.size
+                );
                 rv_genres.adapter?.notifyDataSetChanged()
+                if (page == 2) rv_genres.scheduleLayoutAnimation()
             })
     }
+
 
     private fun setAdapter() {
         rv_genres.setBaseAdapter(
@@ -87,6 +116,22 @@ class GenreFragment(genre: BaseClass?) : Fragment() {
             itemView.ratingBasic.visibility = View.GONE
 
             itemView.setOnClickListener { serie.goToBaseActivity(requireContext(), it) }
+
+            setAnimation(itemView, adapterPosition);
+
+        }
+
+
+    }
+
+    private var lastPosition = -1
+    private fun setAnimation(viewToAnimate: View, position: Int) {
+        // If the bound view wasn't previously displayed on screen, it's animated
+        if (position > lastPosition) {
+            val animation: Animation =
+                AnimationUtils.loadAnimation(context, R.anim.slide_up)
+            viewToAnimate.startAnimation(animation)
+            lastPosition = position
         }
     }
 }
