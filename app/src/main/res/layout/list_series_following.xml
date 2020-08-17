@@ -33,6 +33,7 @@
                     android:id="@+id/posterFollowing"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:transitionName="@string/serie_transition"
                     android:contentDescription="@string/serie_poster_description"
                     android:scaleType="centerCrop" />
 
@@ -187,7 +188,7 @@
 
 
                 <Button
-                    android:id="@+id/next_episode_main_menu"
+                    android:id="@+id/btWatchEpisode"
                     style="@style/Widget.AppCompat.Button.Colored.Personal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

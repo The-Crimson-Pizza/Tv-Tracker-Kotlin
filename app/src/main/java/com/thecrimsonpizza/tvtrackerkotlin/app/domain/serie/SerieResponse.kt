@@ -18,8 +18,6 @@ data class SerieResponse(
 
     @Parcelize
     data class Serie(
-//        override var id: Int = 0,
-//        override var name: String = "",
         var status: String = "",
         var homepage: String = "",
         var overview: String = "",
@@ -29,9 +27,14 @@ data class SerieResponse(
         var similar: Similar = Similar(),
         var seasons: List<Season> = listOf(),
         var video: VideoResponse.Video? = null,
-        var lastEpisodeWatched: Episode = Episode(),
-        @SerializedName("original_name") var originalName: String = "",
+
+        var lastEpisodeWatched: Episode? = null,
+        var firstEpisodeUnwatched: Episode? = null,
+
+        var followingData: FollowingSerie? = null,
+
         @SerializedName("first_air_date") var firstAirDate: String? = "",
+        @SerializedName("original_name") var originalName: String = "",
         @SerializedName("last_air_date") var lastAirDate: String = "",
         @SerializedName("backdrop_path") var backdropPath: String? = null,
         @SerializedName("episode_run_time") var episodeRunTime: List<Int> = listOf(),
@@ -42,119 +45,54 @@ data class SerieResponse(
         @SerializedName("original_language") var originalLanguage: String = "",
         @SerializedName("external_ids") var externalIds: ExternalIds = ExternalIds(),
         @SerializedName("next_episode_to_air") var nextEpisodeToAir: Episode? = null,
-        @SerializedName("last_episode_to_air") var lastEpisodeToAir: Episode? = null,
-
-        var followingData: FollowingData = FollowingData()
+        @SerializedName("last_episode_to_air") var lastEpisodeToAir: Episode? = null
 
     ) : BasicResponse.SerieBasic(0, "", "", 0f) {
 
 
-        fun hasChanged(serieCompared: Serie): Boolean {
-            return this == serieCompared
+//        fun getFollowingSerieData(list: List<Serie>): FollowingSerie? {
+//            return list.find { this.id == it.id }
+//        }
+
+        fun getSerieFromFollowingList(list: List<Serie>): Serie? {
+            return list.find { it.id == this.id }
         }
 
-        fun hasSameId(serieCompared: Serie): Boolean {
-            return this.id == serieCompared.id
+        fun episodesToMap(): Map<String, MutableList<FollowingSerie.FollowingData>> {
+            val episodeList = mutableMapOf<String, MutableList<FollowingSerie.FollowingData>>()
+            this.seasons.forEach {
+                val id = "${it.seasonNumber}_"
+                episodeList[id] = it.toSeasonFollowingDataList()
+            }
+            return episodeList
         }
 
-        fun inFollowingList(list: List<Serie>): Boolean {
-            val found = list.firstOrNull { it.id == this.id }
-            return found != null
+        fun getEpisode(idEpisode: Int): Episode? {
+            return this.seasons.flatMap { it.episodes }.find { it.id == idEpisode }
         }
 
-        fun updateObject(serie: Serie): Serie? {
-            if (this.id == serie.id) {
-                if (this != serie) {
-                    val following = serie.followingData
-                    val seasonMap = HashMap<Int, FollowingData>()
-                    val episodeMap = HashMap<Int, FollowingData>()
-
-                    for (season in serie.seasons) {
-                        seasonMap[season.id] = season.followingData
-                        season.episodes.forEach { episodeMap[it.id] = it.followingData }
-                    }
-                    val new = this
-
-                    new.followingData = following
-                    new.seasons.forEach { season ->
-                        season.followingData = seasonMap[season.id]!!
-                        season.episodes.forEach { episode ->
-                            episode.followingData = episodeMap[episode.id]!!
-                        }
-                    }
-                    return new
-                } else return serie
-            } else return null
-        }
 
         fun mostWatchedTvShow(followingList: List<Serie>): String? {
             val seriesMap = HashMap<String, Int>()
+//            this.seasons.forEach { seasonList.add(it.toSeasonFollowingData()) }
             for (tvShow in followingList)
                 seriesMap[tvShow.name] =
-                    tvShow.seasons.flatMap { it.episodes }.count { it.followingData.watched }
+                    tvShow.followingData?.episodesData?.flatMap { it.value }?.count { it.watched }?:0
             seriesMap.maxBy { it.value }?.key?.let {
                 return it
             } ?: return GlobalConstants.EMPTY_STRING
         }
 
-        fun checkFav(followingList: List<Serie>) {
-            val s: Serie? = followingList.filter { it.id == this.id }.singleOrNull()
-            if (s != null) {
-                s.also { setSeasonWatched(it) }.followingData.added = true
-            }
-        }
 
-        private fun setSeasonWatched(serie: Serie) {
-            var cont = 0
-            for (i in serie.seasons.indices) {
-                seasons[i].followingData.watched = serie.seasons[i].followingData.watched
-                seasons[i].followingData.watchedDate = serie.seasons[i].followingData.watchedDate
-                setEpisodeWatched(serie, i)
-                if (seasons[i].followingData.watched) cont++
-            }
-            isSerieFinished(cont)
-        }
-
-        private fun setEpisodeWatched(serie: Serie, i: Int) {
-            if (serie.seasons.size == seasons.size) {
-                for (j in 0 until serie.seasons[i].episodes.size) {
-                    if (seasons[i].episodes.size == serie.seasons[i].episodes.size) {
-                        seasons[i].episodes[j].followingData.watched =
-                            serie.seasons[i].episodes[j].followingData.watched
-                        seasons[i].episodes[j].followingData.watchedDate =
-                            serie.seasons[i].episodes[j].followingData.watchedDate
-                    }
-                }
-            }
-            if (checkAllEpisodes(serie.seasons[i].episodes)) {
-                seasons[i].followingData.watched = true
-                seasons[i].followingData.watchedDate =
-                    getMaxDate(getDatesEpisodes(serie.seasons[i].episodes))
-            } else {
-                seasons[i].followingData.watched = false
-                seasons[i].followingData.watchedDate = null
-            }
-        }
-
-        private fun isSerieFinished(cont: Int) {
-            if (seasons.size == cont) {
-                followingData.watched = true
-                followingData.watchedDate = getMaxDate(getDatesSeason(seasons))
-            } else {
-                followingData.watched = false
-                followingData.watchedDate = null
-            }
-        }
-
-        private fun checkAllEpisodes(episodes: List<Episode>): Boolean {
-            var cont = 0
-            for (i in episodes.indices) {
-                if (episodes[i].followingData.watched) {
-                    cont++
-                }
-            }
-            return cont == episodes.size
-        }
+//        private fun checkAllEpisodes(episodes: List<Episode>): Boolean {
+//            var cont = 0
+//            for (i in episodes.indices) {
+//                if (episodes[i].followingData.watched) {
+//                    cont++
+//                }
+//            }
+//            return cont == episodes.size
+//        }
 
         private fun getMaxDate(datesList: List<Date>): Date? {
             return if (datesList.isEmpty()) {
@@ -162,27 +100,27 @@ data class SerieResponse(
             } else Collections.max(datesList)
         }
 
-        private fun getDatesEpisodes(episodes: List<Episode>): List<Date> {
-            val dates: MutableList<Date> =
-                ArrayList()
-            for (e in episodes) {
-                if (e.followingData.watchedDate != null) {
-                    dates.add(e.followingData.watchedDate!!)
-                }
-            }
-            return dates
-        }
+//        private fun getDatesEpisodes(episodes: List<Episode>): List<Date> {
+//            val dates: MutableList<Date> =
+//                ArrayList()
+//            for (e in episodes) {
+//                if (e.followingData.watchedDate != null) {
+//                    dates.add(e.followingData.watchedDate!!)
+//                }
+//            }
+//            return dates
+//        }
 
-        private fun getDatesSeason(seasons: List<Season>?): List<Date> {
-            val dates: MutableList<Date> =
-                ArrayList()
-            for (s in seasons!!) {
-                if (s.followingData.watchedDate != null) {
-                    dates.add(s.followingData.watchedDate!!)
-                }
-            }
-            return dates
-        }
+//        private fun getDatesSeason(seasons: List<Season>?): List<Date> {
+//            val dates: MutableList<Date> =
+//                ArrayList()
+//            for (s in seasons!!) {
+//                if (s.followingData.watchedDate != null) {
+//                    dates.add(s.followingData.watchedDate!!)
+//                }
+//            }
+//            return dates
+//        }
 
         fun getPosition(favs: List<Serie>): Int {
             for (i in favs.indices) {
@@ -195,14 +133,14 @@ data class SerieResponse(
 
         @Parcelize
         data class Genre(
-            override var id: Int = 0,
+            override val id: Int = 0,
             override var name: String = "",
             override var posterPath: String? = null
         ) : BaseClass
 
         @Parcelize
         data class Network(
-            override var id: Int = 0,
+            override val id: Int = 0,
             override var name: String = "",
             @SerializedName("logo_path") override var posterPath: String? = ""
         ) : BaseClass

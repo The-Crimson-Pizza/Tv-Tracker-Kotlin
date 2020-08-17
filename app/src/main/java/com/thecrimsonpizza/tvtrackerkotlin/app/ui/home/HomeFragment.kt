@@ -34,6 +34,7 @@ class HomeFragment : Fragment() {
     private val trendList = mutableListOf<BasicResponse.SerieBasic>()
     private val newList = mutableListOf<BasicResponse.SerieBasic>()
     private val followingList = mutableListOf<SerieResponse.Serie>()
+//    private val followingList = mutableListOf<SerieResponse.Serie>()
 
 
     override fun onCreateView(
@@ -58,7 +59,7 @@ class HomeFragment : Fragment() {
         connectionLiveData.observe(viewLifecycleOwner, Observer { isConnected ->
             isConnected?.let {
                 if (it) {
-                            getFollowingShows()
+                    getFollowingShows()
                     getNewShows()
                     getTrendingShows()
                     message.dismiss()
@@ -107,10 +108,15 @@ class HomeFragment : Fragment() {
 
     private fun getFollowingShows() {
         followingViewModel.getFollowing().observe(viewLifecycleOwner, Observer {
-            if (it.isNotEmpty()) {
-                if (gridFollowing.id == switcher_favs.nextView.id) switcher_favs.showNext()
-                refreshData(followingList, it, gridFollowing)
-            } else if (no_data_favs.id == switcher_favs.nextView.id) switcher_favs.showNext()
+            when (it.status) {
+                Status.LOADING -> progressNew.visibility = View.VISIBLE
+                Status.SUCCESS -> {
+                    if (gridFollowing.id == switcher_favs.nextView.id) switcher_favs.showNext()
+                    refreshData(followingList, it.data, gridFollowing)
+                }
+                Status.ERROR -> if (no_data_favs.id == switcher_favs.nextView.id) switcher_favs.showNext()
+
+            }
         })
     }
 
@@ -129,7 +135,7 @@ class HomeFragment : Fragment() {
             )
             itemView.titleBasic.text = show.name
             itemView.ratingBasic.text = show.voteAverage.toString()
-            itemView.setOnClickListener { show.goToBaseActivity(requireContext(), it) }
+            itemView.setOnClickListener { show.goToBaseActivity(requireContext(),  itemView.posterBasic) }
         }
     }
 }

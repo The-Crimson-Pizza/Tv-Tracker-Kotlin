@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
     private fun getFavorites() {
         followingViewModel.getFollowing().observe(this, Observer {
             mFavs.clear()
-            mFavs.addAll(it)
+            it.data?.let { temp -> mFavs.addAll(temp) }
             for (serie in mFavs) {
                 if (serie.seasons.isNotEmpty() && serie.seasons[serie.seasons.size - 1].airDate != null) {
                     setAlarms(serie.seasons[serie.seasons.size - 1], serie.name)

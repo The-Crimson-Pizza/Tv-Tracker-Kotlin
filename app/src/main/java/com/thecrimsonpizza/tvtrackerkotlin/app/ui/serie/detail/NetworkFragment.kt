@@ -68,7 +68,7 @@ class NetworkFragment(data: BaseClass?) : Fragment() {
 
             itemView.ratingBasic.visibility = View.GONE
             itemView.setOnClickListener {
-                serie.goToBaseActivity(requireContext(), it)
+                serie.goToBaseActivity(requireContext(),  itemView.posterBasic)
 //                bundle = Bundle()
 //                bundle.putInt(ID_SERIE, serie.id)val
 //                    Navigation.findNavController(it)

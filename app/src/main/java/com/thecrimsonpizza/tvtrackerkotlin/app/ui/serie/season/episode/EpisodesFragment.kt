@@ -9,6 +9,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.thecrimsonpizza.tvtrackerkotlin.R
+import com.thecrimsonpizza.tvtrackerkotlin.app.data.local.FirebaseDatabaseRealtime
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.seasons.Episode
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie.SeriesViewModel
@@ -29,7 +30,7 @@ class EpisodesFragment : BottomSheetDialogFragment() {
 
     private var seasonPos = -1
     private lateinit var serie: SerieResponse.Serie
-    private val mFavs: MutableList<SerieResponse.Serie> = mutableListOf()
+    private val followingList: MutableList<SerieResponse.Serie> = mutableListOf()
     private val mEpisodes: MutableList<Episode> = mutableListOf()
     private val seriesViewModel: SeriesViewModel by activityViewModels()
 
@@ -59,11 +60,11 @@ class EpisodesFragment : BottomSheetDialogFragment() {
         })
 
         seriesViewModel.getFollowingShows()
-            ?.observe(viewLifecycleOwner, Observer<List<SerieResponse.Serie>> {
-                mFavs.clear()
-                mFavs.addAll(it)
+            ?.observe(viewLifecycleOwner, Observer {
+                followingList.clear()
+                it.data?.let { temp -> followingList.addAll(temp) }
                 if (serie != null) {
-                    serie.checkFav(mFavs)
+//                    serie.checkFav(followingList)
                     mEpisodes.clear()
                     mEpisodes.addAll(serie.seasons[seasonPos].episodes)
                     gridEpisodes.adapter?.notifyDataSetChanged()
@@ -74,20 +75,20 @@ class EpisodesFragment : BottomSheetDialogFragment() {
     }
 
     private fun watchEpisode(episodePos: Int, watched: Boolean = true) {
-        val pos: Int = serie.getPosition(mFavs)
-        mFavs[pos].seasons[seasonPos].episodes[episodePos].markAsWatched(watched)
-        mFavs[pos].seasons[seasonPos].markAsWatched(
-            mFavs[pos].checkEpisodesInSeasonFinished(
-                seasonPos
-            )
-        )
-        mFavs[pos].markAsWatched(mFavs[pos].checkSeasonsFinished())
-        mFavs.saveToFirebase()
+        val pos: Int = serie.getPosition(followingList)
+//        mFavs[pos].seasons[seasonPos].episodes[episodePos].markAsWatched(watched)
+//        mFavs[pos].seasons[seasonPos].markAsWatched(
+//            mFavs[pos].checkEpisodesInSeasonFinished(
+//                seasonPos
+//            )
+//        )
+//        mFavs[pos].markAsWatched(mFavs[pos].checkSeasonsFinished())
+        FirebaseDatabaseRealtime.saveToFirebase(followingList)
     }
 
     private fun setWatchCheck(itemView: View, pos: Int, episode: Episode) {
         itemView.checkbox_watched.visibility = View.VISIBLE
-        itemView.checkbox_watched.isChecked = episode.followingData.watched
+//        itemView.checkbox_watched.isChecked = episode.followingData.watched
         itemView.checkbox_watched.setOnCheckedChangeListener { _, isChecked: Boolean ->
             watchEpisode(pos, !isChecked)
         }
@@ -99,7 +100,7 @@ class EpisodesFragment : BottomSheetDialogFragment() {
             mEpisodes, R.layout.list_episodes
         ) {
 
-            if (serie.followingData.added) setWatchCheck(itemView, adapterPosition, it)
+            if (serie.followingData?.added == true) setWatchCheck(itemView, adapterPosition, it)
 
             itemView.image_episode.getImage(requireContext(), BASE_URL_IMAGES_POSTER + it.stillPath)
             itemView.episode_name.text = it.name

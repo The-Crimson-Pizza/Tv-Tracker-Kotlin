@@ -32,7 +32,7 @@ fun BaseClass.goToBaseActivity(context: Context, view: View) {
 
     val activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(
         context as Activity,
-        Pair(view.posterBasic, view.posterBasic.transitionName)
+        Pair(view, view.transitionName)
     )
 
     ActivityCompat.startActivity(context, intent, activityOptions.toBundle())

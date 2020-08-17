@@ -18,6 +18,7 @@ class SeriesViewModel : ViewModel() {
 
     private val repository: TmdbRepository = TmdbRepository
     private var serieMutable = MutableLiveData<Resource<SerieResponse.Serie>>()
+    private var followingData = MutableLiveData<Resource<SerieResponse.Serie>>()
     private var genres = MutableLiveData<BasicResponse>()
 
     fun getShowData(id: Int) = viewModelScope.launch(IO) {
@@ -25,7 +26,12 @@ class SeriesViewModel : ViewModel() {
         try {
             serieMutable.postValue(Resource.success(data = repository.getSerie(id)))
         } catch (e: Exception) {
-            serieMutable.postValue(Resource.error(data = null, message = e.localizedMessage ?: "Error"))
+            serieMutable.postValue(
+                Resource.error(
+                    data = null,
+                    message = e.localizedMessage ?: "Fatal Error"
+                )
+            )
         }
     }
 
@@ -40,7 +46,7 @@ class SeriesViewModel : ViewModel() {
         return serieMutable
     }
 
-    fun getFollowingShows(): LiveData<List<SerieResponse.Serie>>? {
+    fun getFollowingShows(): LiveData<Resource<List<SerieResponse.Serie>>>? {
         return FollowingViewModel().getFollowing()
     }
 

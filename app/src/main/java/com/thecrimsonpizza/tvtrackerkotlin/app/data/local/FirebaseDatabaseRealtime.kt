@@ -1,5 +1,6 @@
 package com.thecrimsonpizza.tvtrackerkotlin.app.data.local
 
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -11,11 +12,23 @@ import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
 class FirebaseDatabaseRealtime(currentUser: FirebaseUser?) {
 
     val followingReference: DatabaseReference = FirebaseDatabase.getInstance()
+        .getReference("users/" + currentUser?.uid + "/following")
+
+    val followingReferenceDos: DatabaseReference = FirebaseDatabase.getInstance()
         .getReference("users/" + currentUser?.uid + "/series_following")
 
     private val tempIds: DatabaseReference = FirebaseDatabase.getInstance().getReference("temp/")
 
+
     fun setSeriesFav(followingList: List<SerieResponse.Serie>) {
         followingReference.setValue(followingList)
     }
+
+    companion object{
+        fun saveToFirebase(list: List<SerieResponse.Serie>) {
+            FirebaseDatabaseRealtime(FirebaseAuth.getInstance().currentUser).setSeriesFav(list)
+        }
+    }
+
 }
+

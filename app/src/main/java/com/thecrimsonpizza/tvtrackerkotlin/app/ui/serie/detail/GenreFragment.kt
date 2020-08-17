@@ -29,6 +29,7 @@ class GenreFragment(genre: BaseClass?) : Fragment() {
 
     private var mGenre = genre as SerieResponse.Serie.Genre
     private var page = 1
+    private var totalPages: Int = page
     private val mSeriesByGenre: MutableList<BasicResponse.SerieBasic> = mutableListOf()
 
     override fun onCreateView(
@@ -45,18 +46,14 @@ class GenreFragment(genre: BaseClass?) : Fragment() {
         setAdapter()
 
         rv_genres.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-            }
-
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-
-                val layoutManager = rv_genres.layoutManager as GridLayoutManager
-
+                if (page < totalPages) {
+                    val layoutManager = rv_genres.layoutManager as GridLayoutManager
 //                lastVisibleItemId = rv_genres.layoutManager.findLastVisibleItemPosition()
-                if (layoutManager.findLastCompletelyVisibleItemPosition() == mSeriesByGenre.size - 1) {
-                    seriesViewModel.retrieveShowsByGenre(mGenre.id, page++)
+                    if (layoutManager.findLastCompletelyVisibleItemPosition() == mSeriesByGenre.size - 1) {
+                        seriesViewModel.retrieveShowsByGenre(mGenre.id, page++)
+                    }
                 }
             }
         })
@@ -90,6 +87,7 @@ class GenreFragment(genre: BaseClass?) : Fragment() {
         seriesViewModel.getShowsByGenre()
             .observe(viewLifecycleOwner, Observer<BasicResponse> {
 //                mSeriesByGenre.clear()
+                totalPages = it.totalPages
                 mSeriesByGenre.addAll(it.basicSeries)
                 rv_genres.adapter?.notifyItemRangeChanged(
                     mSeriesByGenre.size + 1,
@@ -115,7 +113,12 @@ class GenreFragment(genre: BaseClass?) : Fragment() {
             itemView.ratingBasic.text = serie.voteAverage.toString()
             itemView.ratingBasic.visibility = View.GONE
 
-            itemView.setOnClickListener { serie.goToBaseActivity(requireContext(), it) }
+            itemView.setOnClickListener {
+                serie.goToBaseActivity(
+                    requireContext(),
+                    itemView.posterBasic
+                )
+            }
 
             setAnimation(itemView, adapterPosition);
 

@@ -3,22 +3,15 @@ package com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Bundle
 import android.view.View
-import androidx.core.app.ActivityCompat
-
 import com.thecrimsonpizza.tvtrackerkotlin.R
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
-import com.thecrimsonpizza.tvtrackerkotlin.core.base.BaseActivity
-import com.thecrimsonpizza.tvtrackerkotlin.core.base.BaseClass
 import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.*
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_BACK
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_NETWORK
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_POSTER
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_YOUTUBE
-import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.DATA
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.FORMAT_YEAR
-import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.TYPE_FRAGMENT
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.Type
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.Util
 import kotlinx.android.synthetic.main.fragment_serie.view.*
@@ -36,7 +29,8 @@ class SerieAdapter(val context: Context, val view: View, private val serie: Seri
 
 
     fun fillOverview() {
-        view.seguimiento.visibility = if (serie.followingData.added) View.VISIBLE else View.GONE
+        view.seguimiento.visibility = if (serie.followingData?.added == true) View.VISIBLE
+        else View.GONE
         view.sinopsis_text.text = serie.overview.checkNull(context)
 
         var isTextViewClicked = false
@@ -130,15 +124,5 @@ class SerieAdapter(val context: Context, val view: View, private val serie: Seri
         } else view.genres.visibility = View.GONE
     }
 
-    private fun <T : BaseClass> goToBaseActivity(type: Type, data: T) {
-        val intent = Intent(context, BaseActivity::class.java).apply {
-            putExtras(Bundle().apply {
-                putExtra(TYPE_FRAGMENT, type)
-                putParcelable(DATA, data)
-//                putExtra(GlobalConstants.BASIC_SERIE_POSTER_PATH, serie.posterPath)
-            })
-        }
-        ActivityCompat.startActivity(context, intent, null)
-    }
 }
 

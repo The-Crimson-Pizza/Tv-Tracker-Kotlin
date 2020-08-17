@@ -60,7 +60,7 @@ class ProfileFragment : Fragment() {
 
         followingViewModel.getFollowing().observe(viewLifecycleOwner, Observer {
             followingList.clear()
-            followingList.addAll(it)
+            it.data?.let { temp -> followingList.addAll(temp) }
             initGenrePieChart()
             initNetworkTagCloud()
             fillStats()

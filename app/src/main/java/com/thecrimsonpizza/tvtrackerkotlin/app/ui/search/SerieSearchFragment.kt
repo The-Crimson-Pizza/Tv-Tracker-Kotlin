@@ -71,7 +71,7 @@ class SerieSearchFragment : Fragment() {
             if (serie.voteAverage > 0) itemView.ratingBasic.text = serie.voteAverage.toString()
             else itemView.ratingBasic.visibility = View.GONE
 
-            itemView.setOnClickListener { serie.goToBaseActivity(requireContext(), it) }
+            itemView.setOnClickListener { serie.goToBaseActivity(requireContext(),  itemView.posterBasic) }
         }
     }
 }

@@ -7,16 +7,17 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.navigation.Navigation
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import com.thecrimsonpizza.tvtrackerkotlin.R
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.seasons.Episode
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
-import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.*
+import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.getImage
+import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.goToBaseActivity
+import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.setBaseAdapter
+import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.translateStatus
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_POSTER
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.ES
-import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.ID_SERIE
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.Util
 import kotlinx.android.synthetic.main.fragment_favoritos.*
 import kotlinx.android.synthetic.main.list_series_following.view.*
@@ -45,12 +46,12 @@ class FollowingFragment : Fragment() {
 
         followingViewModel.getFollowing().observe(viewLifecycleOwner, Observer {
             followingList.clear()
-            followingList.addAll(it)
+            it.data?.let { it1 -> followingList.addAll(it1) }
             grid_favoritas.adapter?.notifyDataSetChanged()
         })
 
         radioSortAdded.setOnClickListener {
-            followingList.sortedWith(nullsLast(compareBy { it.followingData.addedDate }))
+            followingList.sortedWith(nullsLast(compareBy { it.followingData?.addedDate }))
             grid_favoritas.adapter?.notifyDataSetChanged()
         }
 
@@ -59,8 +60,17 @@ class FollowingFragment : Fragment() {
             grid_favoritas.adapter?.notifyDataSetChanged()
         }
         radioSortWatched.setOnClickListener {
-            followingList.setLastWatched()
-            followingList.sortedWith(nullsLast(compareBy { it.lastEpisodeWatched.followingData.watchedDate }))
+//            followingList.setLastWatched()
+            followingList.sortedWith(
+                nullsLast(
+                    compareBy { followingSerie ->
+                        followingSerie.followingData?.episodesData
+                            ?.flatMap { it.value }
+                            ?.findLast { it.watched }?.watchedDate
+                    }
+                )
+            )
+//            followingList.sortedWith(nullsLast(compareBy { it.firstEpisodeUnwatched.followingData.watchedDate }))
             grid_favoritas.adapter?.notifyDataSetChanged()
         }
 
@@ -77,14 +87,16 @@ class FollowingFragment : Fragment() {
 
         ) { serie ->
 
-            serie.seasons.sortedWith(nullsLast(compareBy { season -> season.seasonNumber }))
+//            val data = serie.getFollowingSerie()
+
+//            serie.seasons.sortedWith(nullsLast(compareBy { season -> season.seasonNumber }))
             itemView.nameFollowing.text = serie.name
             itemView.posterFollowing.getImage(
                 requireContext(),
                 BASE_URL_IMAGES_POSTER + serie.posterPath
             )
             if (Util().getLanguageString() == ES) itemView.episodeFollowingDate.text =
-                serie.status?.translateStatus()
+                serie.status.translateStatus()
             else itemView.episodeFollowingDate.text = serie.status
 
             itemView.arrowBtn.setOnClickListener {
@@ -96,34 +108,35 @@ class FollowingFragment : Fragment() {
                     View.GONE -> itemView.arrowBtn.setBackgroundResource(R.drawable.arrow_collapse)
                 }
             }
-            //posterFollowing
-            itemView.setOnClickListener { v: View ->
-                val bundle = Bundle()
-                bundle.putInt(ID_SERIE, serie.id)
-                Navigation.findNavController(v)
-                    .navigate(R.id.action_navigation_fav_to_navigation_series, bundle)
+            itemView.setOnClickListener {
+                serie.goToBaseActivity(requireContext(), itemView.posterFollowing)
             }
 
-            if (serie.followingData.watched) itemView.next_episode_main_menu.visibility = View.GONE
-            itemView.next_episode_main_menu.setOnClickListener {
-                serie.watchEpisode(followingList, true)
-                if (serie.followingData.watchedDate != null) {
-                    itemView.next_episode_main_menu.visibility = View.GONE
+            if (serie.followingData?.finished == true) itemView.btWatchEpisode.visibility = View.GONE
+            itemView.btWatchEpisode.setOnClickListener {
+                serie.followingData?.watchEpisode().also {
+                    // todo - get ultimo episodio visto y primero sin ver
+                }
+
+                if (serie.followingData?.finishedDate != null) {
+                    itemView.btWatchEpisode.visibility = View.GONE
                 }
             }
 
+            // PROGRESS
             itemView.watchedEpisodesFollowing.text =
                 context?.getString(
                     R.string.num_vistos,
-                    serie.countEpisodesWatched(),
+                    serie.followingData?.countEpisodesWatched()?:0,
                     serie.numberOfEpisodes
                 )
-            itemView.followingProgress.progress = serie.getProgress()
+            itemView.followingProgress.progress = serie.followingData?.getProgress(serie) ?: 0
 
-            val last: Episode? = serie.getLastUnwatched()
-            itemView.nextEpisodeNameExpandable.text =
-                last?.getUnwatchedTitle(requireContext(), serie)
-            itemView.nextEpisodeName.text = last?.getUnwatchedTitle(requireContext(), serie)
+            val last: Episode? = serie.firstEpisodeUnwatched
+
+            val name = last?.getUnwatchedTitle(requireContext(), serie)
+            itemView.nextEpisodeNameExpandable.text = name
+            itemView.nextEpisodeName.text = name
             itemView.sinopsis.text = last?.getUnwatchedOverview(requireContext(), serie)
 
         }

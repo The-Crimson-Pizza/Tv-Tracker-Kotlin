@@ -8,11 +8,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.thecrimsonpizza.tvtrackerkotlin.R
+import com.thecrimsonpizza.tvtrackerkotlin.app.data.local.FirebaseDatabaseRealtime
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.seasons.Season
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie.SeriesViewModel
 import com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie.season.episode.EpisodesFragment
-import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.*
+import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.getImage
+import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.setBaseAdapter
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_IMAGES_POSTER
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.ID_SEASON
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.Status
@@ -47,18 +49,19 @@ class SeasonFragment : Fragment() {
             sortedSeasons, R.layout.list_season
         ) {
 
-            if (serie.followingData.added) setWatchCheck(itemView, adapterPosition, it)
+            if (serie.followingData?.added == true && !it.episodes.isNullOrEmpty()) setWatchCheck(itemView, adapterPosition, it)
+            else itemView.checkbox_watched.visibility = View.GONE
 
             itemView.image_season.getImage(requireContext(), BASE_URL_IMAGES_POSTER + it.posterPath)
             itemView.season_name.text = it.name
 
             if (!it.episodes.isNullOrEmpty()) {
-                if (serie.followingData.added)
+                if (serie.followingData?.added == true)
                     itemView.episode_number.text =
                         requireContext().resources.getQuantityString(
                             R.plurals.num_episodes_follow,
                             it.episodes.size,
-                            serie.countEpisodesWatched(),
+                            serie.followingData?.countEpisodesWatched() ?: 0,
                             it.episodes.size
                         )
                 else itemView.episode_number.text = requireContext().resources.getQuantityString(
@@ -75,8 +78,8 @@ class SeasonFragment : Fragment() {
     private fun getFollowingSeries() {
         seriesViewModel.getFollowingShows()?.observe(viewLifecycleOwner, Observer {
             followingList.clear()
-            followingList.addAll(it)
-            serie.checkFav(followingList)
+            it.data?.let { temp -> followingList.addAll(temp) }
+//            serie.checkFav(followingList)
             gridSeasons.adapter?.notifyDataSetChanged()
         })
     }
@@ -102,19 +105,28 @@ class SeasonFragment : Fragment() {
     private fun watchSeason(posSeason: Int, watched: Boolean = true) {
         val pos: Int = serie.getPosition(followingList)
         if (pos != -1) {
-            followingList[pos].seasons[posSeason].markAsWatched(watched)
-            followingList[pos].markAsWatched(followingList[pos].checkSeasonsFinished())
-            followingList.saveToFirebase()
+//            followingList[pos].seasons[posSeason].markAsWatched(watched)
+//            followingList[pos].markAsWatched(followingList[pos].checkSeasonsFinished())
+            FirebaseDatabaseRealtime.saveToFirebase(followingList)
         }
     }
 
     private fun setWatchCheck(itemView: View, pos: Int, season: Season) {
-        if (!season.episodes.isNullOrEmpty()) {
+//        if (!season.episodes.isNullOrEmpty()) {
             itemView.checkbox_watched.visibility = View.VISIBLE
+
+            itemView.checkbox_watched.isChecked = checkSeasonWatched(season.seasonNumber)
+            itemView.checkbox_watched.setOnCheckedChangeListener { _, isChecked: Boolean ->
+                watchSeason(pos, !isChecked)
+            }
+//        }
+    }
+
+    private fun checkSeasonWatched(pos: Int): Boolean {
+        val serieData = serie.getSerieFromFollowingList(followingList)?.followingData
+        if (serieData != null) {
+            return serieData.checkEpisodesFromSeason(pos)
         }
-        itemView.checkbox_watched.isChecked = season.followingData.watched
-        itemView.checkbox_watched.setOnCheckedChangeListener { _, isChecked: Boolean ->
-            watchSeason(pos, !isChecked)
-        }
+        return false
     }
 }

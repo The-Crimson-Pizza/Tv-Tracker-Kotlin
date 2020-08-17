@@ -81,7 +81,7 @@ class ActorAdapter(
                     context, BASE_URL_IMAGES_POSTER + cast.posterPath
                 )
                 itemView.ratingBasic.text = cast.voteAverage.toString()
-                itemView.setOnClickListener { cast.goToBaseActivity(context, it) }
+                itemView.setOnClickListener { cast.goToBaseActivity(context,  itemView.posterBasic) }
             }
         } else includeView.tvCreditsView.visibility = View.GONE
     }

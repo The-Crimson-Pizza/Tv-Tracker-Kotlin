@@ -3,13 +3,13 @@ package com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -18,16 +18,16 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.android.material.tabs.TabLayoutMediator.TabConfigurationStrategy
 import com.thecrimsonpizza.tvtrackerkotlin.R
+import com.thecrimsonpizza.tvtrackerkotlin.app.data.local.FirebaseDatabaseRealtime
+import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.FollowingSerie
 import com.thecrimsonpizza.tvtrackerkotlin.app.domain.serie.SerieResponse
 import com.thecrimsonpizza.tvtrackerkotlin.app.ui.following.FollowingViewModel
 import com.thecrimsonpizza.tvtrackerkotlin.app.ui.webview.WebViewActivity
-import com.thecrimsonpizza.tvtrackerkotlin.core.extensions.saveToFirebase
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL_WEB_TV
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.TEXT_PLAIN
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.URL_WEB_VIEW
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.Status
 import kotlinx.android.synthetic.main.fragment_serie.*
-import java.util.*
 
 class SerieFragment(private val idS: Int, private val posterPath: String? = null) : Fragment() {
 
@@ -52,7 +52,8 @@ class SerieFragment(private val idS: Int, private val posterPath: String? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        ViewCompat.setTransitionName(posterImage, posterImage.transitionName)
+//        ViewCompat.setTransitionName(posterImage, posterImage.transitionName)
+// todo- comprobar que el objeto de la base de datos sea igual que el de la API - primero pasarle el followingData y luego comprobar
 
         progres.visibility = View.VISIBLE
         itemWeb = toolbar.menu.findItem(R.id.action_web)
@@ -64,9 +65,9 @@ class SerieFragment(private val idS: Int, private val posterPath: String? = null
     }
 
     private fun getFollowingSeries() {
-        followingViewModel.getFollowing().observe(viewLifecycleOwner, Observer {
-            followingList.clear()
-            followingList.addAll(it)
+        followingViewModel.getFollowing().observe(viewLifecycleOwner, Observer { temp ->
+            followingList.clear().also { temp.data?.let { list -> followingList.addAll(list) } }
+//            followingList.addAll(temp)
             if (this::mSerie.isInitialized) setProgress()
         })
     }
@@ -74,7 +75,7 @@ class SerieFragment(private val idS: Int, private val posterPath: String? = null
     private fun getSerie() {
         seriesViewModel.getShow().observe(viewLifecycleOwner, Observer {
             when (it.status) {
-//                Status.LOADING -> progressTrend.visibility = View.VISIBLE
+                Status.LOADING -> progres.visibility = View.VISIBLE
                 Status.SUCCESS -> {
                     mSerie = it.data!!
                     if (mSerie.homepage.isNotEmpty()) itemWeb.isVisible = true
@@ -83,7 +84,7 @@ class SerieFragment(private val idS: Int, private val posterPath: String? = null
                 Status.ERROR ->
                     Snackbar.make(
                         requireView(),
-                        "${getString(R.string.no_conn)} - ${it.message}",
+                        "Error - ${it.message}",
                         Snackbar.LENGTH_INDEFINITE
                     ).show()
             }
@@ -91,17 +92,26 @@ class SerieFragment(private val idS: Int, private val posterPath: String? = null
     }
 
     private fun setProgress() {
-        progres.visibility = View.VISIBLE
-        mSerie.checkFav(followingList)
+//        mSerie.checkFav(followingList)
 //        seriesViewModel.saveSerie(s)
-        var changed = false
-        followingList.forEachIndexed { index, follow ->
-            if (mSerie.hasSameId(follow) && mSerie.hasChanged(follow)) {
-                val new = mSerie.updateObject(follow)
-                if (new != null && new != follow) followingList[index] = new; changed = true
+//        followingList.forEachIndexed { index, follow ->
+//            if (mSerie.hasSameId(follow) && mSerie.hasChanged(follow)) {
+//                val new = mSerie.updateObject(follow)
+//                if (new != null && new != follow) followingList[index] = new; changed = true
+//            }
+//        }
+//        if (changed) followingList.saveToFirebase()
+        if (mSerie.followingData == null) {
+            val following = mSerie.getSerieFromFollowingList(followingList)
+            if (following != null) {
+                mSerie.followingData = following.followingData
+                seriesViewModel.saveSerie(mSerie)
+                // todo - si es distinta actualizar el objeto de la base de datos
+                if (mSerie == following) Log.e("EEEEEE", "EEEEEE-IGUAL-EEEEEE")
             }
         }
-        if (changed) followingList.saveToFirebase()
+
+
 
         SerieAdapter(requireContext(), requireView(), mSerie).fillCollapseBar(posterPath)
         setFloatingButton()
@@ -111,7 +121,7 @@ class SerieFragment(private val idS: Int, private val posterPath: String? = null
     private fun setFloatingButton() {
         fab.visibility = View.VISIBLE
         fab.setOnClickListener { viewFab: View? ->
-            if (!mSerie.followingData.added || mSerie.inFollowingList(followingList)) {
+            if (mSerie.followingData == null) {
                 addFav()
                 Snackbar.make(viewFab!!, R.string.add_fav, Snackbar.LENGTH_LONG).show()
             } else {
@@ -122,24 +132,25 @@ class SerieFragment(private val idS: Int, private val posterPath: String? = null
     }
 
     private fun addFav() {
-        mSerie.followingData.added = true
-        mSerie.followingData.addedDate = Date()
-        followingList.add(mSerie)
-        followingList.saveToFirebase()
-        seriesViewModel.saveSerie(mSerie)
+        val new = mSerie
+            .also { it.followingData = FollowingSerie() }
+            .also { it.followingData?.added = true }
+            .also { it.followingData?.episodesData = mSerie.episodesToMap() }
+
+        followingList.add(new)
+        FirebaseDatabaseRealtime.saveToFirebase(followingList)
+
+//        seriesViewModel.saveSerie(mSerie)
     }
 
     private fun deleteFav() {
-        val pos = mSerie.getPosition(followingList)
-        if (pos != -1) {
-            followingList.removeAt(pos)
-            followingList.saveToFirebase()
-            mSerie.followingData.added = false
-            mSerie.followingData.addedDate = null
-            seriesViewModel.saveSerie(mSerie)
-//            RxBus.getInstance().publish(serie)
-            Toast.makeText(activity, R.string.borrado_correcto, Toast.LENGTH_SHORT).show()
-        }
+//        val old = mSerie.getFollowingSerieData(followingList)
+        followingList.removeAll { it.id == mSerie.id }
+        FirebaseDatabaseRealtime.saveToFirebase(followingList)
+        // TODO - ver como actualizar la UI con el seguimiento
+        mSerie.followingData = null
+//            seriesViewModel.saveSerie(mSerie)
+        Toast.makeText(activity, R.string.borrado_correcto, Toast.LENGTH_SHORT).show()
     }
 
     private fun setToolbar() {
