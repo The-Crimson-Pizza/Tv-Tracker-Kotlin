@@ -5,5 +5,8 @@ jobs:
     name: Check leaks
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: '2'
       - name: Gitleaks
-        uses: zricethezav/gitleaks-action@v1.1.2
+        uses: zricethezav/gitleaks-action@master
