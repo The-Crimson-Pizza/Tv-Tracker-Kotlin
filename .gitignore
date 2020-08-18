@@ -3,17 +3,18 @@
 /local.properties
 /.idea/
 .DS_Store
-/build
+build/
 /captures
 .externalNativeBuild
 .cxx
 google-services.json
+google-services_.json
 testers.txt
 
 # WEBSITE
 
-/website/*
-!/website/public/*
+website/*
+!website/public
 
 # Logs
 logs
