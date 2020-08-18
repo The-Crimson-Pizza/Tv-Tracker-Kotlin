@@ -5,7 +5,6 @@ object GlobalConstants {
 
     //    API
     const val API_KEY_STRING = "api_key"
-    const val API_KEY = "18f61adb80d286bb036df43e60d7aae6"
 
     //    URLS
     const val BASE_URL = "https://api.themoviedb.org/3/"

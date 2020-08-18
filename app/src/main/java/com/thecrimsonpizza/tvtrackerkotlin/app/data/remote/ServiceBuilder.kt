@@ -1,6 +1,6 @@
 package com.thecrimsonpizza.tvtrackerkotlin.app.data.remote
 
-import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.API_KEY
+import com.thecrimsonpizza.tvtrackerkotlin.BuildConfig
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.API_KEY_STRING
 import com.thecrimsonpizza.tvtrackerkotlin.core.utils.GlobalConstants.BASE_URL
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
@@ -19,7 +19,7 @@ object ServiceBuilder {
     private class TMDBInterceptor : Interceptor {
         override fun intercept(chain: Interceptor.Chain): Response {
             var request: Request = chain.request()
-            val url = request.url.newBuilder().addQueryParameter(API_KEY_STRING, API_KEY).build();
+            val url = request.url.newBuilder().addQueryParameter(API_KEY_STRING, BuildConfig.API_KEY).build();
             request = request.newBuilder().url(url).header("Accept", "application/json").build();
             return chain.proceed(request)
         }

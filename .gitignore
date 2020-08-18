@@ -8,8 +8,12 @@
 .externalNativeBuild
 .cxx
 google-services.json
+testers.txt
 
 # WEBSITE
+
+/website/*
+!/website/public/*
 
 # Logs
 logs
