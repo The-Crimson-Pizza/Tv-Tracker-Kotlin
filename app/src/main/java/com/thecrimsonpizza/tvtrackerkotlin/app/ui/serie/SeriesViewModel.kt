@@ -41,7 +41,6 @@ class SeriesViewModel : ViewModel() {
         serieMutable.postValue(temp)
     }
 
-
     fun getShow(): LiveData<Resource<SerieResponse.Serie>> {
         return serieMutable
     }

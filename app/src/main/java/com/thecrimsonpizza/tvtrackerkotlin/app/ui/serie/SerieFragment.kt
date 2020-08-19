@@ -3,7 +3,6 @@ package com.thecrimsonpizza.tvtrackerkotlin.app.ui.serie
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -92,26 +91,19 @@ class SerieFragment(private val idS: Int, private val posterPath: String? = null
     }
 
     private fun setProgress() {
-//        mSerie.checkFav(followingList)
-//        seriesViewModel.saveSerie(s)
-//        followingList.forEachIndexed { index, follow ->
-//            if (mSerie.hasSameId(follow) && mSerie.hasChanged(follow)) {
-//                val new = mSerie.updateObject(follow)
-//                if (new != null && new != follow) followingList[index] = new; changed = true
-//            }
-//        }
-//        if (changed) followingList.saveToFirebase()
         if (mSerie.followingData == null) {
-            val following = mSerie.getSerieFromFollowingList(followingList)
+            var following = mSerie.getSerieFromFollowingList(followingList)
             if (following != null) {
                 mSerie.followingData = following.followingData
+                if (following != mSerie) {
+                    //Reemplazar serie de la lista por serie de API
+                    val index = followingList.indexOf(following)
+                    followingList[index] = mSerie
+                    FirebaseDatabaseRealtime.saveToFirebase(followingList)
+                }
                 seriesViewModel.saveSerie(mSerie)
-                // todo - si es distinta actualizar el objeto de la base de datos
-                if (mSerie == following) Log.e("EEEEEE", "EEEEEE-IGUAL-EEEEEE")
             }
         }
-
-
 
         SerieAdapter(requireContext(), requireView(), mSerie).fillCollapseBar(posterPath)
         setFloatingButton()

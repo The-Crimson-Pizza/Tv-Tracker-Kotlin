@@ -50,10 +50,6 @@ data class SerieResponse(
     ) : BasicResponse.SerieBasic(0, "", "", 0f) {
 
 
-//        fun getFollowingSerieData(list: List<Serie>): FollowingSerie? {
-//            return list.find { this.id == it.id }
-//        }
-
         fun getSerieFromFollowingList(list: List<Serie>): Serie? {
             return list.find { it.id == this.id }
         }
