@@ -59,9 +59,8 @@ Sdk:29
 
 ### Installing
 
-```
-Clone the repo, open the project in Android Studio, hit "Run". Done!
-```
+To be revised...
+<s>Clone the repo, open the project in Android Studio, hit "Run". Done!</s>
 
 ## 🎈 Usage <a name="usage"></a>
 
@@ -84,14 +83,23 @@ To be made...
 High Priority
 
 - [x] Logout button
+- [ ] Mark all as read button
 - [ ] Similar Shows
 - [ ] Check network - offline mode
 - [x] Add watched episode directly in following list
 - [ ] How long did it take to watch a season/show?
 - [x] Episodes left to watch
+- [ ] Add tab with calendar in following
+- [ ] Change checkbox design
+- [ ] Add read more - marquee
+- [ ] Infinite scroll
 
 Medium Priority
 
+- [ ] Filter by year
+- [ ] Sort by date, popularity, rating
+- [ ] Hide finished shows in following
+- [ ] Group followed shows by finished and returning
 - [ ] Bars Chart with days of the week and trends
 - [ ] Recommendations
 - [ ] Multiscreen
@@ -99,6 +107,9 @@ Medium Priority
 
 Low Priority
 
+- [ ] Add date dialog when watch episode
+- [ ] Zoom poster image
+- [ ] Implement JustWatch
 - [ ] Discover how many shows/movies of an actor we watched
 - [ ] Make lists / default list
 - [ ] Follow actors / mark as favorite
