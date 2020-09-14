@@ -59,7 +59,7 @@ Sdk:29
 
 ### Installing
 
-To be revised...
+To be reviewed...
 <s>Clone the repo, open the project in Android Studio, hit "Run". Done!</s>
 
 ## 🎈 Usage <a name="usage"></a>
